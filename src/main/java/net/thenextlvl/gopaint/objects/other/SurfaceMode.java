@@ -18,6 +18,8 @@
  */
 package net.thenextlvl.gopaint.objects.other;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.utils.Surface;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -26,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Optional;
 
+@Getter
+@RequiredArgsConstructor
 public enum SurfaceMode {
     /**
      * This enumeration represents a more intuitive check.
@@ -47,14 +51,6 @@ public enum SurfaceMode {
     RELATIVE("Relative");
 
     private final @NotNull String name;
-
-    SurfaceMode(@NotNull String name) {
-        this.name = name;
-    }
-
-    public @NotNull String getName() {
-        return name;
-    }
 
     public static @NotNull Optional<SurfaceMode> byName(@NotNull String name) {
         return Arrays.stream(values())

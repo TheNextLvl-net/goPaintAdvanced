@@ -19,6 +19,7 @@
 package net.thenextlvl.gopaint.listeners;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.brush.BrushSettings;
@@ -40,13 +41,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public final class InteractListener implements Listener {
-
     private final GoPaintPlugin plugin;
-
-    public InteractListener(GoPaintPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClick(PlayerInteractEvent event) {
@@ -120,5 +117,4 @@ public final class InteractListener implements Listener {
             plugin.bundle().sendMessage(player, "brush.disabled");
         }
     }
-
 }

@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.32")
     // Paper / Spigot
     compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
     // Fawe / WorldEdit
@@ -36,6 +37,7 @@ dependencies {
     implementation("org.incendo:cloud-paper:2.0.0-beta.8")
     implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
     annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
 paper {

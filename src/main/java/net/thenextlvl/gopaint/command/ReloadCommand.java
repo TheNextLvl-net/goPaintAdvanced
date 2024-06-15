@@ -18,18 +18,15 @@
  */
 package net.thenextlvl.gopaint.command;
 
+import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+@RequiredArgsConstructor
 public final class ReloadCommand {
-
     private final GoPaintPlugin plugin;
-
-    public ReloadCommand(final GoPaintPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Command("bgp|gp reload")
     @Permission(GoPaintPlugin.RELOAD_PERMISSION)
