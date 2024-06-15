@@ -1,2 +1,1 @@
-rootProject.name = "BetterGoPaint"
-includeBuild("build-logic")
+rootProject.name = "goPaintAdvanced"

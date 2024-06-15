@@ -19,7 +19,6 @@ cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "clou
 core-internationalization = { group = "net.thenextlvl.core", name = "i18n", version.ref = "core-i18n" }
 
 [plugins]
-spotless = { id = "com.diffplug.spotless", version = "6.18.0" }
 minotaur = { id = "com.modrinth.minotaur", version = "2.+" }
 shadow = { id = "io.github.goooler.shadow", version = "8.1.7" }
 hangar-publish-plugin = { id = "io.papermc.hangar-publish-plugin", version = "0.1.2" }
