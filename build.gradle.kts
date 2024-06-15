@@ -80,7 +80,6 @@ java {
 
 tasks.shadowJar {
     dependencies {
-        relocate("org.incendo.serverlib", "${rootProject.group}.serverlib")
         relocate("org.bstats", "${rootProject.group}.metrics")
     }
 }
@@ -102,6 +101,11 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
         platforms.register(Platforms.PAPER) {
             jar.set(tasks.shadowJar.flatMap { it.archiveFile })
             platformVersions.set(listOf("1.20.6"))
+            dependencies {
+                url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
+                    required.set(true)
+                }
+            }
         }
     }
 }
