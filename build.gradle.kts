@@ -27,9 +27,6 @@ dependencies {
     // Fawe / WorldEdit
     implementation(platform("com.intellectualsites.bom:bom-newest:1.27"))
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
-    // Utils
-    implementation("dev.notmyfault.serverlib:ServerLib")
-    implementation("io.papermc:paperlib")
     // Stats
     implementation("org.bstats:bstats-bukkit:3.0.2")
     // Internationalization
@@ -82,7 +79,6 @@ tasks.shadowJar {
     dependencies {
         relocate("org.incendo.serverlib", "${rootProject.group}.serverlib")
         relocate("org.bstats", "${rootProject.group}.metrics")
-        relocate("io.papermc.lib", "${rootProject.group}.paperlib")
     }
 }
 
