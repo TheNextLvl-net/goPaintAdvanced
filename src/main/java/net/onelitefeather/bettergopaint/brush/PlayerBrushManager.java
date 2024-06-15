@@ -19,6 +19,7 @@
 package net.onelitefeather.bettergopaint.brush;
 
 import com.google.common.collect.ImmutableList;
+import core.i18n.file.ComponentBundle;
 import net.onelitefeather.bettergopaint.objects.brush.AngleBrush;
 import net.onelitefeather.bettergopaint.objects.brush.Brush;
 import net.onelitefeather.bettergopaint.objects.brush.BucketBrush;
@@ -47,19 +48,23 @@ import java.util.stream.Collectors;
 public class PlayerBrushManager {
 
     private final @NotNull HashMap<UUID, PlayerBrush> playerBrushes = new HashMap<>();
-    private final @NotNull List<Brush> brushes = ImmutableList.of(
-            new SphereBrush(),
-            new SprayBrush(),
-            new SplatterBrush(),
-            new DiscBrush(),
-            new BucketBrush(),
-            new AngleBrush(),
-            new OverlayBrush(),
-            new UnderlayBrush(),
-            new FractureBrush(),
-            new GradientBrush(),
-            new PaintBrush()
-    );
+    private final @NotNull List<Brush> brushes;
+
+    public PlayerBrushManager(ComponentBundle bundle) {
+        brushes = ImmutableList.of(
+                new SphereBrush(),
+                new SprayBrush(),
+                new SplatterBrush(),
+                new DiscBrush(),
+                new BucketBrush(),
+                new AngleBrush(),
+                new OverlayBrush(),
+                new UnderlayBrush(),
+                new FractureBrush(),
+                new GradientBrush(),
+                new PaintBrush(bundle)
+        );
+    }
 
     /**
      * Retrieves the brush for the given player.
