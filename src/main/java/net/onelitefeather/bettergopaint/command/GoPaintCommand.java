@@ -18,8 +18,8 @@
  */
 package net.onelitefeather.bettergopaint.command;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.onelitefeather.bettergopaint.BetterGoPaint;
-import net.onelitefeather.bettergopaint.objects.other.Settings;
 import net.onelitefeather.bettergopaint.brush.PlayerBrush;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,64 +49,65 @@ public class GoPaintCommand extends Command implements PluginIdentifiableCommand
             return false;
         }
         PlayerBrush pb = plugin.getBrushManager().getBrush(p);
-        String prefix = Settings.settings().GENERIC.PREFIX;
         if (!p.hasPermission(BetterGoPaint.USE_PERMISSION)) {
-            p.sendRichMessage(prefix + "<red>You are lacking the permission bettergopaint.use");
+            plugin.bundle().sendMessage(p, "command.gopaint.permission");
             return true;
         }
         if (args.length == 0) {
             if (p.hasPermission(BetterGoPaint.ADMIN_PERMISSION)) {
-                p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info<gray>|<red>reload");
+                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
                 return true;
             }
-            p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info<gray>");
+            plugin.bundle().sendMessage(p, "command.gopaint.usage");
             return true;
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("size")) {
-                p.sendRichMessage(prefix + "<red>/gp size [number]");
+                plugin.bundle().sendMessage(p, "command.gopaint.usage.size");
                 return true;
             } else if (args[0].equalsIgnoreCase("toggle")) {
                 if (pb.enabled()) {
                     pb.toggle();
-                    p.sendRichMessage(prefix + "<red>Disabled brush");
+                    plugin.bundle().sendMessage(p, "command.gopaint.brush.disabled");
                 } else {
                     pb.toggle();
-                    p.sendRichMessage(prefix + "<green>Enabled brush");
+                    plugin.bundle().sendMessage(p, "command.gopaint.brush.enabled");
                 }
                 return true;
             } else if ((args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("r")) && p.hasPermission(
                     BetterGoPaint.ADMIN_PERMISSION)) {
                 plugin.reloadConfig();
-                p.sendRichMessage(prefix + "<green>Reloaded");
+                plugin.bundle().sendMessage(p, "command.gopaint.reloaded");
                 return true;
             } else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
-                p.sendRichMessage(prefix + "<aqua>Created by: <gold>TheMeinerLP");
-                p.sendRichMessage(prefix + "<aqua>Links: <gold><click:open_url:https://twitter.com/themeinerlp'><u>Twitter</u></click>");
+                plugin.bundle().sendMessage(p, "command.gopaint.info.creator");
+                plugin.bundle().sendMessage(p, "command.gopaint.info.link");
                 return true;
             }
             if (p.hasPermission(BetterGoPaint.ADMIN_PERMISSION)) {
-                p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info<gray>|<red>reload");
+                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
                 return true;
             }
-            p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info");
+            plugin.bundle().sendMessage(p, "command.gopaint.usage");
             return true;
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("size") || args[0].equalsIgnoreCase("s")) {
                 try {
                     int sizeAmount = Integer.parseInt(args[1]);
                     pb.setSize(sizeAmount);
-                    p.sendRichMessage(prefix + "<gold>Size set to: <yellow>" + pb.size());
+                    plugin.bundle().sendMessage(p, "command.gopaint.brush.size",
+                            Placeholder.parsed("size", String.valueOf(pb.size()))
+                    );
                     return true;
                 } catch (Exception e) {
-                    p.sendRichMessage(prefix + "<red>/gb size [number]");
+                    plugin.bundle().sendMessage(p, "command.gopaint.usage.size");
                     return true;
                 }
             }
             if (p.hasPermission(BetterGoPaint.ADMIN_PERMISSION)) {
-                p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info<gray>|<red>reload");
+                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
                 return true;
             }
-            p.sendRichMessage(prefix + "<red>/gp size<gray>|<red>toggle<gray>|<red>info<gray>");
+            plugin.bundle().sendMessage(p, "command.gopaint.usage");
             return true;
         }
         return false;

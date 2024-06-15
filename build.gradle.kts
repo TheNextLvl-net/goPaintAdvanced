@@ -46,6 +46,7 @@ val supportedMinecraftVersions = listOf(
 
 repositories {
     mavenCentral()
+    maven("https://repo.thenextlvl.net/releases")
     maven("https://papermc.io/repo/repository/maven-public/")
 }
 
@@ -60,6 +61,8 @@ dependencies {
     implementation(libs.paperlib)
     // Stats
     implementation(libs.bstats)
+    // Internationalization
+    implementation(libs.core.internationalization)
     // Commands
     implementation(libs.cloud.annotations)
     implementation(libs.cloud.minecraft.extras)

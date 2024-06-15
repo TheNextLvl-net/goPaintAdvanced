@@ -117,9 +117,7 @@ public final class InteractListener implements Listener {
                     () -> brushSettings.brush().paint(location, player, brushSettings), false, true
             );
         } else {
-            player.sendRichMessage(
-                    Settings.settings().GENERIC.PREFIX + "<red>Your brush is disabled, left click to enable the brush."
-            );
+            plugin.bundle().sendMessage(player, "brush.disabled");
         }
     }
 

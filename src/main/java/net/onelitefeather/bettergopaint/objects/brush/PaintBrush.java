@@ -18,8 +18,9 @@
  */
 package net.onelitefeather.bettergopaint.objects.brush;
 
+import core.i18n.file.ComponentBundle;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.onelitefeather.bettergopaint.brush.BrushSettings;
-import net.onelitefeather.bettergopaint.objects.other.Settings;
 import net.onelitefeather.bettergopaint.utils.Height;
 import net.onelitefeather.bettergopaint.utils.Sphere;
 import net.onelitefeather.bettergopaint.utils.curve.BezierSpline;
@@ -41,8 +42,11 @@ public class PaintBrush extends Brush {
     private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=";
     private static final @NotNull String NAME = "Paint Brush";
 
-    public PaintBrush() {
+    private final @NotNull ComponentBundle bundle;
+
+    public PaintBrush(@NotNull ComponentBundle bundle) {
         super(NAME, DESCRIPTION, HEAD);
+        this.bundle = bundle;
     }
 
     private static final HashMap<UUID, List<Location>> selectedPoints = new HashMap<>();
@@ -53,13 +57,16 @@ public class PaintBrush extends Brush {
             @NotNull Player player,
             @NotNull BrushSettings brushSettings
     ) {
-        String prefix = Settings.settings().GENERIC.PREFIX;
-
         List<Location> locations = selectedPoints.computeIfAbsent(player.getUniqueId(), ignored -> new ArrayList<>());
         locations.add(target);
 
         if (!player.isSneaking()) {
-            player.sendRichMessage(prefix + " Paint brush point #" + locations.size() + " set.");
+            bundle.sendMessage(player, "brush.paint.point.set",
+                    Placeholder.parsed("x", String.valueOf(target.getBlockX())),
+                    Placeholder.parsed("y", String.valueOf(target.getBlockY())),
+                    Placeholder.parsed("z", String.valueOf(target.getBlockZ())),
+                    Placeholder.parsed("point", String.valueOf(locations.size()))
+            );
             return;
         }
 

@@ -19,7 +19,10 @@
 package net.onelitefeather.bettergopaint;
 
 import com.fastasyncworldedit.core.Fawe;
+import core.i18n.file.ComponentBundle;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.onelitefeather.bettergopaint.brush.PlayerBrushManager;
 import net.onelitefeather.bettergopaint.command.GoPaintCommand;
 import net.onelitefeather.bettergopaint.command.ReloadCommand;
@@ -32,6 +35,7 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -56,7 +61,17 @@ public class BetterGoPaint extends JavaPlugin implements Listener {
     public static final @NotNull String RELOAD_PERMISSION = "bettergopaint.command.admin.reload";
     public static final @NotNull String WORLD_BYPASS_PERMISSION = "bettergopaint.world.bypass";
 
-    private final @NotNull PlayerBrushManager brushManager = new PlayerBrushManager();
+    private final @NotNull File translations = new File(getDataFolder(), "translations");
+    private final @NotNull ComponentBundle bundle = new ComponentBundle(translations, audience ->
+            audience instanceof Player player ? player.locale() : Locale.US)
+            .register("messages", Locale.US)
+            .register("messages_german", Locale.GERMANY)
+            .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
+                    TagResolver.standard(),
+                    Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
+            )).build());
+
+    private final @NotNull PlayerBrushManager brushManager = new PlayerBrushManager(bundle);
     private final @NotNull Metrics metrics = new Metrics(this, 18734);
 
     @Override
@@ -149,6 +164,10 @@ public class BetterGoPaint extends JavaPlugin implements Listener {
 
     public @NotNull PlayerBrushManager getBrushManager() {
         return brushManager;
+    }
+
+    public ComponentBundle bundle() {
+        return bundle;
     }
 
 }
