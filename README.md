@@ -1,4 +1,4 @@
-![](https://i.imgur.com/ulEwPm9.jpg)
+![](https://github.com/NonSwag/goPaintAdvanced/blob/master/gopaint-banner.png)
 
 ---
 
