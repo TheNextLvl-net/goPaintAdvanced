@@ -6,7 +6,6 @@ plugins {
     id("java")
     id("java-library")
 
-    alias(libs.plugins.minotaur)
     alias(libs.plugins.shadow)
     alias(libs.plugins.hangar.publish.plugin)
     alias(libs.plugins.plugin.yml.paper)
