@@ -4,6 +4,7 @@ intellectualsites = "1.27"
 bstats = "3.0.2"
 cloud-minecraft = "2.0.0-beta.8"
 cloud-annotations = "2.0.0-rc.2"
+core-i18n = "1.0.18"
 
 [libraries]
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "minecraft" }
@@ -15,6 +16,7 @@ bstats = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" 
 cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "cloud-annotations" }
 cloud-minecraft-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft" }
 cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloud-minecraft" }
+core-internationalization = { group = "net.thenextlvl.core", name = "i18n", version.ref = "core-i18n" }
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version = "6.18.0" }
