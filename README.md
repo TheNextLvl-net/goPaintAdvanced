@@ -15,6 +15,7 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 
 ### Done
 
+- Replace commands with brigadier
 - Improved configuration file
 - Added internationalization
 - Dropped XMaterial Support
@@ -26,7 +27,6 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 ### To-Do
 
 - Better FAWE integration
-- Replace commands with brigadier
 
 ## Links
 
