@@ -1,44 +1,41 @@
-<p>
-    <img src="https://i.imgur.com/ulEwPm9.jpg">
-</p>
+![](https://i.imgur.com/ulEwPm9.jpg)
 
 ---
 
-BetterGoPaint is a plugin that's designed to simplify painting inside of Minecraft.
-This plugin is a [fork](https://github.com/Arcaniax-Development/goPaint_1.14) of original one, but with many improvements and 
-fixes.  
-
+goPaint is a plugin that's designed to simplify painting inside of Minecraft.
+This plugin is a fork of the [original](https://github.com/Arcaniax-Development/goPaint_1.14) one,
+but with many improvements and fixes.
+We aim to be always up-to-date and use new technology instead of hanging on to old and dead code.
 
 ## Major Changes
+
 ### Done
+
 - Improved configuration file
-- Better XMaterial Support
-- Modrinth auto deployment
+- Added internationalization
+- Dropped XMaterial Support
 - Hangar auto deployment
 - New CI Development builds
-- New download link
 - Better build gradle
-- **Drop 1.13-1.19.4 support. Please use the original plugin!**
+- **Dropped legacy support. Update or use the original plugin!**
 
 ### To-Do
-- Fix performance impacts
-- Memory leaks
+
 - Better FAWE integration
-- Reduce duplicated code
-- Stability
-- Replace default commands with cloud framework
+- Replace commands with brigadier
 
 ## Links
 
-* [Download](https://hangar.papermc.io/TheMeinerLP/BetterGoPaint)
-  * [Mirror](https://modrinth.com/plugin/bettergopaint)
-* [Development Builds](https://hangar.papermc.io/TheMeinerLP/BetterGoPaint)
-  * [Mirror](https://modrinth.com/plugin/bettergopaint)
-* [Discord](https://discord.onelitefeather.net)
-* [Issues](https://github.com/TheMeinerLP/BetterGoPaint/issues)
+* [Download](https://hangar.papermc.io/TheNextLvl/goPaintAdvanced)
+* [Discord](https://thenextlvl.net/discord)
+* [Issues](https://github.com/TheNextLvl-net/goPaintAdvanced/issues)
 
 # Building
-Gradle is the recommended way to build the project. Use `./gradlew shadowJar` in the main project directory to build the project.
+
+Gradle is the recommended way to build the project. Use `./gradlew shadowJar` in the main project directory to build the
+project.
 
 ## Suggestions
-Suggestions are welcome! We have a separate issue form for suggestions, that can be found [here](https://github.com/TheMeinerLP/BetterGoPaint/issues).
+
+Suggestions are welcome! We have a separate issue form for suggestions, that can be
+found [here](https://github.com/TheNextLvl-net/goPaintAdvanced/issues).

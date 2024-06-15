@@ -6,9 +6,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this feature request for BetterGoPaint! Fill out the following form to your best 
-          ability to help us understand your feature request and greately improve the change of it getting added.
-        For anything else than a feature request, use: [our Discord server](https://discord.onelitefeather.net).
+        Thanks for taking the time to fill out this feature request for goPaintAdvanced! Fill out the following form to your best 
+          ability to help us understand your feature request and greatly improve the change of it getting added.
+        For anything else than a feature request, use: [our Discord server](https://thenextlvl.net/discord).
 
   - type: textarea
     attributes:
