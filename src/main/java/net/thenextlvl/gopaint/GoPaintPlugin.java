@@ -103,11 +103,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
         }
 
-        //noinspection UnnecessaryUnicodeEscape
-        getComponentLogger().info(MiniMessage.miniMessage().deserialize(
-                "<white>Made with <red>\u2665</red> <white>in <gradient:black:red:gold>Germany</gradient>"
-        ));
-
         registerListeners();
         registerCommands();
     }
