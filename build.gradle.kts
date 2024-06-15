@@ -6,10 +6,10 @@ plugins {
     id("java")
     id("java-library")
 
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.hangar.publish.plugin)
-    alias(libs.plugins.plugin.yml.paper)
-    alias(libs.plugins.run.paper)
+    id("io.github.goooler.shadow") version "8.1.7"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 group = "net.thenextlvl.gopaint"
@@ -23,22 +23,22 @@ repositories {
 
 dependencies {
     // Paper / Spigot
-    compileOnly(libs.paper)
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
     // Fawe / WorldEdit
-    implementation(platform(libs.fawe.bom))
-    compileOnlyApi(libs.fawe.bukkit)
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.27"))
+    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
     // Utils
-    implementation(libs.serverlib)
-    implementation(libs.paperlib)
+    implementation("dev.notmyfault.serverlib:ServerLib")
+    implementation("io.papermc:paperlib")
     // Stats
-    implementation(libs.bstats)
+    implementation("org.bstats:bstats-bukkit:3.0.2")
     // Internationalization
-    implementation(libs.core.internationalization)
+    implementation("net.thenextlvl.core:i18n:1.0.18")
     // Commands
-    implementation(libs.cloud.annotations)
-    implementation(libs.cloud.minecraft.extras)
-    implementation(libs.cloud.paper)
-    annotationProcessor(libs.cloud.annotations)
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.8")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
+    implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
+    annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
 }
 
 paper {
