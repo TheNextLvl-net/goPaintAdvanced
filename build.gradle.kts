@@ -33,11 +33,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
     // Internationalization
     implementation("net.thenextlvl.core:i18n:1.0.18")
-    // Commands
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.8")
-    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
-    implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
-    annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
+
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
@@ -58,17 +54,14 @@ paper {
     provides = listOf("goPaint")
 
     permissions {
-        register("gopaint.command.admin.reload") {
-            default = BukkitPluginDescription.Permission.Default.OP
-        }
         register("gopaint.use") {
             default = BukkitPluginDescription.Permission.Default.OP
         }
         register("gopaint.admin") {
-            default = BukkitPluginDescription.Permission.Default.FALSE
+            default = BukkitPluginDescription.Permission.Default.OP
         }
         register("gopaint.world.bypass") {
-            default = BukkitPluginDescription.Permission.Default.FALSE
+            default = BukkitPluginDescription.Permission.Default.OP
         }
     }
 }

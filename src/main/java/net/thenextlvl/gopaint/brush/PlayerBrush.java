@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
  * The PlayerBrush class represents the brush settings of a player.
  */
 @Getter
-@Setter
 @Accessors(fluent = true)
 public final class PlayerBrush implements BrushSettings {
 
@@ -67,7 +66,7 @@ public final class PlayerBrush implements BrushSettings {
     private Axis axis;
     private SurfaceMode surfaceMode;
 
-    private Brush brush;
+    private @Setter Brush brush;
     private Material mask;
     private final List<Material> blocks = new ArrayList<>();
 
@@ -206,9 +205,10 @@ public final class PlayerBrush implements BrushSettings {
         updateInventory();
     }
 
-    public void toggle() {
+    public boolean toggle() {
         enabled = !enabled;
         updateInventory();
+        return enabled;
     }
 
     public void increaseChance() {

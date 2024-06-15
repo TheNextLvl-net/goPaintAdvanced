@@ -1,111 +1,63 @@
-/*
- * goPaint is designed to simplify painting inside of Minecraft.
- * Copyright (C) Arcaniax-Development
- * Copyright (C) Arcaniax team and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 package net.thenextlvl.gopaint.command;
 
-import lombok.Getter;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.brush.PlayerBrush;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-@Getter
-public class GoPaintCommand extends Command implements PluginIdentifiableCommand {
+@RequiredArgsConstructor
+@SuppressWarnings("UnstableApiUsage")
+public class GoPaintCommand {
     private final GoPaintPlugin plugin;
 
-    public GoPaintCommand(GoPaintPlugin main) {
-        super("gopaint", "goPaint command", "/gp size|toggle|info|reload", List.of("gp"));
-        plugin = main;
+    public void register() {
+        var command = Commands.literal("gopaint")
+                .requires(stack -> stack.getSender().hasPermission(GoPaintPlugin.USE_PERMISSION))
+                .then(Commands.literal("size")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .then(Commands.argument("size", IntegerArgumentType.integer(1, 100))
+                                .executes(this::size)))
+                .then(Commands.literal("toggle")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::toggle))
+                .then(Commands.literal("reload")
+                        .requires(stack -> stack.getSender().hasPermission(GoPaintPlugin.ADMIN_PERMISSION))
+                        .executes(this::reload))
+                .build();
+        plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
+                event.registrar().register(command, List.of("gp"))));
     }
 
-    @Override
-    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if (!(sender instanceof final Player p)) {
-            return false;
-        }
-        PlayerBrush pb = plugin.brushManager().getBrush(p);
-        if (!p.hasPermission(GoPaintPlugin.USE_PERMISSION)) {
-            plugin.bundle().sendMessage(p, "command.gopaint.permission");
-            return true;
-        }
-        if (args.length == 0) {
-            if (p.hasPermission(GoPaintPlugin.ADMIN_PERMISSION)) {
-                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
-                return true;
-            }
-            plugin.bundle().sendMessage(p, "command.gopaint.usage");
-            return true;
-        } else if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("size")) {
-                plugin.bundle().sendMessage(p, "command.gopaint.usage.size");
-                return true;
-            } else if (args[0].equalsIgnoreCase("toggle")) {
-                if (pb.enabled()) {
-                    pb.toggle();
-                    plugin.bundle().sendMessage(p, "command.gopaint.brush.disabled");
-                } else {
-                    pb.toggle();
-                    plugin.bundle().sendMessage(p, "command.gopaint.brush.enabled");
-                }
-                return true;
-            } else if ((args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("r")) && p.hasPermission(
-                    GoPaintPlugin.ADMIN_PERMISSION)) {
-                plugin.reloadConfig();
-                plugin.bundle().sendMessage(p, "command.gopaint.reloaded");
-                return true;
-            } else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("i")) {
-                plugin.bundle().sendMessage(p, "command.gopaint.info.creator");
-                plugin.bundle().sendMessage(p, "command.gopaint.info.link");
-                return true;
-            }
-            if (p.hasPermission(GoPaintPlugin.ADMIN_PERMISSION)) {
-                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
-                return true;
-            }
-            plugin.bundle().sendMessage(p, "command.gopaint.usage");
-            return true;
-        } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("size") || args[0].equalsIgnoreCase("s")) {
-                try {
-                    int sizeAmount = Integer.parseInt(args[1]);
-                    pb.setSize(sizeAmount);
-                    plugin.bundle().sendMessage(p, "command.gopaint.brush.size",
-                            Placeholder.parsed("size", String.valueOf(pb.size()))
-                    );
-                    return true;
-                } catch (Exception e) {
-                    plugin.bundle().sendMessage(p, "command.gopaint.usage.size");
-                    return true;
-                }
-            }
-            if (p.hasPermission(GoPaintPlugin.ADMIN_PERMISSION)) {
-                plugin.bundle().sendMessage(p, "command.gopaint.usage.admin");
-                return true;
-            }
-            plugin.bundle().sendMessage(p, "command.gopaint.usage");
-            return true;
-        }
-        return false;
+    private int size(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        var brush = plugin.brushManager().getBrush(player);
+        brush.setSize(context.getArgument("size", int.class));
+        plugin.bundle().sendMessage(player, "command.gopaint.brush.size",
+                Placeholder.parsed("size", String.valueOf(brush.size())));
+        return Command.SINGLE_SUCCESS;
     }
 
+    private int toggle(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        var brush = plugin.brushManager().getBrush(player);
+        var message = brush.toggle() ? "command.gopaint.brush.enabled"
+                : "command.gopaint.brush.disabled";
+        plugin.bundle().sendMessage(player, message);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int reload(CommandContext<CommandSourceStack> context) {
+        var sender = context.getSource().getSender();
+        plugin.reloadConfig();
+        plugin.bundle().sendMessage(sender, "command.gopaint.reloaded");
+        return Command.SINGLE_SUCCESS;
+    }
 }
