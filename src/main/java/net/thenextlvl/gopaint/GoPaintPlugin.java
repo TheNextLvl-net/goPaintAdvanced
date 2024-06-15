@@ -43,7 +43,6 @@ import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.serverlib.ServerLib;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,9 +83,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // Check if we are in a safe environment
-        ServerLib.checkUnsafeForks();
-
         // disable if goPaint and BetterGoPaint are installed simultaneously
         if (hasOriginalGoPaint()) {
             getComponentLogger().error("BetterGoPaint is a replacement for goPaint. Please use one instead of both");
