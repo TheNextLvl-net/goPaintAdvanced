@@ -27,6 +27,8 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 ### To-Do
 
 - Better FAWE integration
+- Fluid mode setting
+- Improve Bézier spline
 
 ## Links
 
