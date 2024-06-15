@@ -18,7 +18,6 @@
  */
 package net.thenextlvl.gopaint;
 
-import com.fastasyncworldedit.core.Fawe;
 import core.i18n.file.ComponentBundle;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -33,7 +32,6 @@ import net.thenextlvl.gopaint.listeners.InteractListener;
 import net.thenextlvl.gopaint.listeners.InventoryListener;
 import net.thenextlvl.gopaint.objects.other.Settings;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -49,7 +47,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.logging.Level;
 
 @Getter
@@ -75,14 +72,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
 
     private final PlayerBrushManager brushManager = new PlayerBrushManager(bundle);
     private final Metrics metrics = new Metrics(this, 22279);
-
-    @Override
-    public void onLoad() {
-        metrics.addCustomChart(new SimplePie(
-                "faweVersion",
-                () -> Objects.requireNonNull(Fawe.instance().getVersion()).toString()
-        ));
-    }
 
     @Override
     public void onEnable() {
