@@ -79,8 +79,6 @@ public final class Settings extends Config {
         public int DEFAULT_FALLOFF_STRENGTH = 50;
         @Comment("Default paint mixing strength")
         public int DEFAULT_MIXING_STRENGTH = 50;
-        @Comment("Prefix of the plugin")
-        public String PREFIX = "<aqua>BetterGoPaint > </aqua>";
         @Comment("World there are disabled to used brushes")
         public List<String> DISABLED_WORLDS = new ArrayList<>();
 
