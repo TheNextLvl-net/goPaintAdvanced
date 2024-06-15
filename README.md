@@ -8,7 +8,7 @@ but with many improvements and fixes.
 We aim to be always up-to-date and use new technology instead of hanging on to old and dead code.
 
 > [!IMPORTANT]
-> goPaintAdvanced only supports the latest version of Paper (1.20.6)
+> goPaintAdvanced only supports the latest version of Paper (1.20.6)<br>
 > Therefor at least Java version 21 is required
 
 ## Major Changes
