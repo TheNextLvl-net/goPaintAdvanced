@@ -205,7 +205,7 @@ public final class PlayerBrush implements BrushSettings {
         updateInventory();
     }
 
-    public void toggle() {
+    public boolean toggle() {
         enabled = !enabled;
         updateInventory();
         return enabled;
