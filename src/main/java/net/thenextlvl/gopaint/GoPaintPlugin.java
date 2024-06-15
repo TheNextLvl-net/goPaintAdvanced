@@ -37,7 +37,6 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
@@ -79,7 +78,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
         if (hasOriginalGoPaint()) {
             getComponentLogger().error("goPaintAdvanced is a replacement for goPaint. Please use one instead of both");
             getComponentLogger().error("This plugin is now disabling to prevent future errors");
-            getServer().getPluginManager().disablePlugin(this);
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -89,7 +88,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
         if (!brush.isItem()) {
             getComponentLogger().error("{} is not a valid default brush, it has to be an item", brush.name());
             getComponentLogger().error("For more information visit {}", PAPER_DOCS);
-            getServer().getPluginManager().disablePlugin(this);
+            Bukkit.getPluginManager().disablePlugin(this);
         }
 
         registerListeners();
@@ -117,14 +116,13 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     }
 
     private void registerListeners() {
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new InventoryListener(brushManager()), this);
-        pm.registerEvents(new InteractListener(this), this);
-        pm.registerEvents(new ConnectListener(brushManager()), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(brushManager()), this);
+        Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ConnectListener(brushManager()), this);
     }
 
     private boolean hasOriginalGoPaint() {
-        return getServer().getPluginManager().getPlugin("goPaint") != this;
+        return Bukkit.getPluginManager().getPlugin("goPaint") != this;
     }
 
     private @Nullable AnnotationParser<CommandSender> enableCommandSystem() {
