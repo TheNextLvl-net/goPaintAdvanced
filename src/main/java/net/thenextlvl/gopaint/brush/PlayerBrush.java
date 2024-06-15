@@ -18,6 +18,9 @@
  */
 package net.thenextlvl.gopaint.brush;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -52,6 +55,9 @@ import java.util.stream.Collectors;
 /**
  * The PlayerBrush class represents the brush settings of a player.
  */
+@Getter
+@Setter
+@Accessors(fluent = true)
 public final class PlayerBrush implements BrushSettings {
 
     private final @NotNull PlayerBrushManager brushManager;
@@ -99,89 +105,6 @@ public final class PlayerBrush implements BrushSettings {
 
     public @NotNull Material randomBlock() {
         return blocks().get(random.nextInt(blocks().size()));
-    }
-
-    @Override
-    public @NotNull Brush brush() {
-        return brush;
-    }
-
-    public void setBrush(@NotNull Brush brush) {
-        this.brush = brush;
-    }
-
-    @Override
-    public @NotNull Random random() {
-        return random;
-    }
-
-    @Override
-    public int falloffStrength() {
-        return falloffStrength;
-    }
-
-    @Override
-    public int mixingStrength() {
-        return mixingStrength;
-    }
-
-    @Override
-    public double angleHeightDifference() {
-        return this.angleHeightDifference;
-    }
-
-    @Override
-    public int angleDistance() {
-        return this.angleDistance;
-    }
-
-    @Override
-    public int fractureDistance() {
-        return this.fractureDistance;
-    }
-
-    @Override
-    public @NotNull Material mask() {
-        return mask;
-    }
-
-    @Override
-    public @NotNull List<Material> blocks() {
-        return blocks;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    public boolean enabled() {
-        return enabled;
-    }
-
-    @Override
-    public boolean maskEnabled() {
-        return maskEnabled;
-    }
-
-    @Override
-    public int chance() {
-        return chance;
-    }
-
-    @Override
-    public SurfaceMode surfaceMode() {
-        return surfaceMode;
-    }
-
-    @Override
-    public int thickness() {
-        return thickness;
-    }
-
-    @Override
-    public @NotNull Axis axis() {
-        return axis;
     }
 
     public void updateInventory() {

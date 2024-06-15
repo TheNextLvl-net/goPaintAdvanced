@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.listeners;
 
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.brush.PlayerBrush;
 import net.thenextlvl.gopaint.brush.PlayerBrushManager;
@@ -43,13 +44,9 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
+@RequiredArgsConstructor
 public final class InventoryListener implements Listener {
-
     private final PlayerBrushManager brushManager;
-
-    public InventoryListener(PlayerBrushManager brushManager) {
-        this.brushManager = brushManager;
-    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void menuClick(InventoryClickEvent event) {
@@ -221,10 +218,9 @@ public final class InventoryListener implements Listener {
         //noinspection deprecation
         String name = itemMeta.getDisplayName().replace("§6", "");
         brushManager.getBrushHandler(name).ifPresent(brush -> {
-            playerBrush.setBrush(brush);
+            playerBrush.brush(brush);
             playerBrush.updateInventory();
             player.openInventory(playerBrush.getInventory());
         });
     }
-
 }

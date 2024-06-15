@@ -25,6 +25,8 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.brush.BrushSettings;
 import net.thenextlvl.gopaint.utils.Surface;
 import org.bukkit.Location;
@@ -35,42 +37,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+@Getter
+@RequiredArgsConstructor
 public abstract class Brush {
 
     private final @NotNull String name, description, head;
-
-    protected Brush(@NotNull String name, @NotNull String description, @NotNull String head) {
-        this.description = description;
-        this.name = name;
-        this.head = head;
-    }
-
-    /**
-     * Retrieves the description of the brush.
-     *
-     * @return The description of the brush.
-     */
-    public @NotNull String getDescription() {
-        return description;
-    }
-
-    /**
-     * Retrieves the head of the brush.
-     *
-     * @return The head of the brush.
-     */
-    public @NotNull String getHead() {
-        return head;
-    }
-
-    /**
-     * Retrieves the name of the brush.
-     *
-     * @return The name of the brush.
-     */
-    public @NotNull String getName() {
-        return name;
-    }
 
     /**
      * Performs a painting action using the provided location, player, and brush settings.

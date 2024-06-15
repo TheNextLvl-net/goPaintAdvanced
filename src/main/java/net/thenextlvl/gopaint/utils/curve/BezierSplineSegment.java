@@ -18,12 +18,16 @@
  */
 package net.thenextlvl.gopaint.utils.curve;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+@Getter
+@Setter
 public class BezierSplineSegment {
 
     private final double[] lengths = new double[20];
@@ -39,10 +43,6 @@ public class BezierSplineSegment {
         p1 = new Location(p0.getWorld(), 0, 0, 0);
         p2 = new Location(p0.getWorld(), 0, 0, 0);
         r = new Location(p0.getWorld(), 0, 0, 0);
-    }
-
-    public double getCurveLength() {
-        return curveLength;
     }
 
     public void setX(double xflat2) {
@@ -86,20 +86,20 @@ public class BezierSplineSegment {
         assert (t >= 0);
         assert (t <= 1);
         return 3 * (1 - t) * (1 - t) * (p1.getX() - p0.getX()) + 6 * (1 - t) * t
-                * (p2.getX() - p1.getX()) + 3 * t * t * (p3.getX() - p2.getX());
+                                                                 * (p2.getX() - p1.getX()) + 3 * t * t * (p3.getX() - p2.getX());
     }
 
     public double getdYdT(double t) {
         assert (t <= 1);
         return 3 * (1 - t) * (1 - t) * (p1.getY() - p0.getY()) + 6 * (1 - t) * t
-                * (p2.getY() - p1.getY()) + 3 * t * t * (p3.getY() - p2.getY());
+                                                                 * (p2.getY() - p1.getY()) + 3 * t * t * (p3.getY() - p2.getY());
     }
 
     public double getdZdT(double t) {
         assert (t >= 0);
         assert (t <= 1);
         return 3 * (1 - t) * (1 - t) * (p1.getZ() - p0.getZ()) + 6 * (1 - t) * t
-                * (p2.getZ() - p1.getZ()) + 3 * t * t * (p3.getZ() - p2.getZ());
+                                                                 * (p2.getZ() - p1.getZ()) + 3 * t * t * (p3.getZ() - p2.getZ());
     }
 
     public double getdTdS(double t) {
@@ -137,7 +137,7 @@ public class BezierSplineSegment {
         if (d == curveLength) {
             return 1;
         }
-        int i = 0;
+        int i;
         for (i = 0; i < 20; i++) {
             if (d == lengths[i]) {
                 return i / 19d;
@@ -152,83 +152,19 @@ public class BezierSplineSegment {
     public Location getPoint(double f) {
         Location result = new Location(p0.getWorld(), 0, 0, 0);
         result.setX(Objects.requireNonNullElseGet(xFlat, () -> (Math.pow(1 - f, 3) * p0.getX())
-                + (3 * Math.pow(1 - f, 2) * f * p1.getX())
-                + (3 * (1 - f) * f * f * p2.getX()) + (Math.pow(f, 3) * p3.getX())));
+                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getX())
+                                                               + (3 * (1 - f) * f * f * p2.getX()) + (Math.pow(f, 3) * p3.getX())));
         result.setY(Objects.requireNonNullElseGet(yFlat, () -> (Math.pow(1 - f, 3) * p0.getY())
-                + (3 * Math.pow(1 - f, 2) * f * p1.getY())
-                + (3 * (1 - f) * f * f * p2.getY()) + (Math.pow(f, 3) * p3.getY())));
+                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getY())
+                                                               + (3 * (1 - f) * f * f * p2.getY()) + (Math.pow(f, 3) * p3.getY())));
         result.setZ(Objects.requireNonNullElseGet(zFlat, () -> (Math.pow(1 - f, 3) * p0.getZ())
-                + (3 * Math.pow(1 - f, 2) * f * p1.getZ())
-                + (3 * (1 - f) * f * f * p2.getZ()) + (Math.pow(f, 3) * p3.getZ())));
+                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getZ())
+                                                               + (3 * (1 - f) * f * f * p2.getZ()) + (Math.pow(f, 3) * p3.getZ())));
         return result;
     }
 
     public double getLinearLength() {
         return p0.distance(p3);
-    }
-
-    public @NotNull Location getP0() {
-        return p0;
-    }
-
-    public void setP0(@NotNull Location p0) {
-        this.p0 = p0;
-    }
-
-    public @NotNull Location getP1() {
-        return p1;
-    }
-
-    public void setP1(@NotNull Location p1) {
-        this.p1 = p1;
-    }
-
-    public @NotNull Location getP2() {
-        return p2;
-    }
-
-    public void setP2(@NotNull Location p2) {
-        this.p2 = p2;
-    }
-
-    public @NotNull Location getP3() {
-        return p3;
-    }
-
-    public void setP3(@NotNull Location p3) {
-        this.p3 = p3;
-    }
-
-    public float getA() {
-        return a;
-    }
-
-    public void setA(float a) {
-        this.a = a;
-    }
-
-    public float getB() {
-        return b;
-    }
-
-    public void setB(float b) {
-        this.b = b;
-    }
-
-    public float getC() {
-        return c;
-    }
-
-    public void setC(float c) {
-        this.c = c;
-    }
-
-    public @NotNull Location getR() {
-        return r;
-    }
-
-    public void setR(@NotNull Location r) {
-        this.r = r;
     }
 
 }

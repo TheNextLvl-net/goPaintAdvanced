@@ -18,23 +18,19 @@
  */
 package net.thenextlvl.gopaint.listeners;
 
+import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.brush.PlayerBrushManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+@RequiredArgsConstructor
 public class ConnectListener implements Listener {
-
     private final PlayerBrushManager brushManager;
-
-    public ConnectListener(PlayerBrushManager brushManager) {
-        this.brushManager = brushManager;
-    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         brushManager.removeBrush(event.getPlayer());
     }
-
 }
