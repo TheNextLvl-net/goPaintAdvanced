@@ -81,89 +81,11 @@ public class BezierSplineSegment {
         curveLength = lengths[19];
     }
 
-    public double getdXdT(double t) {
-        assert (t >= 0);
-        assert (t <= 1);
-        return 3 * (1 - t) * (1 - t) * (p1.getX() - p0.getX()) + 6 * (1 - t) * t
-                                                                 * (p2.getX() - p1.getX()) + 3 * t * t * (p3.getX() - p2.getX());
-    }
-
-    public double getdYdT(double t) {
-        assert (t <= 1);
-        return 3 * (1 - t) * (1 - t) * (p1.getY() - p0.getY()) + 6 * (1 - t) * t
-                                                                 * (p2.getY() - p1.getY()) + 3 * t * t * (p3.getY() - p2.getY());
-    }
-
-    public double getdZdT(double t) {
-        assert (t >= 0);
-        assert (t <= 1);
-        return 3 * (1 - t) * (1 - t) * (p1.getZ() - p0.getZ()) + 6 * (1 - t) * t
-                                                                 * (p2.getZ() - p1.getZ()) + 3 * t * t * (p3.getZ() - p2.getZ());
-    }
-
-    public double getdTdS(double t) {
-        double dZdT = getdZdT(t);
-        double dXdT = getdXdT(t);
-        double dYdT = getdYdT(t);
-        return 1 / Math.sqrt(dZdT * dZdT + dXdT * dXdT + dYdT * dYdT);
-    }
-
-    public double getHAngle(double t) {
-        // Positive x is 0, positive z is pi/2, negative x is pi, negative z is
-        // 3*pi/2
-        double dZdT = getdZdT(t);
-        double dXdT = getdXdT(t);
-        if (dXdT == 0) {
-            if (dZdT < 0) {
-                return Math.PI / 2;
-            } else {
-                return -Math.PI / 2;
-            }
-        }
-
-        if (dXdT < 0) {
-            return Math.PI + Math.atan(dZdT / dXdT);
-        }
-        return Math.atan(dZdT / dXdT);
-    }
-
-    public double getT(double d) {
-        assert (d >= 0);
-        assert (d <= curveLength);
-        if (d == 0) {
-            return 0;
-        }
-        if (d == curveLength) {
-            return 1;
-        }
-        int i;
-        for (i = 0; i < 20; i++) {
-            if (d == lengths[i]) {
-                return i / 19d;
-            }
-            if (d < lengths[i]) {
-                break;
-            }
-        }
-        return (i + (d - lengths[i - 1]) / (lengths[i] - lengths[i - 1])) / 20;
-    }
-
     public Location getPoint(double f) {
         Location result = new Location(p0.getWorld(), 0, 0, 0);
-        result.setX(Objects.requireNonNullElseGet(xFlat, () -> (Math.pow(1 - f, 3) * p0.getX())
-                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getX())
-                                                               + (3 * (1 - f) * f * f * p2.getX()) + (Math.pow(f, 3) * p3.getX())));
-        result.setY(Objects.requireNonNullElseGet(yFlat, () -> (Math.pow(1 - f, 3) * p0.getY())
-                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getY())
-                                                               + (3 * (1 - f) * f * f * p2.getY()) + (Math.pow(f, 3) * p3.getY())));
-        result.setZ(Objects.requireNonNullElseGet(zFlat, () -> (Math.pow(1 - f, 3) * p0.getZ())
-                                                               + (3 * Math.pow(1 - f, 2) * f * p1.getZ())
-                                                               + (3 * (1 - f) * f * f * p2.getZ()) + (Math.pow(f, 3) * p3.getZ())));
+        result.setX(Objects.requireNonNullElseGet(xFlat, () -> (Math.pow(1 - f, 3) * p0.getX()) + (3 * Math.pow(1 - f, 2) * f * p1.getX()) + (3 * (1 - f) * f * f * p2.getX()) + (Math.pow(f, 3) * p3.getX())));
+        result.setY(Objects.requireNonNullElseGet(yFlat, () -> (Math.pow(1 - f, 3) * p0.getY()) + (3 * Math.pow(1 - f, 2) * f * p1.getY()) + (3 * (1 - f) * f * f * p2.getY()) + (Math.pow(f, 3) * p3.getY())));
+        result.setZ(Objects.requireNonNullElseGet(zFlat, () -> (Math.pow(1 - f, 3) * p0.getZ()) + (3 * Math.pow(1 - f, 2) * f * p1.getZ()) + (3 * (1 - f) * f * f * p2.getZ()) + (Math.pow(f, 3) * p3.getZ())));
         return result;
     }
-
-    public double getLinearLength() {
-        return p0.distance(p3);
-    }
-
 }
