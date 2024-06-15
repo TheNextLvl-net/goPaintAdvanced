@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.run.paper)
 }
 
-group = "net.onelitefeather.bettergopaint"
+group = "net.thenextlvl.gopaint"
 version = "1.1.0"
 
 repositories {
@@ -44,7 +44,7 @@ dependencies {
 
 paper {
     name = "goPaintAdvanced"
-    main = "net.onelitefeather.bettergopaint.BetterGoPaint"
+    main = "net.thenextlvl.gopaint.GoPaintPlugin"
     authors = listOf("Arcaniax", "TheMeinerLP", "NonSwag")
     apiVersion = "1.20"
 
