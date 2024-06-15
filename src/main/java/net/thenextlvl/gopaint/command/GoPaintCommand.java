@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.command;
 
+import lombok.Getter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.brush.PlayerBrush;
@@ -25,13 +26,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Getter
 public class GoPaintCommand extends Command implements PluginIdentifiableCommand {
-
     private final GoPaintPlugin plugin;
 
     public GoPaintCommand(GoPaintPlugin main) {
@@ -40,15 +39,11 @@ public class GoPaintCommand extends Command implements PluginIdentifiableCommand
     }
 
     @Override
-    public boolean execute(
-            @NotNull final CommandSender sender,
-            @NotNull final String commandLabel,
-            final @NotNull String[] args
-    ) {
+    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!(sender instanceof final Player p)) {
             return false;
         }
-        PlayerBrush pb = plugin.getBrushManager().getBrush(p);
+        PlayerBrush pb = plugin.brushManager().getBrush(p);
         if (!p.hasPermission(GoPaintPlugin.USE_PERMISSION)) {
             plugin.bundle().sendMessage(p, "command.gopaint.permission");
             return true;
@@ -111,11 +106,6 @@ public class GoPaintCommand extends Command implements PluginIdentifiableCommand
             return true;
         }
         return false;
-    }
-
-    @Override
-    public @NotNull Plugin getPlugin() {
-        return plugin;
     }
 
 }

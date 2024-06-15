@@ -24,22 +24,16 @@ import net.thenextlvl.gopaint.objects.other.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public record ExportedPlayerBrush(
-        @NotNull Brush brush,
+        Brush brush,
         @Nullable Material mask,
-        @NotNull List<Material> blocks,
-        @NotNull Axis axis,
+        List<Material> blocks,
+        Axis axis,
         SurfaceMode surfaceMode,
         int size,
         int chance,
@@ -51,9 +45,9 @@ public record ExportedPlayerBrush(
         double angleHeightDifference
 ) implements BrushSettings {
 
-    private static final @NotNull Random RANDOM = new SecureRandom();
+    private static final Random RANDOM = new SecureRandom();
 
-    public ExportedPlayerBrush(@NotNull Builder builder) {
+    public ExportedPlayerBrush(Builder builder) {
         this(
                 builder.brush,
                 builder.mask,
@@ -82,12 +76,12 @@ public record ExportedPlayerBrush(
     }
 
     @Override
-    public @NotNull Material randomBlock() {
+    public Material randomBlock() {
         return blocks().get(random().nextInt(blocks().size()));
     }
 
     @Override
-    public @NotNull Random random() {
+    public Random random() {
         return RANDOM;
     }
 
@@ -97,11 +91,11 @@ public record ExportedPlayerBrush(
 
     public static final class Builder {
 
-        private final @NotNull Brush brush;
+        private final Brush brush;
 
-        private @NotNull List<Material> blocks = Collections.emptyList();
-        private @NotNull Axis axis = Settings.settings().GENERIC.DEFAULT_AXIS;
-        private @NotNull SurfaceMode surfaceMode = SurfaceMode.DISABLED;
+        private List<Material> blocks = Collections.emptyList();
+        private Axis axis = Settings.settings().GENERIC.DEFAULT_AXIS;
+        private SurfaceMode surfaceMode = SurfaceMode.DISABLED;
 
         private @Nullable Material mask;
 
@@ -114,78 +108,78 @@ public record ExportedPlayerBrush(
         private int mixingStrength;
         private double angleHeightDifference;
 
-        private Builder(@NotNull Brush brush) {
+        private Builder(Brush brush) {
             this.brush = brush;
         }
 
-        public @NotNull Builder surfaceMode(SurfaceMode surfaceMode) {
+        public Builder surfaceMode(SurfaceMode surfaceMode) {
             this.surfaceMode = surfaceMode;
             return this;
         }
 
-        public @NotNull Builder blocks(@NotNull List<Material> blocks) {
+        public Builder blocks(List<Material> blocks) {
             this.blocks = blocks;
             return this;
         }
 
-        public @NotNull Builder mask(@Nullable Material mask) {
+        public Builder mask(@Nullable Material mask) {
             this.mask = mask;
             return this;
         }
 
-        public @NotNull Builder size(int size) {
+        public Builder size(int size) {
             this.size = size;
             return this;
         }
 
-        public @NotNull Builder chance(int chance) {
+        public Builder chance(int chance) {
             this.chance = chance;
             return this;
         }
 
-        public @NotNull Builder thickness(int thickness) {
+        public Builder thickness(int thickness) {
             this.thickness = thickness;
             return this;
         }
 
-        public @NotNull Builder angleDistance(int angleDistance) {
+        public Builder angleDistance(int angleDistance) {
             this.angleDistance = angleDistance;
             return this;
         }
 
-        public @NotNull Builder fractureDistance(int fractureDistance) {
+        public Builder fractureDistance(int fractureDistance) {
             this.fractureDistance = fractureDistance;
             return this;
         }
 
-        public @NotNull Builder falloffStrength(int falloffStrength) {
+        public Builder falloffStrength(int falloffStrength) {
             this.falloffStrength = falloffStrength;
             return this;
         }
 
-        public @NotNull Builder mixingStrength(int mixingStrength) {
+        public Builder mixingStrength(int mixingStrength) {
             this.mixingStrength = mixingStrength;
             return this;
         }
 
-        public @NotNull Builder angleHeightDifference(double angleHeightDifference) {
+        public Builder angleHeightDifference(double angleHeightDifference) {
             this.angleHeightDifference = angleHeightDifference;
             return this;
         }
 
-        public @NotNull Builder axis(@NotNull Axis axis) {
+        public Builder axis(Axis axis) {
             this.axis = axis;
             return this;
         }
 
-        public @NotNull ExportedPlayerBrush build() {
+        public ExportedPlayerBrush build() {
             return new ExportedPlayerBrush(this);
         }
 
     }
 
     @Deprecated(forRemoval = true)
-    public static ExportedPlayerBrush parse(@NotNull Brush brush, @NotNull ItemMeta itemMeta) {
+    public static ExportedPlayerBrush parse(Brush brush, ItemMeta itemMeta) {
         ExportedPlayerBrush.Builder builder = ExportedPlayerBrush.builder(brush);
         Optional.ofNullable(itemMeta.getLore()).ifPresent(lore -> lore.stream()
                 .map(line -> line.replace("§8", ""))

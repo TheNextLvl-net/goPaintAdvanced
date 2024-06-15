@@ -27,24 +27,19 @@ import net.thenextlvl.gopaint.utils.curve.BezierSpline;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class PaintBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "Paints strokes\n§8hold shift to end";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=";
-    private static final @NotNull String NAME = "Paint Brush";
+    private static final String DESCRIPTION = "Paints strokes\n§8hold shift to end";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=";
+    private static final String NAME = "Paint Brush";
 
-    private final @NotNull ComponentBundle bundle;
+    private final ComponentBundle bundle;
 
-    public PaintBrush(@NotNull ComponentBundle bundle) {
+    public PaintBrush(ComponentBundle bundle) {
         super(NAME, DESCRIPTION, HEAD);
         this.bundle = bundle;
     }
@@ -52,11 +47,7 @@ public class PaintBrush extends Brush {
     private static final HashMap<UUID, List<Location>> selectedPoints = new HashMap<>();
 
     @Override
-    public void paint(
-            @NotNull Location target,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location target, Player player, BrushSettings brushSettings) {
         List<Location> locations = selectedPoints.computeIfAbsent(player.getUniqueId(), ignored -> new ArrayList<>());
         locations.add(target);
 

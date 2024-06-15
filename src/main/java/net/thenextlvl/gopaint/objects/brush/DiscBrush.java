@@ -23,26 +23,21 @@ import net.thenextlvl.gopaint.utils.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class DiscBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";
-    private static final @NotNull String NAME = "Disc Brush";
+    private static final String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";
+    private static final String NAME = "Disc Brush";
 
     public DiscBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
-    public void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.size(), brushSettings.axis(), false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))

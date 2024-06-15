@@ -23,26 +23,21 @@ import net.thenextlvl.gopaint.utils.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class GradientBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "Creates gradients";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19";
-    private static final @NotNull String NAME = "Gradient Brush";
+    private static final String DESCRIPTION = "Creates gradients";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19";
+    private static final String NAME = "Gradient Brush";
 
     public GradientBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
-    public void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             double y = location.getBlockY() - (brushSettings.size() / 2d);
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.size(), null, false);

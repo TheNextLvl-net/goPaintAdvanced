@@ -23,26 +23,21 @@ import net.thenextlvl.gopaint.utils.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class SplatterBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "More chance when closer\n§8to the clicked point\n§8and configurable chance";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19";
-    private static final @NotNull String NAME = "Splatter Brush";
+    private static final String DESCRIPTION = "More chance when closer\n§8to the clicked point\n§8and configurable chance";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19";
+    private static final String NAME = "Splatter Brush";
 
     public SplatterBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
-    public void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.size(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))

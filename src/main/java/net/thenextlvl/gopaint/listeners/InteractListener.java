@@ -59,7 +59,7 @@ public final class InteractListener implements Listener {
         }
 
         if (event.getAction().isLeftClick() && item.getType() == Settings.settings().GENERIC.DEFAULT_BRUSH) {
-            PlayerBrush brush = plugin.getBrushManager().getBrush(player);
+            PlayerBrush brush = plugin.brushManager().getBrush(player);
             player.openInventory(brush.getInventory());
             event.setCancelled(true);
             return;
@@ -95,12 +95,12 @@ public final class InteractListener implements Listener {
 
         if (itemMeta != null && itemMeta.hasLore() && itemMeta.displayName() instanceof TextComponent name) {
 
-            Optional<Brush> brush = plugin.getBrushManager().getBrushHandler(name.content());
+            Optional<Brush> brush = plugin.brushManager().getBrushHandler(name.content());
 
             //noinspection removal
             brushSettings = brush.map(current -> ExportedPlayerBrush.parse(current, itemMeta)).orElse(null);
         } else if (item.getType().equals(Settings.settings().GENERIC.DEFAULT_BRUSH)) {
-            brushSettings = plugin.getBrushManager().getBrush(player);
+            brushSettings = plugin.brushManager().getBrush(player);
         } else {
             return;
         }

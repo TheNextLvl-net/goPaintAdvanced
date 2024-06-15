@@ -25,15 +25,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.thenextlvl.gopaint.objects.brush.AngleBrush;
-import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.brush.DiscBrush;
-import net.thenextlvl.gopaint.objects.brush.FractureBrush;
-import net.thenextlvl.gopaint.objects.brush.GradientBrush;
-import net.thenextlvl.gopaint.objects.brush.OverlayBrush;
-import net.thenextlvl.gopaint.objects.brush.SplatterBrush;
-import net.thenextlvl.gopaint.objects.brush.SprayBrush;
-import net.thenextlvl.gopaint.objects.brush.UnderlayBrush;
+import net.thenextlvl.gopaint.objects.brush.*;
 import net.thenextlvl.gopaint.objects.other.Settings;
 import net.thenextlvl.gopaint.objects.other.SurfaceMode;
 import net.thenextlvl.gopaint.utils.GUI;
@@ -44,7 +36,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -60,8 +51,8 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public final class PlayerBrush implements BrushSettings {
 
-    private final @NotNull PlayerBrushManager brushManager;
-    private final @NotNull Random random = new SecureRandom();
+    private final PlayerBrushManager brushManager;
+    private final Random random = new SecureRandom();
 
     private boolean maskEnabled;
     private boolean enabled;
@@ -73,16 +64,16 @@ public final class PlayerBrush implements BrushSettings {
     private int falloffStrength;
     private int mixingStrength;
     private double angleHeightDifference;
-    private @NotNull Axis axis;
-    private @NotNull SurfaceMode surfaceMode;
+    private Axis axis;
+    private SurfaceMode surfaceMode;
 
-    private @NotNull Brush brush;
-    private @NotNull Material mask;
-    private final @NotNull List<Material> blocks = new ArrayList<>();
+    private Brush brush;
+    private Material mask;
+    private final List<Material> blocks = new ArrayList<>();
 
-    private final @NotNull Inventory gui;
+    private final Inventory gui;
 
-    public PlayerBrush(@NotNull PlayerBrushManager brushManager) {
+    public PlayerBrush(PlayerBrushManager brushManager) {
         this.brushManager = brushManager;
 
         surfaceMode = Settings.settings().GENERIC.SURFACE_MODE;
@@ -103,7 +94,7 @@ public final class PlayerBrush implements BrushSettings {
         gui = GUI.create(this);
     }
 
-    public @NotNull Material randomBlock() {
+    public Material randomBlock() {
         return blocks().get(random.nextInt(blocks().size()));
     }
 

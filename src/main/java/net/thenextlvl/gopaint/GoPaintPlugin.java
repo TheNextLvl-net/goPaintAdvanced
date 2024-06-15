@@ -20,6 +20,8 @@ package net.thenextlvl.gopaint;
 
 import com.fastasyncworldedit.core.Fawe;
 import core.i18n.file.ComponentBundle;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -43,7 +45,6 @@ import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -51,17 +52,19 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 
+@Getter
+@Accessors(fluent = true)
 public class GoPaintPlugin extends JavaPlugin implements Listener {
 
-    public static final @NotNull String PAPER_DOCS = "https://jd.papermc.io/paper/1.20.6/org/bukkit/Material.html#enum-constant-summary";
+    public static final String PAPER_DOCS = "https://jd.papermc.io/paper/1.20.6/org/bukkit/Material.html#enum-constant-summary";
 
-    public static final @NotNull String USE_PERMISSION = "bettergopaint.use";
-    public static final @NotNull String ADMIN_PERMISSION = "bettergopaint.admin";
-    public static final @NotNull String RELOAD_PERMISSION = "bettergopaint.command.admin.reload";
-    public static final @NotNull String WORLD_BYPASS_PERMISSION = "bettergopaint.world.bypass";
+    public static final String USE_PERMISSION = "bettergopaint.use";
+    public static final String ADMIN_PERMISSION = "bettergopaint.admin";
+    public static final String RELOAD_PERMISSION = "bettergopaint.command.admin.reload";
+    public static final String WORLD_BYPASS_PERMISSION = "bettergopaint.world.bypass";
 
-    private final @NotNull File translations = new File(getDataFolder(), "translations");
-    private final @NotNull ComponentBundle bundle = new ComponentBundle(translations, audience ->
+    private final File translations = new File(getDataFolder(), "translations");
+    private final ComponentBundle bundle = new ComponentBundle(translations, audience ->
             audience instanceof Player player ? player.locale() : Locale.US)
             .register("messages", Locale.US)
             .register("messages_german", Locale.GERMANY)
@@ -70,8 +73,8 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
-    private final @NotNull PlayerBrushManager brushManager = new PlayerBrushManager(bundle);
-    private final @NotNull Metrics metrics = new Metrics(this, 22279);
+    private final PlayerBrushManager brushManager = new PlayerBrushManager(bundle);
+    private final Metrics metrics = new Metrics(this, 22279);
 
     @Override
     public void onLoad() {
@@ -131,9 +134,9 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
 
     private void registerListeners() {
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new InventoryListener(getBrushManager()), this);
+        pm.registerEvents(new InventoryListener(brushManager()), this);
         pm.registerEvents(new InteractListener(this), this);
-        pm.registerEvents(new ConnectListener(getBrushManager()), this);
+        pm.registerEvents(new ConnectListener(brushManager()), this);
     }
 
     private boolean hasOriginalGoPaint() {
@@ -156,14 +159,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             getLogger().log(Level.SEVERE, "Cannot init command manager");
             return null;
         }
-    }
-
-    public @NotNull PlayerBrushManager getBrushManager() {
-        return brushManager;
-    }
-
-    public ComponentBundle bundle() {
-        return bundle;
     }
 
 }

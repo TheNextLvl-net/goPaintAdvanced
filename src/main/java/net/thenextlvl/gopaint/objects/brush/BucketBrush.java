@@ -24,27 +24,22 @@ import net.thenextlvl.gopaint.utils.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 public class BucketBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "Paints connected blocks\n§8with the same block type";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTAxOGI0NTc0OTM5Nzg4YTJhZDU1NTJiOTEyZDY3ODEwNjk4ODhjNTEyMzRhNGExM2VhZGI3ZDRjOTc5YzkzIn19fQ==";
-    private static final @NotNull String NAME = "Bucket Brush";
+    private static final String DESCRIPTION = "Paints connected blocks\n§8with the same block type";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTAxOGI0NTc0OTM5Nzg4YTJhZDU1NTJiOTEyZDY3ODEwNjk4ODhjNTEyMzRhNGExM2VhZGI3ZDRjOTc5YzkzIn19fQ==";
+    private static final String NAME = "Bucket Brush";
 
     public BucketBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
-    public void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             List<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.size(), null, false).toList();
             Stream<Block> connectedBlocks = ConnectedBlocks.getConnectedBlocks(location, blocks);
