@@ -23,26 +23,21 @@ import net.thenextlvl.gopaint.utils.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class SprayBrush extends Brush {
 
-    private static final @NotNull String DESCRIPTION = "Configurable random chance brush";
-    private static final @NotNull String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==";
-    private static final @NotNull String NAME = "Spray Brush";
+    private static final String DESCRIPTION = "Configurable random chance brush";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==";
+    private static final String NAME = "Spray Brush";
 
     public SprayBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
-    public void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    ) {
+    public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.size(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))

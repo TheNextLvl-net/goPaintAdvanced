@@ -22,16 +22,15 @@ package net.thenextlvl.gopaint.utils.curve;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
 public class BezierSpline {
 
-    private final @NotNull LinkedList<Location> knotsList;
+    private final LinkedList<Location> knotsList;
     private Location[] knots;
-    private @NotNull BezierSplineSegment[] segments;
+    private BezierSplineSegment[] segments;
     private double length = 0;
     private Location anchorPoint;
 
@@ -40,7 +39,7 @@ public class BezierSpline {
         segments = new BezierSplineSegment[0];
     }
 
-    public BezierSpline(@NotNull LinkedList<Location> knotsList) {
+    public BezierSpline(LinkedList<Location> knotsList) {
         this.knotsList = knotsList;
         recalculate();
     }
@@ -55,7 +54,7 @@ public class BezierSpline {
         calculateLength();
     }
 
-    public void addKnot(@NotNull Location location) {
+    public void addKnot(Location location) {
         knotsList.add(location);
         recalculate();
     }
@@ -117,7 +116,7 @@ public class BezierSpline {
         return i + segments[i].getT(blocks - current);
     }
 
-    public @NotNull Location getPoint(double point) {
+    public Location getPoint(double point) {
         if (point >= segments.length) {
             return getPoint(segments.length - 1, 1);
         } else {
@@ -125,7 +124,7 @@ public class BezierSpline {
         }
     }
 
-    public @NotNull Location getPoint(int n, double f) {
+    public Location getPoint(int n, double f) {
         assert (n < segments.length);
         assert (0 <= f && f <= 1);
         BezierSplineSegment segment = segments[n];
@@ -286,7 +285,7 @@ public class BezierSpline {
         }
     }
 
-    public void shift(@NotNull Vector vector) {
+    public void shift(Vector vector) {
         for (Location location : knotsList) {
             location.add(vector);
         }
@@ -302,7 +301,7 @@ public class BezierSpline {
         recalculate();
     }
 
-    public void scale(@NotNull Vector vector) {
+    public void scale(Vector vector) {
         for (Location l : knotsList) {
             l.subtract(anchorPoint);
             l.setX(l.getX() * vector.getX());
@@ -331,15 +330,15 @@ public class BezierSpline {
         return knots.length + " points.";
     }
 
-    public @NotNull String toName() {
+    public String toName() {
         return "Curve";
     }
 
-    public @NotNull BezierSpline emptySystem() {
+    public BezierSpline emptySystem() {
         return new BezierSpline();
     }
 
-    public @NotNull String toShorthand() {
+    public String toShorthand() {
         return "curve";
     }
 

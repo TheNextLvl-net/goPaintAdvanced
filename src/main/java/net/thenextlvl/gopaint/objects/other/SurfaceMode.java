@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.utils.Surface;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -50,9 +49,9 @@ public enum SurfaceMode {
      */
     RELATIVE("Relative");
 
-    private final @NotNull String name;
+    private final String name;
 
-    public static @NotNull Optional<SurfaceMode> byName(@NotNull String name) {
+    public static Optional<SurfaceMode> byName(String name) {
         return Arrays.stream(values())
                 .filter(surfaceMode -> surfaceMode.getName().equals(name))
                 .findAny();

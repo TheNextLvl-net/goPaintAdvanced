@@ -33,7 +33,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -41,7 +40,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public abstract class Brush {
 
-    private final @NotNull String name, description, head;
+    private final String name, description, head;
 
     /**
      * Performs a painting action using the provided location, player, and brush settings.
@@ -50,11 +49,7 @@ public abstract class Brush {
      * @param player        The player who is performing the paint action.
      * @param brushSettings The brush settings to be applied while painting.
      */
-    public abstract void paint(
-            @NotNull Location location,
-            @NotNull Player player,
-            @NotNull BrushSettings brushSettings
-    );
+    public abstract void paint(Location location, Player player, BrushSettings brushSettings);
 
     /**
      * Sets the material of a block in an EditSession.
@@ -64,11 +59,7 @@ public abstract class Brush {
      * @param material The material to set the block to.
      * @throws MaxChangedBlocksException If the maximum number of changed blocks is exceeded.
      */
-    protected void setBlock(
-            @NotNull EditSession session,
-            @NotNull Block block,
-            @NotNull Material material
-    ) throws MaxChangedBlocksException {
+    protected void setBlock(EditSession session, Block block, Material material) throws MaxChangedBlocksException {
         BlockVector3 vector = BlockVector3.at(block.getX(), block.getY(), block.getZ());
         if (session.getMask() == null || session.getMask().test(vector)) {
             session.setBlock(vector, BukkitAdapter.asBlockType(material));
@@ -102,7 +93,7 @@ public abstract class Brush {
      * @param block         The block being checked.
      * @return true if the block passes all the default checks, false otherwise.
      */
-    protected boolean passesDefaultChecks(@NotNull BrushSettings brushSettings, @NotNull Player player, @NotNull Block block) {
+    protected boolean passesDefaultChecks(BrushSettings brushSettings, Player player, Block block) {
         return passesMaskCheck(brushSettings, block) && passesSurfaceCheck(brushSettings, player, block);
     }
 
@@ -114,7 +105,7 @@ public abstract class Brush {
      * @param block         The block being checked.
      * @return true if the block passes the surface check, false otherwise.
      */
-    protected boolean passesSurfaceCheck(@NotNull BrushSettings brushSettings, @NotNull Player player, @NotNull Block block) {
+    protected boolean passesSurfaceCheck(BrushSettings brushSettings, Player player, Block block) {
         return Surface.isOnSurface(block, brushSettings.surfaceMode(), player.getLocation());
     }
 
@@ -125,7 +116,7 @@ public abstract class Brush {
      * @param block         The block being checked.
      * @return true if the block passes the mask check, false otherwise.
      */
-    protected boolean passesMaskCheck(@NotNull BrushSettings brushSettings, @NotNull Block block) {
+    protected boolean passesMaskCheck(BrushSettings brushSettings, Block block) {
         return !brushSettings.maskEnabled() || block.getType().equals(brushSettings.mask());
     }
 

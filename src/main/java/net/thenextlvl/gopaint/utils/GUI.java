@@ -22,39 +22,29 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.brush.PlayerBrush;
-import net.thenextlvl.gopaint.objects.brush.AngleBrush;
-import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.brush.DiscBrush;
-import net.thenextlvl.gopaint.objects.brush.FractureBrush;
-import net.thenextlvl.gopaint.objects.brush.GradientBrush;
-import net.thenextlvl.gopaint.objects.brush.OverlayBrush;
-import net.thenextlvl.gopaint.objects.brush.PaintBrush;
-import net.thenextlvl.gopaint.objects.brush.SplatterBrush;
-import net.thenextlvl.gopaint.objects.brush.SprayBrush;
-import net.thenextlvl.gopaint.objects.brush.UnderlayBrush;
+import net.thenextlvl.gopaint.objects.brush.*;
 import net.thenextlvl.gopaint.objects.other.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public class GUI {
 
     private static final GoPaintPlugin plugin = JavaPlugin.getPlugin(GoPaintPlugin.class);
 
-    public static @NotNull Inventory create(PlayerBrush pb) {
+    public static Inventory create(PlayerBrush pb) {
         Inventory inv = Bukkit.createInventory(null, 54, Component.text("goPaint Menu", NamedTextColor.DARK_BLUE));
         update(inv, pb);
         return inv;
     }
 
-    public static @NotNull Inventory generateBrushes() {
+    public static Inventory generateBrushes() {
         Inventory inv = Bukkit.createInventory(null, 27, Component.text("goPaint Brushes", NamedTextColor.DARK_BLUE));
         // FILLER
         formatDefault(inv);
-        for (int index = 0; index < plugin.getBrushManager().getBrushes().size(); index++) {
-            Brush brush = plugin.getBrushManager().getBrushes().get(index);
+        for (int index = 0; index < plugin.brushManager().getBrushes().size(); index++) {
+            Brush brush = plugin.brushManager().getBrushes().get(index);
             inv.setItem(index, Items.createHead(brush.getHead(), 1, "§6" + brush.getName(),
                     "\n§7Click to select\n\n§8" + brush.getDescription()
             ));
@@ -62,13 +52,13 @@ public class GUI {
         return inv;
     }
 
-    private static void formatDefault(@NotNull Inventory inventory) {
+    private static void formatDefault(Inventory inventory) {
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             inventory.setItem(slot, Items.create(Material.GRAY_STAINED_GLASS_PANE, 1, "§7", ""));
         }
     }
 
-    public static void update(@NotNull Inventory inventory, @NotNull PlayerBrush playerBrush) {
+    public static void update(Inventory inventory, PlayerBrush playerBrush) {
         Brush brush = playerBrush.brush();
 
         // FILLER
@@ -96,7 +86,7 @@ public class GUI {
         String clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
 
         inventory.setItem(11, Items.createHead(brush.getHead(), 1, "§6Selected Brush type",
-                clicks + plugin.getBrushManager().getBrushLore(brush)
+                clicks + plugin.brushManager().getBrushLore(brush)
         ));
         inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
 

@@ -20,7 +20,6 @@ package net.thenextlvl.gopaint.utils;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 public class Height {
 
@@ -30,7 +29,7 @@ public class Height {
      * @param location the location to check
      * @return the height of the nearest non-empty block at the location
      */
-    public static int getNearestNonEmptyBlock(@NotNull Location location) {
+    public static int getNearestNonEmptyBlock(Location location) {
         if (location.getBlock().getType().isEmpty()) {
             for (int y = location.getBlockY(); y >= location.getWorld().getMinHeight(); y--) {
                 Block block = location.getWorld().getBlockAt(location.getBlockX(), y, location.getBlockZ());
@@ -58,7 +57,7 @@ public class Height {
      * @param distance the distance at which to calculate the average height difference
      * @return the average height difference of the surrounding blocks within the specified distance
      */
-    public static double getAverageHeightDiffFracture(@NotNull Location location, int height, int distance) {
+    public static double getAverageHeightDiffFracture(Location location, int height, int distance) {
         double totalHeight = 0;
         totalHeight += Math.abs(getNearestNonEmptyBlock(location.clone().add(distance, 0, -distance))) - height;
         totalHeight += Math.abs(getNearestNonEmptyBlock(location.clone().add(distance, 0, distance))) - height;
@@ -78,7 +77,7 @@ public class Height {
      * @param distance the distance at which to calculate the average height difference angle
      * @return the average height difference angle of the surrounding blocks within the specified distance
      */
-    public static double getAverageHeightDiffAngle(@NotNull Location location, int distance) {
+    public static double getAverageHeightDiffAngle(Location location, int distance) {
         double maxHeightDiff = 0;
         double maxHeightDiff2 = 0;
         double diff = Math.abs(getNearestNonEmptyBlock(location.clone().add(distance, 0, -distance))

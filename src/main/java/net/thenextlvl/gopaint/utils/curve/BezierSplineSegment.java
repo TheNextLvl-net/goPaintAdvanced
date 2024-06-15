@@ -21,7 +21,6 @@ package net.thenextlvl.gopaint.utils.curve;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -31,13 +30,13 @@ import java.util.Objects;
 public class BezierSplineSegment {
 
     private final double[] lengths = new double[20];
-    private @NotNull Location p0, p1, p2, p3;
+    private Location p0, p1, p2, p3;
     private float a, b, c;
     private @Nullable Double xFlat, yFlat, zFlat;
-    private @NotNull Location r;
+    private Location r;
     private double curveLength;
 
-    public BezierSplineSegment(@NotNull Location p0, @NotNull Location p3) {
+    public BezierSplineSegment(Location p0, Location p3) {
         this.p0 = p0;
         this.p3 = p3;
         p1 = new Location(p0.getWorld(), 0, 0, 0);

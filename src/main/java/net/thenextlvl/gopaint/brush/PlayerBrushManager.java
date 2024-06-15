@@ -20,20 +20,9 @@ package net.thenextlvl.gopaint.brush;
 
 import com.google.common.collect.ImmutableList;
 import core.i18n.file.ComponentBundle;
-import net.thenextlvl.gopaint.objects.brush.AngleBrush;
-import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.brush.BucketBrush;
-import net.thenextlvl.gopaint.objects.brush.DiscBrush;
-import net.thenextlvl.gopaint.objects.brush.FractureBrush;
-import net.thenextlvl.gopaint.objects.brush.GradientBrush;
-import net.thenextlvl.gopaint.objects.brush.OverlayBrush;
-import net.thenextlvl.gopaint.objects.brush.PaintBrush;
-import net.thenextlvl.gopaint.objects.brush.SphereBrush;
-import net.thenextlvl.gopaint.objects.brush.SplatterBrush;
-import net.thenextlvl.gopaint.objects.brush.SprayBrush;
-import net.thenextlvl.gopaint.objects.brush.UnderlayBrush;
+import lombok.Getter;
+import net.thenextlvl.gopaint.objects.brush.*;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -46,9 +35,8 @@ import java.util.stream.Collectors;
  * The PlayerBrushManager class manages the brush selection for each player.
  */
 public class PlayerBrushManager {
-
-    private final @NotNull HashMap<UUID, PlayerBrush> playerBrushes = new HashMap<>();
-    private final @NotNull List<Brush> brushes;
+    private final HashMap<UUID, PlayerBrush> playerBrushes = new HashMap<>();
+    private final @Getter List<Brush> brushes;
 
     public PlayerBrushManager(ComponentBundle bundle) {
         brushes = ImmutableList.of(
@@ -72,7 +60,7 @@ public class PlayerBrushManager {
      * @param player The player for which to retrieve the brush.
      * @return The brush for the specified player.
      */
-    public @NotNull PlayerBrush getBrush(@NotNull Player player) {
+    public PlayerBrush getBrush(Player player) {
         return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new PlayerBrush(this));
     }
 
@@ -83,7 +71,7 @@ public class PlayerBrushManager {
      * @param brush The brush for which to retrieve the lore.
      * @return The lore for the specified brush.
      */
-    public @NotNull String getBrushLore(@NotNull Brush brush) {
+    public String getBrushLore(Brush brush) {
         return brushes.stream().map(current -> {
             if (current.equals(brush)) {
                 return "§e" + current.getName() + "\n";
@@ -99,19 +87,10 @@ public class PlayerBrushManager {
      * @param name The name of the brush to look for.
      * @return An optional containing the brush handler, or empty if not found.
      */
-    public @NotNull Optional<Brush> getBrushHandler(String name) {
+    public Optional<Brush> getBrushHandler(String name) {
         return brushes.stream()
                 .filter(brush -> name.contains(brush.getName()))
                 .findAny();
-    }
-
-    /**
-     * Retrieves the list of available brushes.
-     *
-     * @return The list of available brushes.
-     */
-    public @NotNull List<Brush> getBrushes() {
-        return brushes;
     }
 
     /**
@@ -119,7 +98,7 @@ public class PlayerBrushManager {
      *
      * @param player The player who should be removed.
      */
-    public void removeBrush(@NotNull Player player) {
+    public void removeBrush(Player player) {
         playerBrushes.remove(player.getUniqueId());
     }
 
@@ -129,7 +108,7 @@ public class PlayerBrushManager {
      * @param brush The current brush, if null returns the first brush in the list.
      * @return The next brush in the list, or the first brush if the current brush is null.
      */
-    public @NotNull Brush cycleForward(@Nullable Brush brush) {
+    public Brush cycleForward(@Nullable Brush brush) {
         if (brush == null) {
             return brushes.getFirst();
         }
@@ -146,7 +125,7 @@ public class PlayerBrushManager {
      * @param brush The current brush.
      * @return The previous brush in the list, or the first brush if the current brush is null.
      */
-    public @NotNull Brush cycleBack(@Nullable Brush brush) {
+    public Brush cycleBack(@Nullable Brush brush) {
         if (brush == null) {
             return brushes.getFirst();
         }
