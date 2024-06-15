@@ -58,16 +58,16 @@ paper {
     provides = listOf("goPaint")
 
     permissions {
-        register("bettergopaint.command.admin.reload") {
+        register("gopaint.command.admin.reload") {
             default = BukkitPluginDescription.Permission.Default.OP
         }
-        register("bettergopaint.use") {
+        register("gopaint.use") {
             default = BukkitPluginDescription.Permission.Default.OP
         }
-        register("bettergopaint.admin") {
+        register("gopaint.admin") {
             default = BukkitPluginDescription.Permission.Default.FALSE
         }
-        register("bettergopaint.world.bypass") {
+        register("gopaint.world.bypass") {
             default = BukkitPluginDescription.Permission.Default.FALSE
         }
     }

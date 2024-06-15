@@ -82,10 +82,8 @@ public final class InteractListener implements Listener {
             return;
         }
 
-        final boolean hasNotWorldBaypassPermission = !player.hasPermission(GoPaintPlugin.WORLD_BYPASS_PERMISSION);
-
-        if (hasNotWorldBaypassPermission && Settings.settings().GENERIC.DISABLED_WORLDS
-                .contains(location.getWorld().getName())) {
+        if (!player.hasPermission(GoPaintPlugin.WORLD_BYPASS_PERMISSION)
+            && Settings.settings().GENERIC.DISABLED_WORLDS.contains(location.getWorld().getName())) {
             return;
         }
 
