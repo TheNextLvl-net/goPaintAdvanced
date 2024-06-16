@@ -18,8 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush;
 
-import com.google.common.collect.ImmutableList;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
@@ -33,30 +32,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();
-    private final @Getter List<Brush> brushes;
     private final GoPaintPlugin plugin;
-
-    public CraftBrushController(GoPaintPlugin plugin) {
-        brushes = ImmutableList.of(
-                new SphereBrush(),
-                new SprayBrush(),
-                new SplatterBrush(),
-                new DiscBrush(),
-                new BucketBrush(),
-                new AngleBrush(),
-                new OverlayBrush(),
-                new UnderlayBrush(),
-                new FractureBrush(),
-                new GradientBrush(),
-                new PaintBrush(plugin.bundle())
-        );
-        this.plugin = plugin;
-    }
 
     @Override
     public PlayerBrushSettings getBrush(Player player) {
@@ -81,7 +66,7 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public String getBrushLore(Brush brush) {
-        return brushes.stream().map(current -> {
+        return plugin.brushRegistry().getBrushes().stream().map(current -> {
             if (current.equals(brush)) {
                 return "§e" + current.getName() + "\n";
             } else {
@@ -92,7 +77,7 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public Optional<Brush> getBrushHandler(String name) {
-        return brushes.stream()
+        return plugin.brushRegistry().getBrushes().stream()
                 .filter(brush -> name.contains(brush.getName()))
                 .findAny();
     }
@@ -104,25 +89,19 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public Brush cycleForward(@Nullable Brush brush) {
-        if (brush == null) {
-            return brushes.getFirst();
-        }
+        var brushes = plugin.brushRegistry().getBrushes();
+        if (brush == null) return brushes.getFirst();
         int next = brushes.indexOf(brush) + 1;
-        if (next < brushes.size()) {
-            return brushes.get(next);
-        }
+        if (next < brushes.size()) return brushes.get(next);
         return brushes.getFirst();
     }
 
     @Override
     public Brush cycleBackward(@Nullable Brush brush) {
-        if (brush == null) {
-            return brushes.getFirst();
-        }
+        var brushes = plugin.brushRegistry().getBrushes();
+        if (brush == null) return brushes.getFirst();
         int back = brushes.indexOf(brush) - 1;
-        if (back >= 0) {
-            return brushes.get(back);
-        }
+        if (back >= 0) return brushes.get(back);
         return brushes.getLast();
     }
 }

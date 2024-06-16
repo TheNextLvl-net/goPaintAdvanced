@@ -7,21 +7,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * This interface controls the brush selection for each player.
  */
 public interface BrushController {
-
-    /**
-     * Retrieves the list of brushes available in the BrushManager.
-     *
-     * @return The list of brushes.
-     */
-    List<Brush> getBrushes();
-
     /**
      * Retrieves the brush settings for a specific player.
      *
