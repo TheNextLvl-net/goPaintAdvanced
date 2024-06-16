@@ -45,7 +45,7 @@ public final class InteractListener implements Listener {
         if (item == null) return;
 
         if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().generic().defaultBrush())) {
-            var brush = plugin.brushController().getBrush(player);
+            var brush = plugin.brushController().getBrushSettings(player);
             player.openInventory(brush.getInventory());
             event.setCancelled(true);
             return;
@@ -71,7 +71,7 @@ public final class InteractListener implements Listener {
 
         var settings = !item.getType().equals(plugin.config().generic().defaultBrush())
                 ? plugin.brushController().parseBrushSettings(item).orElse(null)
-                : plugin.brushController().getBrush(player);
+                : plugin.brushController().getBrushSettings(player);
 
         event.setCancelled(true);
 

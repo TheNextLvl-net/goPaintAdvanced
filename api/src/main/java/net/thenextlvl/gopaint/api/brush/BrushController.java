@@ -5,12 +5,12 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
 
 /**
- * This interface controls the brush selection for each player.
+ * This interface controls the brush settings for each player.
  */
 public interface BrushController {
     /**
@@ -19,7 +19,7 @@ public interface BrushController {
      * @param player The player whose brush settings are being retrieved.
      * @return The brush settings for the specified player.
      */
-    PlayerBrushSettings getBrush(Player player);
+    PlayerBrushSettings getBrushSettings(Player player);
 
     /**
      * Parses the brush settings from the provided item stack.
@@ -39,20 +39,13 @@ public interface BrushController {
     ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta);
 
     /**
-     * Retrieves the lore for a specific brush. Each brush name is preceded by a color code
-     * indicating whether it is the currently selected brush or not.
-     *
-     * @param brush The brush for which to retrieve the lore.
-     * @return The lore for the specified brush.
-     */
-    String getBrushLore(Brush brush);
-
-    /**
-     * Retrieves the brush handler for the given name.
+     * Retrieves the brush for the given name.
      *
      * @param name The name of the brush to look for.
      * @return An optional containing the brush handler, or empty if not found.
      */
+    @Deprecated(forRemoval = true, since = "1.1.1")
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     Optional<Brush> getBrushHandler(String name);
 
     /**
@@ -60,21 +53,5 @@ public interface BrushController {
      *
      * @param player The player whose brush settings are being removed.
      */
-    void removeBrush(Player player);
-
-    /**
-     * Retrieves the next brush in the list of available brushes.
-     *
-     * @param brush The current brush, if null returns the first brush in the list.
-     * @return The next brush in the list, or the first brush if the current brush is null.
-     */
-    Brush cycleForward(@Nullable Brush brush);
-
-    /**
-     * Retrieves the previous brush in the list of available brushes.
-     *
-     * @param brush The current brush.
-     * @return The previous brush in the list, or the first brush if the current brush is null.
-     */
-    Brush cycleBackward(@Nullable Brush brush);
+    void removeBrushSettings(Player player);
 }

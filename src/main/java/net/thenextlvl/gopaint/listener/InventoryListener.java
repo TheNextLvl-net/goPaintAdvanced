@@ -51,7 +51,7 @@ public final class InventoryListener implements Listener {
             }
             return;
         }
-        var playerBrush = plugin.brushController().getBrush(player);
+        var playerBrush = plugin.brushController().getBrushSettings(player);
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 if (!event.getCursor().getType().isBlock()) {
@@ -196,7 +196,7 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        var playerBrush = plugin.brushController().getBrush(player);
+        var playerBrush = plugin.brushController().getBrushSettings(player);
 
         ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
 

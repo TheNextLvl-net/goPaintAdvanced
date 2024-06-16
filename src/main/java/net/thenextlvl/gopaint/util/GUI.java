@@ -29,6 +29,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.stream.Collectors;
+
 public class GUI {
 
     private static final GoPaintPlugin plugin = JavaPlugin.getPlugin(GoPaintPlugin.class);
@@ -86,8 +88,16 @@ public class GUI {
 
         String clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
 
+        var lore = plugin.brushRegistry().getBrushes().stream().map(current -> {
+            if (current.equals(brush)) {
+                return "§e" + current.getName() + "\n";
+            } else {
+                return "§8" + current.getName() + "\n";
+            }
+        }).collect(Collectors.joining());
+
         inventory.setItem(11, Items.createHead(brush.getHeadValue(), 1, "§6Selected Brush type",
-                clicks + plugin.brushController().getBrushLore(brush)
+                clicks + lore
         ));
         inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
 

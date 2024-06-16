@@ -30,13 +30,11 @@ import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CraftBrushController implements BrushController {
@@ -44,7 +42,7 @@ public class CraftBrushController implements BrushController {
     private final GoPaintPlugin plugin;
 
     @Override
-    public PlayerBrushSettings getBrush(Player player) {
+    public PlayerBrushSettings getBrushSettings(Player player) {
         return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new CraftPlayerBrushSettings(plugin));
     }
 
@@ -65,17 +63,6 @@ public class CraftBrushController implements BrushController {
     }
 
     @Override
-    public String getBrushLore(Brush brush) {
-        return plugin.brushRegistry().getBrushes().stream().map(current -> {
-            if (current.equals(brush)) {
-                return "§e" + current.getName() + "\n";
-            } else {
-                return "§8" + current.getName() + "\n";
-            }
-        }).collect(Collectors.joining());
-    }
-
-    @Override
     public Optional<Brush> getBrushHandler(String name) {
         return plugin.brushRegistry().getBrushes().stream()
                 .filter(brush -> name.contains(brush.getName()))
@@ -83,25 +70,7 @@ public class CraftBrushController implements BrushController {
     }
 
     @Override
-    public void removeBrush(Player player) {
+    public void removeBrushSettings(Player player) {
         playerBrushes.remove(player.getUniqueId());
-    }
-
-    @Override
-    public Brush cycleForward(@Nullable Brush brush) {
-        var brushes = plugin.brushRegistry().getBrushes();
-        if (brush == null) return brushes.getFirst();
-        int next = brushes.indexOf(brush) + 1;
-        if (next < brushes.size()) return brushes.get(next);
-        return brushes.getFirst();
-    }
-
-    @Override
-    public Brush cycleBackward(@Nullable Brush brush) {
-        var brushes = plugin.brushRegistry().getBrushes();
-        if (brush == null) return brushes.getFirst();
-        int back = brushes.indexOf(brush) - 1;
-        if (back >= 0) return brushes.get(back);
-        return brushes.getLast();
     }
 }

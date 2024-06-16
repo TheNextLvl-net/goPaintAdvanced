@@ -37,6 +37,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         axis = plugin.config().generic().defaultAxis();
         size = plugin.config().generic().defaultSize();
         mask = plugin.config().generic().defaultMask();
-        brush = plugin.brushController().cycleForward(null);
+        brush = cycleForward(null);
         blocks.add(Material.STONE);
         inventory = GUI.create(this);
     }
@@ -94,151 +95,178 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         return random;
     }
 
+    @Override
     public Material getRandomBlock() {
         return getBlocks().get(random.nextInt(getBlocks().size()));
     }
 
+    @Override
     public void updateInventory() {
         GUI.update(inventory, this);
     }
 
+    @Override
     public void increaseFalloffStrength() {
         if (falloffStrength > 90) return;
         falloffStrength += 10;
         updateInventory();
     }
 
+    @Override
     public void decreaseFalloffStrength() {
         if (falloffStrength < 10) return;
         falloffStrength -= 10;
         updateInventory();
     }
 
+    @Override
     public void increaseMixingStrength() {
         if (mixingStrength > 90) return;
         mixingStrength += 10;
         updateInventory();
     }
 
+    @Override
     public void decreaseMixingStrength() {
         if (mixingStrength < 10) return;
         mixingStrength -= 10;
         updateInventory();
     }
 
+    @Override
     public void setMask(Material type) {
         mask = type;
         updateInventory();
     }
 
+    @Override
     public void addBlock(Material type, int slot) {
         if (blocks.size() < slot) blocks.add(type);
         else blocks.set(slot - 1, type);
         updateInventory();
     }
 
+    @Override
     public void removeBlock(int slot) {
         if (blocks.size() < slot) return;
         blocks.remove(slot - 1);
         updateInventory();
     }
 
+    @Override
     public void cycleBrushForward() {
-        brush = plugin.brushController().cycleForward(brush);
+        brush = cycleForward(brush);
         updateInventory();
     }
 
+    @Override
     public void cycleBrushBackward() {
-        brush = plugin.brushController().cycleBackward(brush);
+        brush = cycleBackward(brush);
         updateInventory();
     }
 
+    @Override
     public void setSize(int size) {
         this.size = Math.clamp(size, 1, plugin.config().generic().maxSize());
         updateInventory();
     }
 
+    @Override
     public void increaseBrushSize(int amount) {
         size = Math.min(plugin.config().generic().maxSize(), size + amount);
         updateInventory();
     }
 
+    @Override
     public void decreaseBrushSize(int amount) {
         size = Math.max(1, size - amount);
         updateInventory();
     }
 
+    @Override
     public boolean toggle() {
         enabled = !enabled;
         updateInventory();
         return enabled;
     }
 
+    @Override
     public void increaseChance() {
         if (chance >= 90) return;
         chance += 10;
         updateInventory();
     }
 
+    @Override
     public void decreaseChance() {
         if (chance <= 10) return;
         chance -= 10;
         updateInventory();
     }
 
+    @Override
     public void increaseThickness() {
         if (thickness >= plugin.config().thickness().maxThickness()) return;
         thickness += 1;
         updateInventory();
     }
 
+    @Override
     public void decreaseThickness() {
         if (thickness <= 1) return;
         thickness -= 1;
         updateInventory();
     }
 
+    @Override
     public void increaseAngleDistance() {
         if (angleDistance >= plugin.config().angle().maxAngleDistance()) return;
         angleDistance += 1;
         updateInventory();
     }
 
+    @Override
     public void decreaseAngleDistance() {
         if (angleDistance <= 1) return;
         angleDistance -= 1;
         updateInventory();
     }
 
+    @Override
     public void increaseFractureDistance() {
         if (this.fractureDistance >= plugin.config().fracture().maxFractureDistance()) return;
         this.fractureDistance += 1;
         updateInventory();
     }
 
+    @Override
     public void decreaseFractureDistance() {
         if (this.fractureDistance <= 1) return;
         this.fractureDistance -= 1;
         updateInventory();
     }
 
+    @Override
     public void increaseAngleHeightDifference(int amount) {
         var max = plugin.config().angle().maxAngleHeightDifference();
         angleHeightDifference = Math.min(max, angleHeightDifference + amount);
         updateInventory();
     }
 
+    @Override
     public void decreaseAngleHeightDifference(int amount) {
         var min = plugin.config().angle().minAngleHeightDifference();
         angleHeightDifference = Math.max(min, angleHeightDifference - amount);
         updateInventory();
     }
 
+    @Override
     public void toggleMask() {
         maskEnabled = !maskEnabled;
         updateInventory();
     }
 
+    @Override
     public void cycleSurfaceMode() {
         surfaceMode = switch (surfaceMode) {
             case DIRECT -> SurfaceMode.RELATIVE;
@@ -248,6 +276,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         updateInventory();
     }
 
+    @Override
     public void cycleAxis() {
         axis = switch (axis) {
             case X -> Axis.Y;
@@ -257,6 +286,25 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         updateInventory();
     }
 
+    @Override
+    public Brush cycleForward(@Nullable Brush brush) {
+        var brushes = plugin.brushRegistry().getBrushes();
+        if (brush == null) return brushes.getFirst();
+        int next = brushes.indexOf(brush) + 1;
+        if (next < brushes.size()) return brushes.get(next);
+        return brushes.getFirst();
+    }
+
+    @Override
+    public Brush cycleBackward(@Nullable Brush brush) {
+        var brushes = plugin.brushRegistry().getBrushes();
+        if (brush == null) return brushes.getFirst();
+        int back = brushes.indexOf(brush) - 1;
+        if (back >= 0) return brushes.get(back);
+        return brushes.getLast();
+    }
+
+    @Override
     public void export(ItemStack itemStack) {
         List<String> lore = new ArrayList<>();
         lore.add("");

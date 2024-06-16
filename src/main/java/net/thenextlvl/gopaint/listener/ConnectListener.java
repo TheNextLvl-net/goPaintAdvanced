@@ -31,6 +31,6 @@ public class ConnectListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.brushController().removeBrush(event.getPlayer());
+        plugin.brushController().removeBrushSettings(event.getPlayer());
     }
 }
