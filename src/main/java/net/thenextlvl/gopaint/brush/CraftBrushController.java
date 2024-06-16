@@ -57,7 +57,6 @@ public class CraftBrushController implements BrushController {
     }
 
     @Override
-    @SuppressWarnings("removal")
     public ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta) {
         return CraftItemBrushSettings.parse(brush, itemMeta);
     }
