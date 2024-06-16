@@ -11,13 +11,14 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.gopaint.brush.PlayerBrushManager;
+import net.thenextlvl.gopaint.api.brush.BrushManager;
+import net.thenextlvl.gopaint.brush.CraftBrushManager;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
-import net.thenextlvl.gopaint.objects.other.PluginConfig;
-import net.thenextlvl.gopaint.listeners.ConnectListener;
-import net.thenextlvl.gopaint.listeners.InteractListener;
-import net.thenextlvl.gopaint.listeners.InventoryListener;
-import net.thenextlvl.gopaint.objects.other.SurfaceMode;
+import net.thenextlvl.gopaint.model.PluginConfig;
+import net.thenextlvl.gopaint.listener.ConnectListener;
+import net.thenextlvl.gopaint.listener.InteractListener;
+import net.thenextlvl.gopaint.listener.InventoryListener;
+import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
 import org.bukkit.Bukkit;
@@ -57,7 +58,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             .create()
     ).validate().save();
 
-    private final @Getter PlayerBrushManager brushManager = new PlayerBrushManager(this);
+    private final @Getter BrushManager brushManager = new CraftBrushManager(this);
     private final Metrics metrics = new Metrics(this, 22279);
 
     @Override
@@ -76,18 +77,14 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
         configFile.reload();
     }
 
-    private void registerCommands() {
-        new GoPaintCommand(this).register();
-    }
-
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new InventoryListener(this), this);
         Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new ConnectListener(brushManager()), this);
+        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
     }
 
-    private boolean hasOriginalGoPaint() {
-        return Bukkit.getPluginManager().getPlugin("goPaint") != this;
+    private void registerCommands() {
+        new GoPaintCommand(this).register();
     }
 
     public PluginConfig config() {
