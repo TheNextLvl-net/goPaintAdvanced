@@ -35,6 +35,8 @@ dependencies {
     implementation("net.thenextlvl.core:i18n:1.0.18")
     implementation("net.thenextlvl.core:adapters:1.0.9")
 
+    api(project(":api"))
+
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
