@@ -62,6 +62,12 @@ public class CraftBrushController implements BrushController {
     }
 
     @Override
+    @SuppressWarnings("removal")
+    public ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta) {
+        return CraftItemBrushSettings.parse(brush, itemMeta);
+    }
+
+    @Override
     public String getBrushLore(Brush brush) {
         return brushes.stream().map(current -> {
             if (current.equals(brush)) {

@@ -30,6 +30,15 @@ public interface BrushController {
     PlayerBrushSettings getBrush(Player player);
 
     /**
+     * Parses the brush settings from the given brush and item metadata.
+     *
+     * @param brush    The brush used for painting.
+     * @param itemMeta The metadata of the item.
+     * @return The parsed brush settings.
+     */
+    ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta);
+
+    /**
      * Retrieves the lore for a specific brush. Each brush name is preceded by a color code
      * indicating whether it is the currently selected brush or not.
      *
