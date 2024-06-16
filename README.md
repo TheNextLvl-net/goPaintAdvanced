@@ -1,4 +1,4 @@
-![](https://github.com/NonSwag/goPaintAdvanced/blob/master/gopaint-banner.png)
+![](https://github.com/TheNextLvl-net/goPaintAdvanced/blob/master/gopaint-banner.png?raw=true)
 
 ---
 
