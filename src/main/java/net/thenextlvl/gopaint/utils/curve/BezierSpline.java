@@ -18,45 +18,42 @@
  */
 package net.thenextlvl.gopaint.utils.curve;
 
-import org.bukkit.Location;
+import lombok.Getter;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.OptionalDouble;
 
+@Getter
 public class BezierSpline {
 
-    private final LinkedList<Location> knotsList;
-    private Location[] knots;
-    private BezierSplineSegment[] segments;
-    private double length = 0;
+    private final Vector[] knots;
+    private final BezierSplineSegment[] segments;
+    private final double curveLength;
 
-    public BezierSpline(LinkedList<Location> knotsList) {
-        this.knotsList = knotsList;
-        recalculate();
-    }
-
-    private void recalculate() {
-        knots = knotsList.toArray(new Location[0]);
-        segments = new BezierSplineSegment[knots.length - 1];
-        for (int i = 0; i < knots.length - 1; i++) {
-            segments[i] = new BezierSplineSegment(knots[i], knots[i + 1]);
+    public BezierSpline(LinkedList<Vector> curve) {
+        this.knots = curve.toArray(new Vector[0]);
+        this.segments = new BezierSplineSegment[knots.length - 1];
+        for (var segment = 0; segment < knots.length - 1; segment++) {
+            segments[segment] = new BezierSplineSegment(knots[segment], knots[segment + 1]);
         }
         calculateControlPoints();
-        calculateLength();
+        this.curveLength = calculateLength();
     }
 
-    public double getCurveLength() {
+    @Contract(pure = true)
+    public double calculateLength() {
+        var length = this.curveLength;
+        for (var segment : segments) {
+            length += segment.getCurveLength();
+        }
         return length;
     }
 
-    public void calculateLength() {
-        length = 0;
-        for (BezierSplineSegment segment : segments) {
-            segment.calculateCurveLength();
-            length += segment.getCurveLength();
-        }
-    }
-
-    public Location getPoint(double point) {
+    @Contract(pure = true)
+    public Vector getPoint(double point) {
         if (point >= segments.length) {
             return getPoint(segments.length - 1, 1);
         } else {
@@ -64,109 +61,92 @@ public class BezierSpline {
         }
     }
 
-    public Location getPoint(int n, double f) {
-        assert (n < segments.length);
-        assert (0 <= f && f <= 1);
-        BezierSplineSegment segment = segments[n];
-        return segment.getPoint(f);
+    @Contract(pure = true)
+    public Vector getPoint(int segmentIndex, double factor) {
+        assert (segmentIndex < segments.length);
+        assert (factor > 0 && factor <= 1);
+        return segments[segmentIndex].getPoint(factor);
     }
 
     public void calculateControlPoints() {
-        if (segments == null) return;
         if (segments.length == 0) return;
 
-        Double xflat, yflat, zflat;
-        xflat = knots[0].getX();
-        yflat = knots[0].getY();
-        zflat = knots[0].getZ();
-        for (Location l : knots) {
-            if (l.getBlockX() != xflat) {
-                xflat = null;
-                break;
-            }
-        }
-        for (Location l : knots) {
-            if (l.getBlockY() != yflat) {
-                yflat = null;
-                break;
-            }
-        }
-        for (Location l : knots) {
-            if (l.getBlockZ() != zflat) {
-                zflat = null;
-                break;
-            }
-        }
+        var xFlat = Arrays.stream(knots).allMatch(l -> l.getBlockX() == knots[0].getX())
+                ? OptionalDouble.of(knots[0].getX()) : OptionalDouble.empty();
+        var yFlat = Arrays.stream(knots).allMatch(l -> l.getBlockY() == knots[0].getY())
+                ? OptionalDouble.of(knots[0].getY()) : OptionalDouble.empty();
+        var zFlat = Arrays.stream(knots).allMatch(l -> l.getBlockZ() == knots[0].getZ())
+                ? OptionalDouble.of(knots[0].getZ()) : OptionalDouble.empty();
 
         if (segments.length == 1) {
-            Location midpoint = new Location(segments[0].getP0().getWorld(), 0, 0, 0);
-            midpoint.setX((segments[0].getP0().getX() + segments[0].getP3().getX()) / 2);
-            midpoint.setY((segments[0].getP0().getY() + segments[0].getP3().getY()) / 2);
-            midpoint.setZ((segments[0].getP0().getZ() + segments[0].getP3().getZ()) / 2);
-            segments[0].setP1(midpoint);
-            segments[0].setP2(midpoint.clone());
+            var midpoint = new Vector(0, 0, 0);
+            midpoint.setX((segments[0].getStartPoint().getX() + segments[0].getEndPoint().getX()) / 2);
+            midpoint.setY((segments[0].getStartPoint().getY() + segments[0].getEndPoint().getY()) / 2);
+            midpoint.setZ((segments[0].getStartPoint().getZ() + segments[0].getEndPoint().getZ()) / 2);
+            segments[0].setIntermediatePoint1(midpoint);
+            segments[0].setIntermediatePoint2(midpoint.clone());
         } else {
-            segments[0].setA(0);
-            segments[0].setB(2);
-            segments[0].setC(1);
-            segments[0].getR().setX(knots[0].getX() + 2 * knots[1].getX());
-            segments[0].getR().setY(knots[0].getY() + 2 * knots[1].getY());
-            segments[0].getR().setZ(knots[0].getZ() + 2 * knots[1].getZ());
+            segments[0].setCoefficient1(0);
+            segments[0].setCoefficient2(2);
+            segments[0].setCoefficient3(1);
+            segments[0].getResult().setX(knots[0].getX() + 2 * knots[1].getX());
+            segments[0].getResult().setY(knots[0].getY() + 2 * knots[1].getY());
+            segments[0].getResult().setZ(knots[0].getZ() + 2 * knots[1].getZ());
 
             int n = knots.length - 1;
             float m;
 
             for (int i = 1; i < n - 1; i++) {
-                segments[i].setA(1);
-                segments[i].setB(4);
-                segments[i].setC(1);
-                segments[i].getR().setX(4 * knots[i].getX() + 2 * knots[i + 1].getX());
-                segments[i].getR().setY(4 * knots[i].getY() + 2 * knots[i + 1].getY());
-                segments[i].getR().setZ(4 * knots[i].getZ() + 2 * knots[i + 1].getZ());
+                segments[i].setCoefficient1(1);
+                segments[i].setCoefficient2(4);
+                segments[i].setCoefficient3(1);
+                segments[i].getResult().setX(4 * knots[i].getX() + 2 * knots[i + 1].getX());
+                segments[i].getResult().setY(4 * knots[i].getY() + 2 * knots[i + 1].getY());
+                segments[i].getResult().setZ(4 * knots[i].getZ() + 2 * knots[i + 1].getZ());
             }
 
-            segments[n - 1].setA(2);
-            segments[n - 1].setB(7);
-            segments[n - 1].setC(0);
-            segments[n - 1].getR().setX(8 * knots[n - 1].getX() + knots[n].getX());
-            segments[n - 1].getR().setY(8 * knots[n - 1].getY() + knots[n].getY());
-            segments[n - 1].getR().setZ(8 * knots[n - 1].getZ() + knots[n].getZ());
+            segments[n - 1].setCoefficient1(2);
+            segments[n - 1].setCoefficient2(7);
+            segments[n - 1].setCoefficient3(0);
+            segments[n - 1].getResult().setX(8 * knots[n - 1].getX() + knots[n].getX());
+            segments[n - 1].getResult().setY(8 * knots[n - 1].getY() + knots[n].getY());
+            segments[n - 1].getResult().setZ(8 * knots[n - 1].getZ() + knots[n].getZ());
 
             for (int i = 1; i < n; i++) {
-                m = segments[i].getA() / segments[i - 1].getB();
-                segments[i].setB(segments[i].getB() - m * segments[i - 1].getC());
-                segments[i].getR().setX(segments[i].getR().getX() - m * segments[i - 1].getR().getX());
-                segments[i].getR().setY(segments[i].getR().getY() - m * segments[i - 1].getR().getY());
-                segments[i].getR().setZ(segments[i].getR().getZ() - m * segments[i - 1].getR().getZ());
+                m = segments[i].getCoefficient1() / segments[i - 1].getCoefficient2();
+                segments[i].setCoefficient2(segments[i].getCoefficient2() - m * segments[i - 1].getCoefficient3());
+                segments[i].getResult().setX(segments[i].getResult().getX() - m * segments[i - 1].getResult().getX());
+                segments[i].getResult().setY(segments[i].getResult().getY() - m * segments[i - 1].getResult().getY());
+                segments[i].getResult().setZ(segments[i].getResult().getZ() - m * segments[i - 1].getResult().getZ());
             }
 
-            segments[n - 1].getP1().setX(segments[n - 1].getR().getX() / segments[n - 1].getB());
-            segments[n - 1].getP1().setY(segments[n - 1].getR().getY() / segments[n - 1].getB());
-            segments[n - 1].getP1().setZ(segments[n - 1].getR().getZ() / segments[n - 1].getB());
+            segments[n - 1].getIntermediatePoint1().setX(segments[n - 1].getResult().getX() / segments[n - 1].getCoefficient2());
+            segments[n - 1].getIntermediatePoint1().setY(segments[n - 1].getResult().getY() / segments[n - 1].getCoefficient2());
+            segments[n - 1].getIntermediatePoint1().setZ(segments[n - 1].getResult().getZ() / segments[n - 1].getCoefficient2());
 
             for (int i = n - 2; i >= 0; i--) {
-                segments[i].getP1().setX((segments[i].getR().getX() - segments[i].getC() * segments[i + 1].getP1().getX()) / segments[i].getB());
-                segments[i].getP1().setY((segments[i].getR().getY() - segments[i].getC() * segments[i + 1].getP1().getY()) / segments[i].getB());
-                segments[i].getP1().setZ((segments[i].getR().getZ() - segments[i].getC() * segments[i + 1].getP1().getZ()) / segments[i].getB());
+                segments[i].getIntermediatePoint1().setX((segments[i].getResult().getX() - segments[i].getCoefficient3() * segments[i + 1].getIntermediatePoint1().getX()) / segments[i].getCoefficient2());
+                segments[i].getIntermediatePoint1().setY((segments[i].getResult().getY() - segments[i].getCoefficient3() * segments[i + 1].getIntermediatePoint1().getY()) / segments[i].getCoefficient2());
+                segments[i].getIntermediatePoint1().setZ((segments[i].getResult().getZ() - segments[i].getCoefficient3() * segments[i + 1].getIntermediatePoint1().getZ()) / segments[i].getCoefficient2());
             }
 
             for (int i = 0; i < n - 1; i++) {
-                segments[i].getP2().setX(2 * knots[i + 1].getX() - segments[i + 1].getP1().getX());
-                segments[i].getP2().setY(2 * knots[i + 1].getY() - segments[i + 1].getP1().getY());
-                segments[i].getP2().setZ(2 * knots[i + 1].getZ() - segments[i + 1].getP1().getZ());
+                segments[i].getIntermediatePoint2().setX(2 * knots[i + 1].getX() - segments[i + 1].getIntermediatePoint1().getX());
+                segments[i].getIntermediatePoint2().setY(2 * knots[i + 1].getY() - segments[i + 1].getIntermediatePoint1().getY());
+                segments[i].getIntermediatePoint2().setZ(2 * knots[i + 1].getZ() - segments[i + 1].getIntermediatePoint1().getZ());
             }
-            segments[n - 1].getP2().setX(0.5 * (knots[n].getX() + segments[n - 1].getP1().getX()));
-            segments[n - 1].getP2().setY(0.5 * (knots[n].getY() + segments[n - 1].getP1().getY()));
-            segments[n - 1].getP2().setZ(0.5 * (knots[n].getZ() + segments[n - 1].getP1().getZ()));
+            segments[n - 1].getIntermediatePoint2().setX(0.5 * (knots[n].getX() + segments[n - 1].getIntermediatePoint1().getX()));
+            segments[n - 1].getIntermediatePoint2().setY(0.5 * (knots[n].getY() + segments[n - 1].getIntermediatePoint1().getY()));
+            segments[n - 1].getIntermediatePoint2().setZ(0.5 * (knots[n].getZ() + segments[n - 1].getIntermediatePoint1().getZ()));
         }
 
-        if (xflat != null) for (BezierSplineSegment cs : segments) cs.setX(xflat);
-        if (yflat != null) for (BezierSplineSegment cs : segments) cs.setY(yflat);
-        if (zflat != null) for (BezierSplineSegment cs : segments) cs.setZ(zflat);
+        xFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setX(value)));
+        yFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setY(value)));
+        zFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setZ(value)));
     }
 
     @Override
     public String toString() {
-        return (knots != null ? knots.length : 0) + " points.";
+        return knots.length + " points.";
     }
 }
