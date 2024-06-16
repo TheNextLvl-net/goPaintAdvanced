@@ -1,8 +1,16 @@
 package net.thenextlvl.gopaint.api.brush;
 
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.math.BlockVector3;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import net.thenextlvl.gopaint.api.math.Surface;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,27 +21,21 @@ import java.util.function.Consumer;
 /**
  * This interface represents a brush used for painting blocks in a world.
  */
-public interface Brush {
+@Getter
+@RequiredArgsConstructor
+public abstract class Brush {
     /**
      * Retrieves the name of the brush.
-     *
-     * @return The name of the brush.
      */
-    String getName();
-
+    private final String name;
     /**
      * Retrieves the description of the brush.
-     *
-     * @return The description of the brush.
      */
-    String getDescription();
-
+    private final String description;
     /**
      * Retrieves the base64 head value.
-     *
-     * @return The base64 head value.
      */
-    String getHeadValue();
+    private final String headValue;
 
     /**
      * Performs a painting action using the provided location, player, and brush settings.
@@ -41,8 +43,10 @@ public interface Brush {
      * @param location      The location the painting action is performed.
      * @param player        The player who is performing the paint action.
      * @param brushSettings The brush settings to be applied while painting.
+     * @see #performEdit(Player, Consumer)
+     * @see #setBlock(EditSession, Block, Material)
      */
-    void paint(Location location, Player player, BrushSettings brushSettings);
+    public abstract void paint(Location location, Player player, BrushSettings brushSettings);
 
     /**
      * Sets the material of a block in an EditSession.
@@ -52,7 +56,12 @@ public interface Brush {
      * @param material The material to set the block to.
      * @throws MaxChangedBlocksException If the maximum number of changed blocks is exceeded.
      */
-    void setBlock(EditSession session, Block block, Material material) throws MaxChangedBlocksException;
+    protected void setBlock(EditSession session, Block block, Material material) throws MaxChangedBlocksException {
+        BlockVector3 vector = BlockVector3.at(block.getX(), block.getY(), block.getZ());
+        if (session.getMask() == null || session.getMask().test(vector)) {
+            session.setBlock(vector, BukkitAdapter.asBlockType(material));
+        }
+    }
 
     /**
      * Performs an edit using WorldEdit's EditSession.
@@ -61,7 +70,17 @@ public interface Brush {
      * @param player The player performing the edit.
      * @param edit   A Consumer functional interface that defines the actions to be taken within the edit session.
      */
-    void performEdit(Player player, Consumer<EditSession> edit);
+    protected void performEdit(Player player, Consumer<EditSession> edit) {
+        BukkitPlayer wrapped = BukkitAdapter.adapt(player);
+        LocalSession localSession = WorldEdit.getInstance().getSessionManager().get(wrapped);
+        try (EditSession editsession = localSession.createEditSession(wrapped)) {
+            try {
+                edit.accept(editsession);
+            } finally {
+                localSession.remember(editsession);
+            }
+        }
+    }
 
     /**
      * Checks if a given block passes the default checks defined by the brush settings.
@@ -71,7 +90,9 @@ public interface Brush {
      * @param block         The block being checked.
      * @return true if the block passes all the default checks, false otherwise.
      */
-    boolean passesDefaultChecks(BrushSettings brushSettings, Player player, Block block);
+    protected boolean passesDefaultChecks(BrushSettings brushSettings, Player player, Block block) {
+        return passesMaskCheck(brushSettings, block) && passesSurfaceCheck(brushSettings, player, block);
+    }
 
     /**
      * Checks if a given block passes the surface check defined by the brush settings.
@@ -81,7 +102,9 @@ public interface Brush {
      * @param block         The block being checked.
      * @return true if the block passes the surface check, false otherwise.
      */
-    boolean passesSurfaceCheck(BrushSettings brushSettings, Player player, Block block);
+    protected boolean passesSurfaceCheck(BrushSettings brushSettings, Player player, Block block) {
+        return Surface.isOnSurface(block, brushSettings.getSurfaceMode(), player.getLocation());
+    }
 
     /**
      * Checks if a given block passes the mask check defined by the brush settings.
@@ -90,5 +113,7 @@ public interface Brush {
      * @param block         The block being checked.
      * @return true if the block passes the mask check, false otherwise.
      */
-    boolean passesMaskCheck(BrushSettings brushSettings, Block block);
+    protected boolean passesMaskCheck(BrushSettings brushSettings, Block block) {
+        return !brushSettings.isMaskEnabled() || block.getType().equals(brushSettings.getMask());
+    }
 }

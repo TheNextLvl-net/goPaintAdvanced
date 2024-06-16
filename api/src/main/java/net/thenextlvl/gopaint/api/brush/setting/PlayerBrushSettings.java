@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The PlayerBrushSettings interface extends the BrushSettings interface and the InventoryHolder interface.
@@ -247,4 +248,20 @@ public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
      * in the brush settings that requires updating the inventory display.
      */
     void updateInventory();
+
+    /**
+     * Retrieves the next brush in the list of available brushes.
+     *
+     * @param brush The current brush, if null returns the first brush in the list.
+     * @return The next brush in the list, or the first brush if the current brush is null.
+     */
+    Brush cycleForward(@Nullable Brush brush);
+
+    /**
+     * Retrieves the previous brush in the list of available brushes.
+     *
+     * @param brush The current brush.
+     * @return The previous brush in the list, or the first brush if the current brush is null.
+     */
+    Brush cycleBackward(@Nullable Brush brush);
 }

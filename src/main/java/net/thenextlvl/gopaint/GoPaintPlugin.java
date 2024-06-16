@@ -11,8 +11,10 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.gopaint.api.brush.BrushManager;
-import net.thenextlvl.gopaint.brush.CraftBrushManager;
+import net.thenextlvl.gopaint.api.brush.BrushController;
+import net.thenextlvl.gopaint.api.brush.BrushRegistry;
+import net.thenextlvl.gopaint.brush.CraftBrushController;
+import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
 import net.thenextlvl.gopaint.model.PluginConfig;
 import net.thenextlvl.gopaint.listener.ConnectListener;
@@ -25,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -58,8 +61,14 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             .create()
     ).validate().save();
 
-    private final @Getter BrushManager brushManager = new CraftBrushManager(this);
+    private final @Getter BrushController brushController = new CraftBrushController(this);
+    private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
+
     private final Metrics metrics = new Metrics(this, 22279);
+
+    public GoPaintPlugin() {
+        registerServices();
+    }
 
     @Override
     public void onEnable() {
@@ -75,6 +84,11 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     @Override
     public void reloadConfig() {
         configFile.reload();
+    }
+
+    private void registerServices() {
+        Bukkit.getServicesManager().register(BrushController.class, brushController(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(BrushRegistry.class, brushRegistry(), this, ServicePriority.Highest);
     }
 
     private void registerListeners() {

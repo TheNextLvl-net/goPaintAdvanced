@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
@@ -26,21 +27,22 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class DiscBrush extends CraftBrush {
+public class SprayBrush extends Brush {
 
-    private static final String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";
-    private static final String NAME = "Disc Brush";
+    private static final String DESCRIPTION = "Configurable random chance brush";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==";
+    private static final String NAME = "Spray Brush";
 
-    public DiscBrush() {
+    public SprayBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), brushSettings.getAxis(), false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
+                    .filter(block -> brushSettings.getRandom().nextInt(100) < brushSettings.getChance())
                     .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
         });
     }

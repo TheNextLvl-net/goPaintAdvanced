@@ -16,9 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -26,13 +28,13 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class SprayBrush extends CraftBrush {
+public class AngleBrush extends Brush {
 
-    private static final String DESCRIPTION = "Configurable random chance brush";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==";
-    private static final String NAME = "Spray Brush";
+    private static final String DESCRIPTION = "Only works on cliffs";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmRlNDQ4ZjBkYmU3NmJiOGE4MzJjOGYzYjJhMDNkMzViZDRlMjc4NWZhNWU4Mjk4YzI2MTU1MDNmNDdmZmEyIn19fQ==";
+    private static final String NAME = "Angle Brush";
 
-    public SprayBrush() {
+    public AngleBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
@@ -41,7 +43,9 @@ public class SprayBrush extends CraftBrush {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
-                    .filter(block -> brushSettings.getRandom().nextInt(100) < brushSettings.getChance())
+                    .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) >= 0.1
+                            && Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
+                            >= Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
                     .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
         });
     }

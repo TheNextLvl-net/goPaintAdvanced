@@ -22,12 +22,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.brush.*;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
+import net.thenextlvl.gopaint.brush.standard.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.stream.Collectors;
 
 public class GUI {
 
@@ -43,8 +45,9 @@ public class GUI {
         Inventory inv = Bukkit.createInventory(null, 27, Component.text("goPaint Brushes", NamedTextColor.DARK_BLUE));
         // FILLER
         formatDefault(inv);
-        for (int index = 0; index < plugin.brushManager().getBrushes().size(); index++) {
-            var brush = plugin.brushManager().getBrushes().get(index);
+        var brushes = plugin.brushRegistry().getBrushes();
+        for (int index = 0; index < brushes.size(); index++) {
+            var brush = brushes.get(index);
             inv.setItem(index, Items.createHead(brush.getHeadValue(), 1, "§6" + brush.getName(),
                     "\n§7Click to select\n\n§8" + brush.getDescription()
             ));
@@ -85,8 +88,16 @@ public class GUI {
 
         String clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
 
+        var lore = plugin.brushRegistry().getBrushes().stream().map(current -> {
+            if (current.equals(brush)) {
+                return "§e" + current.getName() + "\n";
+            } else {
+                return "§8" + current.getName() + "\n";
+            }
+        }).collect(Collectors.joining());
+
         inventory.setItem(11, Items.createHead(brush.getHeadValue(), 1, "§6Selected Brush type",
-                clicks + plugin.brushManager().getBrushLore(brush)
+                clicks + lore
         ));
         inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
 

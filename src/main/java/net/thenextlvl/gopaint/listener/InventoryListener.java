@@ -21,7 +21,7 @@ package net.thenextlvl.gopaint.listener;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.brush.*;
+import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.util.GUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -51,7 +51,7 @@ public final class InventoryListener implements Listener {
             }
             return;
         }
-        var playerBrush = plugin.brushManager().getBrush(player);
+        var playerBrush = plugin.brushController().getBrushSettings(player);
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 if (!event.getCursor().getType().isBlock()) {
@@ -196,7 +196,7 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        var playerBrush = plugin.brushManager().getBrush(player);
+        var playerBrush = plugin.brushController().getBrushSettings(player);
 
         ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
 
@@ -206,7 +206,7 @@ public final class InventoryListener implements Listener {
 
         //noinspection deprecation
         String name = itemMeta.getDisplayName().replace("§6", "");
-        plugin.brushManager().getBrushHandler(name).ifPresent(brush -> {
+        plugin.brushController().getBrushHandler(name).ifPresent(brush -> {
             playerBrush.setBrush(brush);
             playerBrush.updateInventory();
             player.openInventory(playerBrush.getInventory());

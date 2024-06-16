@@ -12,8 +12,8 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
-group = "net.thenextlvl.gopaint"
-version = "1.1.1"
+group = project(":api").group
+version = project(":api").version
 
 repositories {
     mavenCentral()
@@ -24,16 +24,12 @@ repositories {
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.32")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
-    // Paper / Spigot
     compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
-    // Fawe / WorldEdit
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.27"))
-    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
-    // Stats
+
     implementation("org.bstats:bstats-bukkit:3.0.2")
-    // Internationalization
-    implementation("net.thenextlvl.core:i18n:1.0.18")
-    implementation("net.thenextlvl.core:adapters:1.0.9")
+
+    api("net.thenextlvl.core:i18n:1.0.18")
+    api("net.thenextlvl.core:adapters:1.0.9")
 
     api(project(":api"))
 
