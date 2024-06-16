@@ -12,7 +12,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.gopaint.api.brush.BrushController;
+import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
+import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
 import net.thenextlvl.gopaint.model.PluginConfig;
 import net.thenextlvl.gopaint.listener.ConnectListener;
@@ -60,6 +62,8 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     ).validate().save();
 
     private final @Getter BrushController brushController = new CraftBrushController(this);
+    private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
+
     private final Metrics metrics = new Metrics(this, 22279);
 
     public GoPaintPlugin() {
@@ -84,6 +88,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
 
     private void registerServices() {
         Bukkit.getServicesManager().register(BrushController.class, brushController(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(BrushRegistry.class, brushRegistry(), this, ServicePriority.Highest);
     }
 
     private void registerListeners() {

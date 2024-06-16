@@ -22,8 +22,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.brush.*;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
+import net.thenextlvl.gopaint.brush.standard.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -43,8 +43,9 @@ public class GUI {
         Inventory inv = Bukkit.createInventory(null, 27, Component.text("goPaint Brushes", NamedTextColor.DARK_BLUE));
         // FILLER
         formatDefault(inv);
-        for (int index = 0; index < plugin.brushController().getBrushes().size(); index++) {
-            var brush = plugin.brushController().getBrushes().get(index);
+        var brushes = plugin.brushRegistry().getBrushes();
+        for (int index = 0; index < brushes.size(); index++) {
+            var brush = brushes.get(index);
             inv.setItem(index, Items.createHead(brush.getHeadValue(), 1, "§6" + brush.getName(),
                     "\n§7Click to select\n\n§8" + brush.getDescription()
             ));
