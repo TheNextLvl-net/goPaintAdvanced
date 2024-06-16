@@ -33,6 +33,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
     // Internationalization
     implementation("net.thenextlvl.core:i18n:1.0.18")
+    implementation("net.thenextlvl.core:adapters:1.0.9")
 
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 }

@@ -19,7 +19,6 @@
 package net.thenextlvl.gopaint.brush;
 
 import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.other.Settings;
 import net.thenextlvl.gopaint.objects.other.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
@@ -94,7 +93,7 @@ public record ExportedPlayerBrush(
         private final Brush brush;
 
         private List<Material> blocks = Collections.emptyList();
-        private Axis axis = Settings.settings().GENERIC.DEFAULT_AXIS;
+        private Axis axis = Axis.Y; // todo: plugin.config().GENERIC.DEFAULT_AXIS;
         private SurfaceMode surfaceMode = SurfaceMode.DISABLED;
 
         private @Nullable Material mask;

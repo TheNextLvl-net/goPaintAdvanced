@@ -20,19 +20,9 @@ package net.thenextlvl.gopaint.listeners;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
+import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.brush.PlayerBrush;
-import net.thenextlvl.gopaint.brush.PlayerBrushManager;
-import net.thenextlvl.gopaint.objects.brush.AngleBrush;
-import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.brush.DiscBrush;
-import net.thenextlvl.gopaint.objects.brush.FractureBrush;
-import net.thenextlvl.gopaint.objects.brush.GradientBrush;
-import net.thenextlvl.gopaint.objects.brush.OverlayBrush;
-import net.thenextlvl.gopaint.objects.brush.PaintBrush;
-import net.thenextlvl.gopaint.objects.brush.SplatterBrush;
-import net.thenextlvl.gopaint.objects.brush.SprayBrush;
-import net.thenextlvl.gopaint.objects.brush.UnderlayBrush;
-import net.thenextlvl.gopaint.objects.other.Settings;
+import net.thenextlvl.gopaint.objects.brush.*;
 import net.thenextlvl.gopaint.utils.GUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -46,7 +36,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 @RequiredArgsConstructor
 public final class InventoryListener implements Listener {
-    private final PlayerBrushManager brushManager;
+    private final GoPaintPlugin plugin;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void menuClick(InventoryClickEvent event) {
@@ -57,16 +47,16 @@ public final class InventoryListener implements Listener {
             return;
         }
         if (event.getView().getTopInventory() != event.getClickedInventory()) {
-            if (event.getClick().isShiftClick() || event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+            if (event.getClick().isShiftClick() || event.getAction().equals(InventoryAction.COLLECT_TO_CURSOR)) {
                 event.setCancelled(true);
             }
             return;
         }
-        PlayerBrush playerBrush = brushManager.getBrush(player);
+        PlayerBrush playerBrush = plugin.brushManager().getBrush(player);
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 if (!event.getCursor().getType().isBlock()) {
-                    if (!event.getCursor().getType().equals(Settings.settings().GENERIC.DEFAULT_BRUSH)) {
+                    if (!event.getCursor().getType().equals(plugin.config().generic().defaultBrush())) {
                         playerBrush.export(event.getCursor());
                     }
                 }
@@ -207,7 +197,7 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        PlayerBrush playerBrush = brushManager.getBrush(player);
+        PlayerBrush playerBrush = plugin.brushManager().getBrush(player);
 
         ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
 
@@ -217,7 +207,7 @@ public final class InventoryListener implements Listener {
 
         //noinspection deprecation
         String name = itemMeta.getDisplayName().replace("§6", "");
-        brushManager.getBrushHandler(name).ifPresent(brush -> {
+        plugin.brushManager().getBrushHandler(name).ifPresent(brush -> {
             playerBrush.brush(brush);
             playerBrush.updateInventory();
             player.openInventory(playerBrush.getInventory());
