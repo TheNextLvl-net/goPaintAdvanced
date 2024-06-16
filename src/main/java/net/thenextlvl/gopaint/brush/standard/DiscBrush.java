@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
@@ -26,7 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class DiscBrush extends CraftBrush {
+public class DiscBrush extends Brush {
 
     private static final String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
     private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";

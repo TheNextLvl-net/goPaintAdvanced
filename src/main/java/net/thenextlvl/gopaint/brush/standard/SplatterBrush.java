@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
@@ -26,7 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class SplatterBrush extends CraftBrush {
+public class SplatterBrush extends Brush {
 
     private static final String DESCRIPTION = "More chance when closer\n§8to the clicked point\n§8and configurable chance";
     private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19";

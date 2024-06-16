@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -27,7 +28,7 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class FractureBrush extends CraftBrush {
+public class FractureBrush extends Brush {
 
     private static final String DESCRIPTION = "Places blocks in cracks/fisures";
     private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNkZjczZWVlNjIyNGM1YzVkOTQ4ZDJhMzQ1ZGUyNWYyMDhjYmQ5YWY3MTA4Y2UxZTFiNjFhNTg2ZGU5OGIyIn19fQ==";
