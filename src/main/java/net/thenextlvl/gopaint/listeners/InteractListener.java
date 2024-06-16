@@ -26,7 +26,6 @@ import net.thenextlvl.gopaint.brush.BrushSettings;
 import net.thenextlvl.gopaint.brush.ExportedPlayerBrush;
 import net.thenextlvl.gopaint.brush.PlayerBrush;
 import net.thenextlvl.gopaint.objects.brush.Brush;
-import net.thenextlvl.gopaint.objects.other.Settings;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -58,7 +57,7 @@ public final class InteractListener implements Listener {
             return;
         }
 
-        if (event.getAction().isLeftClick() && item.getType() == Settings.settings().GENERIC.DEFAULT_BRUSH) {
+        if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().generic().defaultBrush())) {
             PlayerBrush brush = plugin.brushManager().getBrush(player);
             player.openInventory(brush.getInventory());
             event.setCancelled(true);
@@ -70,7 +69,7 @@ public final class InteractListener implements Listener {
         }
 
         Location location;
-        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             Block targetBlock = player.getTargetBlockExact(250, FluidCollisionMode.NEVER);
             if (targetBlock == null) {
                 return;
@@ -83,7 +82,7 @@ public final class InteractListener implements Listener {
         }
 
         if (!player.hasPermission(GoPaintPlugin.WORLD_BYPASS_PERMISSION)
-            && Settings.settings().GENERIC.DISABLED_WORLDS.contains(location.getWorld().getName())) {
+            && plugin.config().generic().disabledWorlds().contains(location.getWorld().getName())) {
             return;
         }
 
@@ -97,11 +96,13 @@ public final class InteractListener implements Listener {
 
             //noinspection removal
             brushSettings = brush.map(current -> ExportedPlayerBrush.parse(current, itemMeta)).orElse(null);
-        } else if (item.getType().equals(Settings.settings().GENERIC.DEFAULT_BRUSH)) {
+        } else if (item.getType().equals(plugin.config().generic().defaultBrush())) {
             brushSettings = plugin.brushManager().getBrush(player);
         } else {
             return;
         }
+
+        event.setCancelled(true);
 
         if (brushSettings == null || brushSettings.blocks().isEmpty()) {
             return;

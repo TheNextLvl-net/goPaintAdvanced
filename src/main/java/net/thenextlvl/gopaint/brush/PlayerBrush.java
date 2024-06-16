@@ -25,8 +25,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.objects.brush.*;
-import net.thenextlvl.gopaint.objects.other.Settings;
 import net.thenextlvl.gopaint.objects.other.SurfaceMode;
 import net.thenextlvl.gopaint.utils.GUI;
 import org.bukkit.Axis;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @Accessors(fluent = true)
 public final class PlayerBrush implements BrushSettings {
 
-    private final PlayerBrushManager brushManager;
+    private final GoPaintPlugin plugin;
     private final Random random = new SecureRandom();
 
     private boolean maskEnabled;
@@ -72,23 +72,23 @@ public final class PlayerBrush implements BrushSettings {
 
     private final Inventory gui;
 
-    public PlayerBrush(PlayerBrushManager brushManager) {
-        this.brushManager = brushManager;
+    public PlayerBrush(GoPaintPlugin plugin) {
+        this.plugin = plugin;
 
-        surfaceMode = Settings.settings().GENERIC.SURFACE_MODE;
-        maskEnabled = Settings.settings().GENERIC.MASK_ENABLED;
-        enabled = Settings.settings().GENERIC.ENABLED_BY_DEFAULT;
-        chance = Settings.settings().GENERIC.DEFAULT_CHANCE;
-        thickness = Settings.settings().THICKNESS.DEFAULT_THICKNESS;
-        fractureDistance = Settings.settings().FRACTURE.DEFAULT_FRACTURE_DISTANCE;
-        angleDistance = Settings.settings().ANGLE.DEFAULT_ANGLE_DISTANCE;
-        angleHeightDifference = Settings.settings().ANGLE.DEFAULT_ANGLE_HEIGHT_DIFFERENCE;
-        falloffStrength = Settings.settings().GENERIC.DEFAULT_FALLOFF_STRENGTH;
-        mixingStrength = Settings.settings().GENERIC.DEFAULT_MIXING_STRENGTH;
-        axis = Settings.settings().GENERIC.DEFAULT_AXIS;
-        size = Settings.settings().GENERIC.DEFAULT_SIZE;
-        mask = Settings.settings().GENERIC.DEFAULT_MASK;
-        brush = brushManager.cycleForward(null);
+        surfaceMode = plugin.config().generic().surfaceMode();
+        maskEnabled = plugin.config().generic().maskEnabled();
+        enabled = plugin.config().generic().enabledByDefault();
+        chance = plugin.config().generic().defaultChance();
+        thickness = plugin.config().thickness().defaultThickness();
+        fractureDistance = plugin.config().fracture().defaultFractureDistance();
+        angleDistance = plugin.config().angle().defaultAngleDistance();
+        angleHeightDifference = plugin.config().angle().defaultAngleHeightDifference();
+        falloffStrength = plugin.config().generic().defaultFalloffStrength();
+        mixingStrength = plugin.config().generic().defaultMixingStrength();
+        axis = plugin.config().generic().defaultAxis();
+        size = plugin.config().generic().defaultSize();
+        mask = plugin.config().generic().defaultMask();
+        brush = plugin.brushManager().cycleForward(null);
         blocks.add(Material.STONE);
         gui = GUI.create(this);
     }
@@ -151,20 +151,20 @@ public final class PlayerBrush implements BrushSettings {
     }
 
     public void cycleBrushForward() {
-        brush = brushManager.cycleForward(brush);
+        brush = plugin.brushManager().cycleForward(brush);
         updateInventory();
     }
 
     public void cycleBrushBackwards() {
-        brush = brushManager.cycleBack(brush);
+        brush = plugin.brushManager().cycleBack(brush);
         updateInventory();
     }
 
     public void setSize(int size) {
-        if (size <= Settings.settings().GENERIC.MAX_SIZE && size > 0) {
+        if (size <= plugin.config().generic().maxSize() && size > 0) {
             this.size = size;
-        } else if (size > Settings.settings().GENERIC.MAX_SIZE) {
-            this.size = Settings.settings().GENERIC.MAX_SIZE;
+        } else if (size > plugin.config().generic().maxSize()) {
+            this.size = plugin.config().generic().maxSize();
         } else {
             this.size = 1;
         }
@@ -177,13 +177,13 @@ public final class PlayerBrush implements BrushSettings {
 
     public void increaseBrushSize(boolean x10) {
         if (x10) {
-            if (size + 10 <= Settings.settings().GENERIC.MAX_SIZE) {
+            if (size + 10 <= plugin.config().generic().maxSize()) {
                 size += 10;
             } else {
-                size = Settings.settings().GENERIC.MAX_SIZE;
+                size = plugin.config().generic().maxSize();
             }
         } else {
-            if (size < Settings.settings().GENERIC.MAX_SIZE) {
+            if (size < plugin.config().generic().maxSize()) {
                 size += 1;
             }
         }
@@ -226,7 +226,7 @@ public final class PlayerBrush implements BrushSettings {
     }
 
     public void increaseThickness() {
-        if (thickness < Settings.settings().THICKNESS.MAX_THICKNESS) {
+        if (thickness < plugin.config().thickness().maxThickness()) {
             thickness += 1;
         }
         updateInventory();
@@ -240,7 +240,7 @@ public final class PlayerBrush implements BrushSettings {
     }
 
     public void increaseAngleDistance() {
-        if (angleDistance < Settings.settings().ANGLE.MAX_ANGLE_DISTANCE) {
+        if (angleDistance < plugin.config().angle().maxAngleDistance()) {
             angleDistance += 1;
         }
         updateInventory();
@@ -254,7 +254,7 @@ public final class PlayerBrush implements BrushSettings {
     }
 
     public void increaseFractureDistance() {
-        if (this.fractureDistance < Settings.settings().FRACTURE.MAX_FRACTURE_DISTANCE) {
+        if (this.fractureDistance < plugin.config().fracture().maxFractureDistance()) {
             this.fractureDistance += 1;
         }
         updateInventory();
@@ -273,8 +273,8 @@ public final class PlayerBrush implements BrushSettings {
         } else {
             angleHeightDifference += 5.0;
         }
-        if (angleHeightDifference > Settings.settings().ANGLE.MAX_ANGLE_HEIGHT_DIFFERENCE) {
-            angleHeightDifference = Settings.settings().ANGLE.MAX_ANGLE_HEIGHT_DIFFERENCE;
+        if (angleHeightDifference > plugin.config().angle().maxAngleHeightDifference()) {
+            angleHeightDifference = plugin.config().angle().maxAngleHeightDifference();
         }
         updateInventory();
     }
@@ -285,8 +285,8 @@ public final class PlayerBrush implements BrushSettings {
         } else {
             angleHeightDifference -= 5.0;
         }
-        if (angleHeightDifference < Settings.settings().ANGLE.MIN_ANGLE_HEIGHT_DIFFERENCE) {
-            angleHeightDifference = Settings.settings().ANGLE.MIN_ANGLE_HEIGHT_DIFFERENCE;
+        if (angleHeightDifference < plugin.config().angle().minAngleHeightDifference()) {
+            angleHeightDifference = plugin.config().angle().minAngleHeightDifference();
         }
         updateInventory();
     }

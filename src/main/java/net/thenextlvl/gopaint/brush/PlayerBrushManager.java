@@ -19,8 +19,8 @@
 package net.thenextlvl.gopaint.brush;
 
 import com.google.common.collect.ImmutableList;
-import core.i18n.file.ComponentBundle;
 import lombok.Getter;
+import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.objects.brush.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -37,8 +37,9 @@ import java.util.stream.Collectors;
 public class PlayerBrushManager {
     private final HashMap<UUID, PlayerBrush> playerBrushes = new HashMap<>();
     private final @Getter List<Brush> brushes;
+    private final GoPaintPlugin plugin;
 
-    public PlayerBrushManager(ComponentBundle bundle) {
+    public PlayerBrushManager(GoPaintPlugin plugin) {
         brushes = ImmutableList.of(
                 new SphereBrush(),
                 new SprayBrush(),
@@ -50,8 +51,9 @@ public class PlayerBrushManager {
                 new UnderlayBrush(),
                 new FractureBrush(),
                 new GradientBrush(),
-                new PaintBrush(bundle)
+                new PaintBrush(plugin.bundle())
         );
+        this.plugin = plugin;
     }
 
     /**
@@ -61,7 +63,7 @@ public class PlayerBrushManager {
      * @return The brush for the specified player.
      */
     public PlayerBrush getBrush(Player player) {
-        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new PlayerBrush(this));
+        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new PlayerBrush(plugin));
     }
 
     /**

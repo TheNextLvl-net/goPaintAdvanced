@@ -1,24 +1,11 @@
-/*
- * goPaint is designed to simplify painting inside of Minecraft.
- * Copyright (C) Arcaniax-Development
- * Copyright (C) Arcaniax team and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 package net.thenextlvl.gopaint;
 
+import com.google.gson.GsonBuilder;
+import core.file.FileIO;
+import core.file.format.GsonFile;
 import core.i18n.file.ComponentBundle;
+import core.io.IO;
+import core.paper.adapters.inventory.MaterialAdapter;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -26,11 +13,13 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.gopaint.brush.PlayerBrushManager;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
+import net.thenextlvl.gopaint.objects.other.PluginConfig;
 import net.thenextlvl.gopaint.listeners.ConnectListener;
 import net.thenextlvl.gopaint.listeners.InteractListener;
 import net.thenextlvl.gopaint.listeners.InventoryListener;
-import net.thenextlvl.gopaint.objects.other.Settings;
+import net.thenextlvl.gopaint.objects.other.SurfaceMode;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Axis;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,20 +27,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 
-@Getter
 @Accessors(fluent = true)
 public class GoPaintPlugin extends JavaPlugin implements Listener {
-
-    public static final String PAPER_DOCS = "https://jd.papermc.io/paper/1.20.6/org/bukkit/Material.html#enum-constant-summary";
-
     public static final String USE_PERMISSION = "gopaint.use";
     public static final String ADMIN_PERMISSION = "gopaint.admin";
     public static final String WORLD_BYPASS_PERMISSION = "gopaint.world.bypass";
 
     private final File translations = new File(getDataFolder(), "translations");
-    private final ComponentBundle bundle = new ComponentBundle(translations, audience ->
+    private final @Getter ComponentBundle bundle = new ComponentBundle(translations, audience ->
             audience instanceof Player player ? player.locale() : Locale.US)
             .register("messages", Locale.US)
             .register("messages_german", Locale.GERMANY)
@@ -60,7 +46,18 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
-    private final PlayerBrushManager brushManager = new PlayerBrushManager(bundle);
+    private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
+            new PluginConfig.Generic(Material.FEATHER, 100, 10, 50, Axis.Y, 50, 50, new ArrayList<>(), true, true, Material.SPONGE, SurfaceMode.DIRECT),
+            new PluginConfig.Thickness(1, 5),
+            new PluginConfig.Angle(2, 5, 10, 40, 85),
+            new PluginConfig.Fracture(2, 5)
+    ), new GsonBuilder()
+            .registerTypeAdapter(Material.class, MaterialAdapter.NotNull.INSTANCE)
+            .setPrettyPrinting()
+            .create()
+    ).validate().save();
+
+    private final @Getter PlayerBrushManager brushManager = new PlayerBrushManager(this);
     private final Metrics metrics = new Metrics(this, 22279);
 
     @Override
@@ -73,15 +70,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        reloadConfig();
-
-        Material brush = Settings.settings().GENERIC.DEFAULT_BRUSH;
-        if (!brush.isItem()) {
-            getComponentLogger().error("{} is not a valid default brush, it has to be an item", brush.name());
-            getComponentLogger().error("For more information visit {}", PAPER_DOCS);
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-
         registerListeners();
         registerCommands();
     }
@@ -91,8 +79,9 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
         metrics.shutdown();
     }
 
+    @Override
     public void reloadConfig() {
-        Settings.settings().reload(this, new File(getDataFolder(), "config.yml"));
+        configFile.reload();
     }
 
     private void registerCommands() {
@@ -100,12 +89,16 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     }
 
     private void registerListeners() {
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(brushManager()), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(this), this);
         Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ConnectListener(brushManager()), this);
     }
 
     private boolean hasOriginalGoPaint() {
         return Bukkit.getPluginManager().getPlugin("goPaint") != this;
+    }
+
+    public PluginConfig config() {
+        return configFile.getRoot();
     }
 }
