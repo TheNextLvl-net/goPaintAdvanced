@@ -22,21 +22,24 @@ import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
-import net.thenextlvl.gopaint.api.brush.BrushManager;
+import net.thenextlvl.gopaint.api.brush.BrushController;
+import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
+import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CraftBrushManager implements BrushManager {
+public class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();
     private final @Getter List<Brush> brushes;
     private final GoPaintPlugin plugin;
 
-    public CraftBrushManager(GoPaintPlugin plugin) {
+    public CraftBrushController(GoPaintPlugin plugin) {
         brushes = ImmutableList.of(
                 new SphereBrush(),
                 new SprayBrush(),

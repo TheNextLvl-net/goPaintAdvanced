@@ -24,18 +24,14 @@ import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @RequiredArgsConstructor
 public final class InteractListener implements Listener {
@@ -43,34 +39,26 @@ public final class InteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClick(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+        var player = event.getPlayer();
 
-        if (!player.hasPermission(GoPaintPlugin.USE_PERMISSION)) {
-            return;
-        }
+        if (!player.hasPermission(GoPaintPlugin.USE_PERMISSION)) return;
 
-        ItemStack item = event.getItem();
-        if (item == null) {
-            return;
-        }
+        var item = event.getItem();
+        if (item == null) return;
 
         if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().generic().defaultBrush())) {
-            var brush = plugin.brushManager().getBrush(player);
+            var brush = plugin.brushController().getBrush(player);
             player.openInventory(brush.getInventory());
             event.setCancelled(true);
             return;
         }
 
-        if (!event.getAction().isRightClick()) {
-            return;
-        }
+        if (!event.getAction().isRightClick()) return;
 
         Location location;
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             Block targetBlock = player.getTargetBlockExact(250, FluidCollisionMode.NEVER);
-            if (targetBlock == null) {
-                return;
-            }
+            if (targetBlock == null) return;
             location = targetBlock.getLocation().clone();
         } else if (event.getClickedBlock() != null) {
             location = event.getClickedBlock().getLocation();
@@ -85,25 +73,17 @@ public final class InteractListener implements Listener {
 
         BrushSettings settings;
 
-        ItemMeta itemMeta = item.getItemMeta();
-
-        if (itemMeta != null && itemMeta.hasLore() && itemMeta.displayName() instanceof TextComponent name) {
-
-            var brush = plugin.brushManager().getBrushHandler(name.content());
-
-            //noinspection removal
-            settings = brush.map(current -> CraftItemBrushSettings.parse(current, itemMeta)).orElse(null);
+        var meta = item.getItemMeta();
+        if (meta != null && meta.hasLore() && meta.displayName() instanceof TextComponent name) {
+            var brush = plugin.brushController().getBrushHandler(name.content());
+            settings = brush.map(current -> plugin.brushController().parseBrushSettings(current, meta)).orElse(null);
         } else if (item.getType().equals(plugin.config().generic().defaultBrush())) {
-            settings = plugin.brushManager().getBrush(player);
-        } else {
-            return;
-        }
+            settings = plugin.brushController().getBrush(player);
+        } else return;
 
         event.setCancelled(true);
 
-        if (settings == null || settings.getBlocks().isEmpty()) {
-            return;
-        }
+        if (settings == null || settings.getBlocks().isEmpty()) return;
 
         if (!(settings instanceof PlayerBrushSettings playerSettings) || playerSettings.isEnabled()) {
             BukkitAdapter.adapt(player).runAction(

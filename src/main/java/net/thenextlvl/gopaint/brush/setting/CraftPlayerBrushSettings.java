@@ -84,7 +84,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         axis = plugin.config().generic().defaultAxis();
         size = plugin.config().generic().defaultSize();
         mask = plugin.config().generic().defaultMask();
-        brush = plugin.brushManager().cycleForward(null);
+        brush = plugin.brushController().cycleForward(null);
         blocks.add(Material.STONE);
         inventory = GUI.create(this);
     }
@@ -144,12 +144,12 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     public void cycleBrushForward() {
-        brush = plugin.brushManager().cycleForward(brush);
+        brush = plugin.brushController().cycleForward(brush);
         updateInventory();
     }
 
     public void cycleBrushBackward() {
-        brush = plugin.brushManager().cycleBackward(brush);
+        brush = plugin.brushController().cycleBackward(brush);
         updateInventory();
     }
 

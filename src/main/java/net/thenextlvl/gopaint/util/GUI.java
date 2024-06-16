@@ -43,8 +43,8 @@ public class GUI {
         Inventory inv = Bukkit.createInventory(null, 27, Component.text("goPaint Brushes", NamedTextColor.DARK_BLUE));
         // FILLER
         formatDefault(inv);
-        for (int index = 0; index < plugin.brushManager().getBrushes().size(); index++) {
-            var brush = plugin.brushManager().getBrushes().get(index);
+        for (int index = 0; index < plugin.brushController().getBrushes().size(); index++) {
+            var brush = plugin.brushController().getBrushes().get(index);
             inv.setItem(index, Items.createHead(brush.getHeadValue(), 1, "§6" + brush.getName(),
                     "\n§7Click to select\n\n§8" + brush.getDescription()
             ));
@@ -86,7 +86,7 @@ public class GUI {
         String clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
 
         inventory.setItem(11, Items.createHead(brush.getHeadValue(), 1, "§6Selected Brush type",
-                clicks + plugin.brushManager().getBrushLore(brush)
+                clicks + plugin.brushController().getBrushLore(brush)
         ));
         inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
 

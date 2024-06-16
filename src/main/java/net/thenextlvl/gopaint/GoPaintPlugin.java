@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.gopaint.api.brush.BrushManager;
-import net.thenextlvl.gopaint.brush.CraftBrushManager;
+import net.thenextlvl.gopaint.api.brush.BrushController;
+import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
 import net.thenextlvl.gopaint.model.PluginConfig;
 import net.thenextlvl.gopaint.listener.ConnectListener;
@@ -58,7 +58,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             .create()
     ).validate().save();
 
-    private final @Getter BrushManager brushManager = new CraftBrushManager(this);
+    private final @Getter BrushController brushController = new CraftBrushController(this);
     private final Metrics metrics = new Metrics(this, 22279);
 
     @Override

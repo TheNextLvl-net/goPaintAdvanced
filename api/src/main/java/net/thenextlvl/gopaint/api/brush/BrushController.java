@@ -1,16 +1,18 @@
 package net.thenextlvl.gopaint.api.brush;
 
+import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * This interface manages the brush selection for each player.
+ * This interface controls the brush selection for each player.
  */
-public interface BrushManager {
+public interface BrushController {
 
     /**
      * Retrieves the list of brushes available in the BrushManager.
