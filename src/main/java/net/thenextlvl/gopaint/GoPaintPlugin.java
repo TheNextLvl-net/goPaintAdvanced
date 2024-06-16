@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -61,6 +62,10 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     private final @Getter BrushController brushController = new CraftBrushController(this);
     private final Metrics metrics = new Metrics(this, 22279);
 
+    public GoPaintPlugin() {
+        registerServices();
+    }
+
     @Override
     public void onEnable() {
         registerListeners();
@@ -75,6 +80,10 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
     @Override
     public void reloadConfig() {
         configFile.reload();
+    }
+
+    private void registerServices() {
+        Bukkit.getServicesManager().register(BrushController.class, brushController(), this, ServicePriority.Highest);
     }
 
     private void registerListeners() {
