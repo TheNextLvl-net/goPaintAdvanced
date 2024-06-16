@@ -20,6 +20,7 @@ package net.thenextlvl.gopaint.brush;
 
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
+import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.BrushController;
@@ -28,6 +29,7 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +61,16 @@ public class CraftBrushController implements BrushController {
     @Override
     public PlayerBrushSettings getBrush(Player player) {
         return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new CraftPlayerBrushSettings(plugin));
+    }
+
+    @Override
+    public Optional<ItemBrushSettings> parseBrushSettings(ItemStack itemStack) {
+        if (!itemStack.hasItemMeta()) return Optional.empty();
+        var meta = itemStack.getItemMeta();
+        if (meta == null || !meta.hasLore() || !meta.hasDisplayName()) return Optional.empty();
+        if (!(meta.displayName() instanceof TextComponent name)) return Optional.empty();
+        var brush = getBrushHandler(name.content());
+        return brush.map(current -> parseBrushSettings(current, meta));
     }
 
     @Override

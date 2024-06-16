@@ -20,9 +20,7 @@ package net.thenextlvl.gopaint.listener;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -71,15 +69,9 @@ public final class InteractListener implements Listener {
             return;
         }
 
-        BrushSettings settings;
-
-        var meta = item.getItemMeta();
-        if (meta != null && meta.hasLore() && meta.displayName() instanceof TextComponent name) {
-            var brush = plugin.brushController().getBrushHandler(name.content());
-            settings = brush.map(current -> plugin.brushController().parseBrushSettings(current, meta)).orElse(null);
-        } else if (item.getType().equals(plugin.config().generic().defaultBrush())) {
-            settings = plugin.brushController().getBrush(player);
-        } else return;
+        var settings = !item.getType().equals(plugin.config().generic().defaultBrush())
+                ? plugin.brushController().parseBrushSettings(item).orElse(null)
+                : plugin.brushController().getBrush(player);
 
         event.setCancelled(true);
 
