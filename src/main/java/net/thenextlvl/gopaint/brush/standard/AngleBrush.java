@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -26,13 +27,13 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class SplatterBrush extends CraftBrush {
+public class AngleBrush extends CraftBrush {
 
-    private static final String DESCRIPTION = "More chance when closer\n§8to the clicked point\n§8and configurable chance";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19";
-    private static final String NAME = "Splatter Brush";
+    private static final String DESCRIPTION = "Only works on cliffs";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmRlNDQ4ZjBkYmU3NmJiOGE4MzJjOGYzYjJhMDNkMzViZDRlMjc4NWZhNWU4Mjk4YzI2MTU1MDNmNDdmZmEyIn19fQ==";
+    private static final String NAME = "Angle Brush";
 
-    public SplatterBrush() {
+    public AngleBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
@@ -41,18 +42,10 @@ public class SplatterBrush extends CraftBrush {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
-                    .forEach(block -> {
-                        double rate = (block.getLocation().distance(location) - ((double) brushSettings.getSize() / 2.0)
-                                * ((100.0 - (double) brushSettings.getFalloffStrength()) / 100.0))
-                                / (((double) brushSettings.getSize() / 2.0) - ((double) brushSettings.getSize() / 2.0)
-                                                                              * ((100.0 - (double) brushSettings.getFalloffStrength()) / 100.0));
-
-                        if (brushSettings.getRandom().nextDouble() <= rate) {
-                            return;
-                        }
-
-                        setBlock(session, block, brushSettings.getRandomBlock());
-                    });
+                    .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) >= 0.1
+                            && Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
+                            >= Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
+                    .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
         });
     }
 }

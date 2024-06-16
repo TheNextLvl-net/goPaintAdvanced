@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -26,20 +26,20 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
-public class SphereBrush extends CraftBrush {
+public class DiscBrush extends CraftBrush {
 
-    private static final String DESCRIPTION = "Regular sphere brush";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmU5OGY0ODU2MDE0N2MwYTJkNGVkYzE3ZjZkOTg1ZThlYjVkOTRiZDcyZmM2MDc0NGE1YThmMmQ5MDVhMTgifX19";
-    private static final String NAME = "Sphere Brush";
+    private static final String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
+    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";
+    private static final String NAME = "Disc Brush";
 
-    public SphereBrush() {
+    public DiscBrush() {
         super(NAME, DESCRIPTION, HEAD);
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), brushSettings.getAxis(), false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
                     .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
         });

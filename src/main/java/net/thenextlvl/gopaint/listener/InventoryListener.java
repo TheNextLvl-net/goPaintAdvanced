@@ -21,7 +21,7 @@ package net.thenextlvl.gopaint.listener;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.brush.*;
+import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.util.GUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

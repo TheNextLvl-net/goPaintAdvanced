@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;

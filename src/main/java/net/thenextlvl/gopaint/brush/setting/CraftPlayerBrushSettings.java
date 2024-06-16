@@ -28,7 +28,7 @@ import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
-import net.thenextlvl.gopaint.brush.*;
+import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.util.GUI;
 import org.bukkit.Axis;
 import org.bukkit.Material;

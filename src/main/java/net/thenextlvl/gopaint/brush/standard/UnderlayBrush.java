@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;

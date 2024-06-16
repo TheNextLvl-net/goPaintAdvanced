@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush;
+package net.thenextlvl.gopaint.brush.standard;
 
 import core.i18n.file.ComponentBundle;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
