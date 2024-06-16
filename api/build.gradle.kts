@@ -12,7 +12,7 @@ java {
 }
 
 group = "net.thenextlvl.gopaint"
-version = "1.1.1"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
