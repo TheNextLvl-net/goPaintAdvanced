@@ -62,14 +62,6 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // disable if goPaint and goPaintAdvanced are installed simultaneously
-        if (hasOriginalGoPaint()) {
-            getComponentLogger().error("goPaintAdvanced is a replacement for goPaint. Please use one instead of both");
-            getComponentLogger().error("This plugin is now disabling to prevent future errors");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-
         registerListeners();
         registerCommands();
     }
