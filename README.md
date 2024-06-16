@@ -17,6 +17,7 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 
 - Replace commands with brigadier
 - Improved configuration file
+- Improved algorithms
 - Added internationalization
 - Dropped XMaterial Support
 - Hangar auto deployment
@@ -28,7 +29,6 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 
 - Better FAWE integration
 - Fluid mode setting
-- Improve Bézier spline
 
 ## Links
 
