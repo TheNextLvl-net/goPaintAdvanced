@@ -27,9 +27,9 @@ import net.thenextlvl.gopaint.utils.curve.BezierSpline;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class PaintBrush extends Brush {
 
@@ -64,45 +64,46 @@ public class PaintBrush extends Brush {
         selectedPoints.remove(player.getUniqueId());
 
         performEdit(player, session -> {
+            var world = player.getWorld();
             Location first = locations.getFirst();
-            Stream<Block> blocks = Sphere.getBlocksInRadius(first, brushSettings.size(), null, false);
-            blocks.forEach(block -> {
-                if (Height.getAverageHeightDiffAngle(block.getLocation(), 1) >= 0.1
-                        && Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.angleDistance())
-                        >= Math.tan(Math.toRadians(brushSettings.angleHeightDifference()))) {
-                    return;
-                }
+            Sphere.getBlocksInRadius(first, brushSettings.size(), null, false)
+                    .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
+                                     || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.angleDistance())
+                                        < Math.tan(Math.toRadians(brushSettings.angleHeightDifference())))
+                    .filter(block -> {
+                        var rate = calculateRate(block, first, brushSettings);
+                        return brushSettings.random().nextDouble() > rate;
+                    }).forEach(block -> {
+                        var curve = new LinkedList<Vector>();
+                        curve.add(new Vector(block.getX(), block.getY(), block.getZ()));
+                        locations.stream().map(location -> new Vector(
+                                block.getX() + location.getX() - first.getX(),
+                                block.getY() + location.getY() - first.getY(),
+                                block.getZ() + location.getZ() - first.getZ()
+                        )).forEach(curve::add);
 
-                double rate = (block.getLocation().distance(first) - (brushSettings.size() / 2.0)
-                        * ((100.0 - brushSettings.falloffStrength()) / 100.0)) / ((brushSettings.size() / 2.0)
-                        - (brushSettings.size() / 2.0) * ((100.0 - brushSettings.falloffStrength()) / 100.0));
+                        var spline = new BezierSpline(curve);
+                        var maxCount = (spline.getCurveLength() * 2.5) + 1;
 
-                if (brushSettings.random().nextDouble() <= rate) {
-                    return;
-                }
+                        for (int y = 0; y <= maxCount; y++) {
+                            var point = spline.getPoint((y / maxCount) * (locations.size() - 1)).toLocation(world).getBlock();
 
-                LinkedList<Location> newCurve = new LinkedList<>();
-                newCurve.add(block.getLocation());
-                for (Location location : locations) {
-                    newCurve.add(block.getLocation().clone().add(
-                            location.getX() - first.getX(),
-                            location.getY() - first.getY(),
-                            location.getZ() - first.getZ()
-                    ));
-                }
-                BezierSpline spline = new BezierSpline(newCurve);
-                double maxCount = (spline.getCurveLength() * 2.5) + 1;
-                for (int y = 0; y <= maxCount; y++) {
-                    Block point = spline.getPoint((y / maxCount) * (locations.size() - 1)).getBlock();
+                            if (point.isEmpty() || !passesDefaultChecks(brushSettings, player, point)) {
+                                continue;
+                            }
 
-                    if (point.isEmpty() || !passesDefaultChecks(brushSettings, player, point)) {
-                        continue;
-                    }
-
-                    setBlock(session, point, brushSettings.randomBlock());
-                }
-            });
+                            setBlock(session, point, brushSettings.randomBlock());
+                        }
+                    });
         });
     }
 
+    private double calculateRate(Block block, Location first, BrushSettings brushSettings) {
+        double sizeHalf = brushSettings.size() / 2.0;
+        double falloffStrengthFactor = (100.0 - brushSettings.falloffStrength()) / 100.0;
+        double numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
+        double denominator = sizeHalf - sizeHalf * falloffStrengthFactor;
+
+        return numerator / denominator;
+    }
 }
