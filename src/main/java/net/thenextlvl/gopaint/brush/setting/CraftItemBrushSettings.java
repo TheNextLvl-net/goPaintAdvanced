@@ -66,7 +66,7 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
 
     @Deprecated(forRemoval = true)
     public static ItemBrushSettings parse(Brush brush, ItemMeta itemMeta) {
-        var builder = builder().brush(brush);
+        var builder = builder().brush(brush).surfaceMode(SurfaceMode.DISABLED);
         Optional.ofNullable(itemMeta.getLore()).ifPresent(lore -> lore.stream()
                 .map(line -> line.replace("§8", ""))
                 .forEach(line -> {
