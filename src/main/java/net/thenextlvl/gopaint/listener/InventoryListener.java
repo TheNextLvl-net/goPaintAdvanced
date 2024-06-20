@@ -172,34 +172,5 @@ public final class InventoryListener implements Listener {
         if (!(event.getView().title() instanceof TextComponent title) || !title.content().equals("goPaint Brushes")) {
             return;
         }
-
-        if (event.getView().getTopInventory() != event.getClickedInventory()) {
-            if (event.getClick().isShiftClick() || event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-
-        event.setCancelled(true);
-
-        if (event.getCurrentItem() == null || !event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
-            return;
-        }
-
-        var playerBrush = plugin.brushController().getBrushSettings(player);
-
-        ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
-
-        if (itemMeta == null || !itemMeta.hasDisplayName()) {
-            return;
-        }
-
-        //noinspection deprecation
-        String name = itemMeta.getDisplayName().replace("§6", "");
-        plugin.brushController().getBrushHandler(name).ifPresent(brush -> {
-            playerBrush.setBrush(brush);
-            playerBrush.updateInventory();
-            player.openInventory(playerBrush.getInventory());
-        });
     }
 }

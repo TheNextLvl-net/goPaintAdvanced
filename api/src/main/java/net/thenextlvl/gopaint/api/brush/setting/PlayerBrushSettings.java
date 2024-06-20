@@ -1,8 +1,8 @@
 package net.thenextlvl.gopaint.api.brush.setting;
 
+import core.paper.gui.AbstractGUI;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import org.bukkit.Material;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * The PlayerBrushSettings interface extends the BrushSettings interface and the InventoryHolder interface.
  * It represents the configuration settings for a brush specifically used by a player.
  */
-public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
+public interface PlayerBrushSettings extends BrushSettings {
     /**
      * Checks whether the brush is enabled.
      *
@@ -233,12 +233,18 @@ public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
     void setSize(int size);
 
     /**
-     * Updates the inventory of the player brush settings.
-     * <p>
-     * This method should be called whenever there is a change
-     * in the brush settings that requires updating the inventory display.
+     * Retrieves the main menu for the player.
+     *
+     * @return The main menu.
      */
-    void updateInventory();
+    AbstractGUI getMainMenu();
+
+    /**
+     * Retrieves the brushes menu for the player.
+     *
+     * @return The brushes menu.
+     */
+    AbstractGUI getBrushesMenu();
 
     /**
      * Retrieves the next brush in the list of available brushes.
