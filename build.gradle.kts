@@ -28,7 +28,6 @@ dependencies {
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
-    api("net.thenextlvl.core:i18n:1.0.18")
     api("net.thenextlvl.core:adapters:1.0.9")
 
     api(project(":api"))

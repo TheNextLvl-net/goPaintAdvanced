@@ -28,6 +28,9 @@ dependencies {
     compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.45"))
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
+    api("net.thenextlvl.core:i18n:1.0.18")
+    api("net.thenextlvl.core:paper:1.3.4")
+
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
