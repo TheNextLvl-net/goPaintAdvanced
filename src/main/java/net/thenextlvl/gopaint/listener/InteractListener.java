@@ -73,8 +73,6 @@ public final class InteractListener implements Listener {
                 ? plugin.brushController().parseBrushSettings(item).orElse(null)
                 : plugin.brushController().getBrushSettings(player);
 
-        event.setCancelled(true);
-
         if (settings == null || settings.getBlocks().isEmpty()) return;
 
         if (!(settings instanceof PlayerBrushSettings playerSettings) || playerSettings.isEnabled()) {
@@ -82,5 +80,7 @@ public final class InteractListener implements Listener {
                     () -> settings.getBrush().paint(location, player, settings), false, true
             );
         } else plugin.bundle().sendMessage(player, "brush.disabled");
+
+        event.setCancelled(true);
     }
 }
