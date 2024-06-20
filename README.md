@@ -15,7 +15,8 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 
 ### Done
 
-- Replace commands with brigadier
+- Better WorldEdit integration
+- Brigadier commands
 - Improved configuration file
 - Improved algorithms
 - Added internationalization
@@ -23,11 +24,10 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 - Hangar auto deployment
 - New CI Development builds
 - Better build gradle
-- **Dropped legacy support. Update or use the original plugin!**
+- **Dropped legacy support. _Update or use the original plugin!_**
 
 ### To-Do
 
-- Better FAWE integration
 - Fluid mode setting
 
 ## Links
