@@ -230,7 +230,7 @@ public interface PlayerBrushSettings extends BrushSettings {
      *
      * @param size The size of the brush. Must be a positive integer.
      */
-    void setSize(int size);
+    void setBrushSize(int size);
 
     /**
      * Retrieves the main menu for the player.
