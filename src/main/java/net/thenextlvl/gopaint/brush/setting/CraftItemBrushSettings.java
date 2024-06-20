@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
+import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
@@ -38,6 +39,7 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final List<Material> blocks;
     private final Axis axis;
     private final SurfaceMode surfaceMode;
+    private final MaskMode maskMode;
     private final int size;
     private final int chance;
     private final int thickness;
@@ -48,11 +50,6 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final double angleHeightDifference;
 
     private static final Random random = new Random();
-
-    @Override
-    public boolean isMaskEnabled() {
-        return getMask() != null;
-    }
 
     @Override
     public Material getRandomBlock() {
@@ -95,6 +92,8 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
                                 .toList());
                     } else if (line.startsWith("Mask: ")) {
                         builder.mask(Material.matchMaterial(line.substring(6)));
+                    } else if (line.startsWith("Mask Mode: ")) {
+                        MaskMode.byName(line.substring(11)).ifPresent(builder::maskMode);
                     } else if (line.startsWith("Surface Mode: ")) {
                         SurfaceMode.byName(line.substring(14)).ifPresent(builder::surfaceMode);
                     }

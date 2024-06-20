@@ -51,18 +51,18 @@ public final class InventoryListener implements Listener {
             }
             return;
         }
+        event.setCancelled(true);
         var playerBrush = plugin.brushController().getBrushSettings(player);
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
-            if (event.getClick().equals(ClickType.LEFT)) {
+            if (event.getClick().isLeftClick()) {
                 if (!event.getCursor().getType().isBlock()) {
                     if (!event.getCursor().getType().equals(plugin.config().generic().defaultBrush())) {
                         playerBrush.export(event.getCursor());
                     }
                 }
-            } else if (event.getClick().equals(ClickType.RIGHT)) {
+            } else if (event.getClick().isRightClick()) {
                 playerBrush.toggle();
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 playerBrush.cycleBrushForward();
@@ -71,44 +71,42 @@ public final class InventoryListener implements Listener {
             } else if (event.getClick().isShiftClick()) {
                 player.openInventory(GUI.generateBrushes());
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 12 || event.getRawSlot() == 3 || event.getRawSlot() == 21) {
             var brush = playerBrush.getBrush();
             if (brush instanceof SprayBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseChance();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseChance();
                 }
             } else if (brush instanceof OverlayBrush || brush instanceof UnderlayBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseThickness();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseThickness();
                 }
             } else if (brush instanceof FractureBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseFractureDistance();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseFractureDistance();
                 }
             } else if (brush instanceof AngleBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseAngleDistance();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseAngleDistance();
                 }
             } else if (brush instanceof GradientBrush || brush instanceof PaintBrush
                        || brush instanceof SplatterBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseFalloffStrength();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseFalloffStrength();
                 }
             } else if (brush instanceof DiscBrush) {
                 playerBrush.cycleAxis();
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 13 || event.getRawSlot() == 4 || event.getRawSlot() == 22) {
             var brush = playerBrush.getBrush();
             if (brush instanceof AngleBrush) {
@@ -122,13 +120,12 @@ public final class InventoryListener implements Listener {
                     playerBrush.decreaseAngleHeightDifference(15);
                 }
             } else if (brush instanceof GradientBrush) {
-                if (event.getClick().equals(ClickType.LEFT)) {
+                if (event.getClick().isLeftClick()) {
                     playerBrush.increaseMixingStrength();
-                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                } else if (event.getClick().isRightClick()) {
                     playerBrush.decreaseMixingStrength();
                 }
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 14 || event.getRawSlot() == 5 || event.getRawSlot() == 23) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 playerBrush.increaseBrushSize(1);
@@ -139,38 +136,31 @@ public final class InventoryListener implements Listener {
             } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
                 playerBrush.decreaseBrushSize(10);
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 15 || event.getRawSlot() == 6 || event.getRawSlot() == 24) {
-            playerBrush.toggleMask();
-            event.setCancelled(true);
+            playerBrush.cycleMaskMode();
         } else if (event.getRawSlot() == 16 || event.getRawSlot() == 7 || event.getRawSlot() == 25) {
             playerBrush.cycleSurfaceMode();
-            event.setCancelled(true);
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
-                || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
+                   || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
             int slot;
             if (event.getRawSlot() >= 37 && event.getRawSlot() <= 41) {
                 slot = event.getRawSlot() - 36;
             } else {
                 slot = event.getRawSlot() - 45;
             }
-            if (event.getClick().equals(ClickType.LEFT)) {
+            if (event.getClick().isLeftClick()) {
                 if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
                     playerBrush.addBlock(event.getCursor().getType(), slot);
                 }
-            } else if (event.getClick().equals(ClickType.RIGHT)) {
+            } else if (event.getClick().isRightClick()) {
                 playerBrush.removeBlock(slot);
             }
-            event.setCancelled(true);
         } else if (event.getRawSlot() == 43 || event.getRawSlot() == 52) {
-            if (event.getClick().equals(ClickType.LEFT)) {
+            if (event.getClick().isLeftClick()) {
                 if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
                     playerBrush.setMask(event.getCursor().getType());
                 }
             }
-            event.setCancelled(true);
-        } else {
-            event.setCancelled(true);
         }
     }
 

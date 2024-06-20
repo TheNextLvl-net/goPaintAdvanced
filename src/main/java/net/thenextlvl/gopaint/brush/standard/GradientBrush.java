@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -40,24 +41,28 @@ public class GradientBrush extends Brush {
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            double y = location.getBlockY() - (brushSettings.getSize() / 2d);
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
-            blocks.filter(block -> passesDefaultChecks(brushSettings, player, block)).filter(block -> {
-                double rate = (block.getLocation().distance(location) - (brushSettings.getSize() / 2d)
-                        * ((100d - brushSettings.getFalloffStrength()) / 100d))
-                        / ((brushSettings.getSize() / 2d) - (brushSettings.getSize() / 2d)
-                                                            * ((100d - brushSettings.getFalloffStrength()) / 100d));
-
-                return brushSettings.getRandom().nextDouble() > rate;
-            }).forEach(block -> {
-                int random = (int) (((block.getLocation().getBlockY() - y) / brushSettings.getSize()
-                        * brushSettings.getBlocks().size()) + (brushSettings.getRandom().nextDouble() * 2 - 1)
-                                                              * (brushSettings.getMixingStrength() / 100d));
-
-                int index = Math.clamp(random, 0, brushSettings.getBlocks().size() - 1);
-
-                setBlock(session, block, brushSettings.getBlocks().get(index));
-            });
+            blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
+                    .filter(block -> brushSettings.getRandom().nextDouble() > getRate(location, brushSettings, block))
+                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
+                    .forEach(vector3 -> {
+                        int random = getRandom(brushSettings, vector3);
+                        int index = Math.clamp(random, 0, brushSettings.getBlocks().size() - 1);
+                        setBlock(session, vector3, brushSettings.getBlocks().get(index));
+                    });
         });
+    }
+
+    private static int getRandom(BrushSettings brushSettings, BlockVector3 vector3) {
+        var y = vector3.getY() - (brushSettings.getSize() / 2d);
+        var mixingStrength = brushSettings.getMixingStrength() / 100d;
+        var random = brushSettings.getRandom().nextDouble() * 2 - 1;
+        var size = (vector3.getY() - y) / brushSettings.getSize() * brushSettings.getBlocks().size();
+        return (int) (size + random * mixingStrength);
+    }
+
+    private static double getRate(Location location, BrushSettings brushSettings, Block block) {
+        double size = (brushSettings.getSize() / 2d) * ((100d - brushSettings.getFalloffStrength()) / 100d);
+        return (block.getLocation().distance(location) - size) / ((brushSettings.getSize() / 2d) - size);
     }
 }

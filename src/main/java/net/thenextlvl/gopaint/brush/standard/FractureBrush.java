@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
@@ -42,7 +43,7 @@ public class FractureBrush extends Brush {
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
-            blocks.filter(block -> passesMaskCheck(brushSettings, block))
+            blocks.filter(block -> passesMaskCheck(brushSettings, session, block))
                     .filter(block -> Height.getAverageHeightDiffFracture(
                             block.getLocation(),
                             Height.getNearestNonEmptyBlock(block.getLocation()),
@@ -53,7 +54,8 @@ public class FractureBrush extends Brush {
                             Height.getNearestNonEmptyBlock(block.getLocation()),
                             brushSettings.getFractureDistance()
                     ) >= 0.1)
-                    .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
+                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
+                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
         });
     }
 }

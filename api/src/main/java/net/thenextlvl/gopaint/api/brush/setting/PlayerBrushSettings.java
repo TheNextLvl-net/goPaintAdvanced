@@ -4,7 +4,6 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import org.bukkit.Material;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -48,6 +47,11 @@ public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
      * Cycle the selected brush forward.
      */
     void cycleBrushForward();
+
+    /**
+     * Cycle the mask mode of the brush.
+     */
+    void cycleMaskMode();
 
     /**
      * Cycle the surface mode of the brush.
@@ -216,10 +220,7 @@ public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
      * The mask determines whether the brush applies its effect only to blocks matching the material specified
      *
      * @param type The Material type to set as the mask.
-     * @deprecated the mask-material is going to be replaced with a WorldEdit Mask
      */
-    @Deprecated(since = "1.1.1")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     void setMask(Material type);
 
     /**
@@ -230,16 +231,6 @@ public interface PlayerBrushSettings extends BrushSettings, InventoryHolder {
      * @param size The size of the brush. Must be a positive integer.
      */
     void setSize(int size);
-
-    /**
-     * Toggles the mask state of the brush.
-     * <p>
-     * The mask state determines whether the brush applies its effect only to blocks
-     * matching the material specified by {@link PlayerBrushSettings#setMask(Material)}.
-     * If the mask is enabled, the brush will only affect blocks of the specified material.
-     * If the mask is disabled, the brush will affect blocks of any material.
-     */
-    void toggleMask();
 
     /**
      * Updates the inventory of the player brush settings.

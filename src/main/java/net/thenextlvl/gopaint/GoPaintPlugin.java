@@ -13,6 +13,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
+import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
@@ -51,7 +52,7 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
             )).build());
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
-            new PluginConfig.Generic(Material.FEATHER, 100, 10, 50, Axis.Y, 50, 50, new ArrayList<>(), true, true, Material.SPONGE, SurfaceMode.DIRECT),
+            new PluginConfig.Generic(Material.FEATHER, 100, 10, 50, Axis.Y, 50, 50, new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
             new PluginConfig.Thickness(1, 5),
             new PluginConfig.Angle(2, 5, 10, 40, 85),
             new PluginConfig.Fracture(2, 5)

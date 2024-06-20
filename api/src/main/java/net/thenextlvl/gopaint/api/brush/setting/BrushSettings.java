@@ -1,10 +1,10 @@
 package net.thenextlvl.gopaint.api.brush.setting;
 
 import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.Random;
@@ -40,18 +40,15 @@ public interface BrushSettings {
      * Retrieves the mask material used by the brush settings.
      *
      * @return The mask material.
-     * @deprecated the mask-material is going to be replaced with a WorldEdit Mask
      */
-    @Deprecated(since = "1.1.0-SNAPSHOT")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     Material getMask();
 
     /**
-     * Checks if the mask is enabled.
+     * Retrieves the mask mode used by the brush settings.
      *
-     * @return true if the mask is enabled, false otherwise.
+     * @return The mask mode used by the brush settings.
      */
-    boolean isMaskEnabled();
+    MaskMode getMaskMode();
 
     /**
      * Returns the surface mode used by the brush settings.

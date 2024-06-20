@@ -44,7 +44,7 @@ public abstract class Brush {
      * @param player        The player who is performing the paint action.
      * @param brushSettings The brush settings to be applied while painting.
      * @see #performEdit(Player, Consumer)
-     * @see #setBlock(EditSession, Block, Material)
+     * @see #setBlock(EditSession, BlockVector3, Material)
      */
     public abstract void paint(Location location, Player player, BrushSettings brushSettings);
 
@@ -52,15 +52,12 @@ public abstract class Brush {
      * Sets the material of a block in an EditSession.
      *
      * @param session  The EditSession to perform the block update in.
-     * @param block    The block to update.
+     * @param vector3  The block to update.
      * @param material The material to set the block to.
      * @throws MaxChangedBlocksException If the maximum number of changed blocks is exceeded.
      */
-    protected void setBlock(EditSession session, Block block, Material material) throws MaxChangedBlocksException {
-        BlockVector3 vector = BlockVector3.at(block.getX(), block.getY(), block.getZ());
-        if (session.getMask() == null || session.getMask().test(vector)) {
-            session.setBlock(vector, BukkitAdapter.asBlockType(material));
-        }
+    public void setBlock(EditSession session, BlockVector3 vector3, Material material) throws MaxChangedBlocksException {
+        session.setBlock(vector3, BukkitAdapter.asBlockType(material));
     }
 
     /**
@@ -70,7 +67,7 @@ public abstract class Brush {
      * @param player The player performing the edit.
      * @param edit   A Consumer functional interface that defines the actions to be taken within the edit session.
      */
-    protected void performEdit(Player player, Consumer<EditSession> edit) {
+    public void performEdit(Player player, Consumer<EditSession> edit) {
         BukkitPlayer wrapped = BukkitAdapter.adapt(player);
         LocalSession localSession = WorldEdit.getInstance().getSessionManager().get(wrapped);
         try (EditSession editsession = localSession.createEditSession(wrapped)) {
@@ -87,11 +84,12 @@ public abstract class Brush {
      *
      * @param brushSettings The brush settings to be checked against.
      * @param player        The player using the brush.
+     * @param session       The EditSession object used for performing the checks.
      * @param block         The block being checked.
-     * @return true if the block passes all the default checks, false otherwise.
+     * @return true if the block passes the default checks, false otherwise.
      */
-    protected boolean passesDefaultChecks(BrushSettings brushSettings, Player player, Block block) {
-        return passesMaskCheck(brushSettings, block) && passesSurfaceCheck(brushSettings, player, block);
+    public boolean passesDefaultChecks(BrushSettings brushSettings, Player player, EditSession session, Block block) {
+        return passesMaskCheck(brushSettings, session, block) && passesSurfaceCheck(brushSettings, player, block);
     }
 
     /**
@@ -102,7 +100,7 @@ public abstract class Brush {
      * @param block         The block being checked.
      * @return true if the block passes the surface check, false otherwise.
      */
-    protected boolean passesSurfaceCheck(BrushSettings brushSettings, Player player, Block block) {
+    public boolean passesSurfaceCheck(BrushSettings brushSettings, Player player, Block block) {
         return Surface.isOnSurface(block, brushSettings.getSurfaceMode(), player.getLocation());
     }
 
@@ -110,10 +108,17 @@ public abstract class Brush {
      * Checks if a given block passes the mask check defined by the brush settings.
      *
      * @param brushSettings The brush settings to be checked against.
+     * @param session       The EditSession object used for performing the mask check.
      * @param block         The block being checked.
      * @return true if the block passes the mask check, false otherwise.
      */
-    protected boolean passesMaskCheck(BrushSettings brushSettings, Block block) {
-        return !brushSettings.isMaskEnabled() || block.getType().equals(brushSettings.getMask());
+    public boolean passesMaskCheck(BrushSettings brushSettings, EditSession session, Block block) {
+        return switch (brushSettings.getMaskMode()) {
+            case INTERFACE -> block.getType().equals(brushSettings.getMask());
+            case WORLDEDIT -> session.getMask() == null || session.getMask().test(
+                    BlockVector3.at(block.getX(), block.getY(), block.getZ())
+            );
+            case DISABLED -> true;
+        };
     }
 }

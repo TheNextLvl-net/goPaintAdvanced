@@ -1,6 +1,7 @@
 package net.thenextlvl.gopaint.model;
 
 import com.google.gson.annotations.SerializedName;
+import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
@@ -24,8 +25,8 @@ public record PluginConfig(
             @SerializedName("default-mixing-strength") int defaultMixingStrength,
             @SerializedName("disabled-worlds") List<String> disabledWorlds,
             @SerializedName("enabled-by-default") boolean enabledByDefault,
-            @SerializedName("mask-enabled") boolean maskEnabled,
             @SerializedName("default-mask") Material defaultMask,
+            @SerializedName("mask-mode") MaskMode maskMode,
             @SerializedName("surface-mode") SurfaceMode surfaceMode
     ) {
     }

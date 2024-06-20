@@ -32,8 +32,7 @@ import java.util.UUID;
 public final class Items {
 
     public static ItemStack create(Material material, int amount, String name, String lore) {
-        ItemStack itemStack = new ItemStack(material);
-        itemStack.setAmount(amount);
+        var itemStack = new ItemStack(material, amount);
         itemStack.editMeta(itemMeta -> {
             if (!lore.isEmpty()) {
                 String[] loreListArray = lore.split("\n");
@@ -50,8 +49,14 @@ public final class Items {
         return itemStack;
     }
 
+    public static ItemStack create(Material material) {
+        var itemStack = new ItemStack(material);
+        itemStack.editMeta(itemMeta -> itemMeta.setHideTooltip(true));
+        return itemStack;
+    }
+
     public static ItemStack createHead(String texture, int amount, String name, String lore) {
-        ItemStack head = create(Material.PLAYER_HEAD, amount, name, lore);
+        var head = create(Material.PLAYER_HEAD, amount, name, lore);
         head.editMeta(SkullMeta.class, skullMeta -> {
             var profile = Bukkit.createProfile(UUID.randomUUID());
             profile.setProperty(new ProfileProperty("textures", texture));

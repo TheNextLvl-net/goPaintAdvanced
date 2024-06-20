@@ -27,6 +27,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
+import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.util.GUI;
@@ -50,7 +51,6 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
     private final GoPaintPlugin plugin;
 
-    private boolean maskEnabled;
     private boolean enabled;
     private int size;
     private int chance;
@@ -61,6 +61,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private int mixingStrength;
     private double angleHeightDifference;
     private Axis axis;
+    private MaskMode maskMode;
     private SurfaceMode surfaceMode;
 
     private @Setter Brush brush;
@@ -73,7 +74,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         this.plugin = plugin;
 
         surfaceMode = plugin.config().generic().surfaceMode();
-        maskEnabled = plugin.config().generic().maskEnabled();
+        maskMode = plugin.config().generic().maskMode();
         enabled = plugin.config().generic().enabledByDefault();
         chance = plugin.config().generic().defaultChance();
         thickness = plugin.config().thickness().defaultThickness();
@@ -261,8 +262,12 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void toggleMask() {
-        maskEnabled = !maskEnabled;
+    public void cycleMaskMode() {
+        maskMode = switch (maskMode) {
+            case INTERFACE -> MaskMode.WORLDEDIT;
+            case WORLDEDIT -> MaskMode.DISABLED;
+            case DISABLED -> MaskMode.INTERFACE;
+        };
         updateInventory();
     }
 
@@ -331,11 +336,15 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 .map(NamespacedKey::asMinimalString)
                 .collect(Collectors.joining(", "))));
 
-        if (isMaskEnabled()) {
+        if (!getMaskMode().equals(MaskMode.DISABLED)) {
+            lore.add("Mask Mode: " + getMaskMode().getName());
+        }
+        if (getMaskMode().equals(MaskMode.INTERFACE)) {
             lore.add("Mask: " + getMask().getKey().asMinimalString());
         }
+
         if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-            lore.add("Surface Mode: " + surfaceMode.getName());
+            lore.add("Surface Mode: " + getSurfaceMode().getName());
         }
 
         itemStack.editMeta(itemMeta -> {

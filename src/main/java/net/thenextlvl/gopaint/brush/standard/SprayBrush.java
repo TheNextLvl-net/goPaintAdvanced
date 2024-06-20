@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -41,9 +42,10 @@ public class SprayBrush extends Brush {
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
-            blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
+            blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .filter(block -> brushSettings.getRandom().nextInt(100) < brushSettings.getChance())
-                    .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
+                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
+                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
         });
     }
 }
