@@ -22,7 +22,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
 import net.thenextlvl.gopaint.brush.standard.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,7 +34,7 @@ public class GUI {
 
     private static final GoPaintPlugin plugin = JavaPlugin.getPlugin(GoPaintPlugin.class);
 
-    public static Inventory create(CraftPlayerBrushSettings pb) {
+    public static Inventory create(PlayerBrushSettings pb) {
         Inventory inv = Bukkit.createInventory(null, 54, Component.text("goPaint Menu", NamedTextColor.DARK_BLUE));
         update(inv, pb);
         return inv;
@@ -56,9 +55,8 @@ public class GUI {
     }
 
     private static void formatDefault(Inventory inventory) {
-        for (int slot = 0; slot < inventory.getSize(); slot++) {
-            inventory.setItem(slot, Items.create(Material.GRAY_STAINED_GLASS_PANE, 1, "§7", ""));
-        }
+        var placeholder = Items.create(Material.GRAY_STAINED_GLASS_PANE);
+        for (int slot = 0; slot < inventory.getSize(); slot++) inventory.setItem(slot, placeholder);
     }
 
     public static void update(Inventory inventory, PlayerBrushSettings settings) {
@@ -69,21 +67,21 @@ public class GUI {
 
         // goPaint toggle
         if (settings.isEnabled()) {
-            inventory.setItem(1, Items.create(Material.LIME_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(1, Items.create(Material.LIME_STAINED_GLASS_PANE));
             inventory.setItem(10, Items.create(plugin.config().generic().defaultBrush(), 1, "§6goPaint Brush",
                     "§a§lEnabled\n\n§7Left click with item to export\n§7Right click to toggle"
             ));
-            inventory.setItem(19, Items.create(Material.LIME_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(19, Items.create(Material.LIME_STAINED_GLASS_PANE));
         } else {
-            inventory.setItem(1, Items.create(Material.RED_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(1, Items.create(Material.RED_STAINED_GLASS_PANE));
             inventory.setItem(10, Items.create(plugin.config().generic().defaultBrush(), 1, "§6goPaint Brush",
                     "§c§lDisabled\n\n§7Left click with item to export\n§7Right click to toggle"
             ));
-            inventory.setItem(19, Items.create(Material.RED_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(19, Items.create(Material.RED_STAINED_GLASS_PANE));
         }
 
         // Brushes + Chance
-        inventory.setItem(2, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
+        inventory.setItem(2, Items.create(Material.ORANGE_STAINED_GLASS_PANE));
 
 
         String clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
@@ -99,113 +97,102 @@ public class GUI {
         inventory.setItem(11, Items.createHead(brush.getHeadValue(), 1, "§6Selected Brush type",
                 clicks + lore
         ));
-        inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§7", ""));
+        inventory.setItem(20, Items.create(Material.ORANGE_STAINED_GLASS_PANE));
 
         // chance
         if (brush instanceof SprayBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.GOLD_NUGGET, 1,
                     "§6Place chance: §e" + settings.getChance() + "%",
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
         // axis
         if (brush instanceof DiscBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.COMPASS, 1,
                     "§6Axis: §e" + settings.getAxis(), "\n§7Click to change"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
 
         // thickness
         if (brush instanceof OverlayBrush || brush instanceof UnderlayBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.BOOK, 1,
                     "§6Layer Thickness: §e" + settings.getThickness(),
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
         // angle settings
         if (brush instanceof AngleBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
                     "§6Angle Check Distance: §e" + settings.getAngleDistance(),
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
 
-            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(13, Items.create(Material.BLAZE_ROD, 1,
                     "§6Maximum Angle: §e" + settings.getAngleHeightDifference() + "°",
                     "\n§7Left click to increase\n§7Right click to decrease\n§7Shift click to change by 15"
             ));
-            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
         // fracture settings
         if (brush instanceof FractureBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
                     "§6Fracture Check Distance: §e" + settings.getFractureDistance(),
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
         // angle settings
         if (brush instanceof GradientBrush) {
-            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(13, Items.create(Material.MAGMA_CREAM, 1,
                     "§6Mixing Strength: §e" + settings.getMixingStrength() + "%",
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
         if (brush instanceof SplatterBrush || brush instanceof PaintBrush || brush instanceof GradientBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
             inventory.setItem(12, Items.create(Material.BLAZE_POWDER, 1,
                     "§6Falloff Strength: §e" + settings.getFalloffStrength() + "%",
                     "\n§7Left click to increase\n§7Right click to decrease"
             ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         }
 
 
         // Size
-        inventory.setItem(5, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+        inventory.setItem(5, Items.create(Material.WHITE_STAINED_GLASS_PANE));
         inventory.setItem(14, Items.create(Material.BROWN_MUSHROOM, 1,
                 "§6Brush Size: §e" + settings.getSize(),
                 "\n§7Left click to increase\n§7Right click to decrease\n§7Shift click to change by 10"
         ));
-        inventory.setItem(23, Items.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§7", ""));
+        inventory.setItem(23, Items.create(Material.WHITE_STAINED_GLASS_PANE));
 
-        // Mask toggle
-        if (settings.isMaskEnabled()) {
-            inventory.setItem(6, Items.create(Material.LIME_STAINED_GLASS_PANE, 1, "§7", ""));
-            inventory.setItem(15, Items.create(Material.JACK_O_LANTERN, 1,
-                    "§6Mask",
-                    "§a§lEnabled\n\n§7Click to toggle"
-            ));
-            inventory.setItem(24, Items.create(Material.LIME_STAINED_GLASS_PANE, 1, "§7", ""));
-        } else {
-            inventory.setItem(6, Items.create(Material.RED_STAINED_GLASS_PANE, 1, "§7", ""));
-            inventory.setItem(15, Items.create(Material.CARVED_PUMPKIN, 1, "§6Mask", "§c§lDisabled\n\n§7Click to toggle"));
-            inventory.setItem(24, Items.create(Material.RED_STAINED_GLASS_PANE, 1, "§7", ""));
-        }
+        // Mask Mode switch
+        addMaskModeSwitch(inventory, settings);
 
-        // Surface Mode toggle
+        // Surface Mode switch
         addSurfaceModeSwitch(inventory, settings);
 
         // Place Block
         for (int x = 37; x <= 41; x++) {
-            inventory.setItem(x, Items.create(Material.YELLOW_STAINED_GLASS_PANE, 1, "§7", ""));
+            inventory.setItem(x, Items.create(Material.YELLOW_STAINED_GLASS_PANE));
         }
         for (int x = 46; x <= 50; x++) {
             inventory.setItem(x, Items.create(Material.BARRIER, 1, "§cEmpty Slot", "\n§7Click with a block to set"));
@@ -229,8 +216,33 @@ public class GUI {
         }
 
         // Mask Block
-        inventory.setItem(43, Items.create(Material.YELLOW_STAINED_GLASS_PANE, 1, "§7", ""));
+        inventory.setItem(43, Items.create(Material.YELLOW_STAINED_GLASS_PANE));
         inventory.setItem(52, Items.create(settings.getMask(), 1, "§6Current Mask", "\n§7Left click with a block to change"));
+    }
+
+    private static void addMaskModeSwitch(Inventory inventory, PlayerBrushSettings settings) {
+        var pane = switch (settings.getMaskMode()) {
+            case DISABLED -> Material.RED_STAINED_GLASS_PANE;
+            case INTERFACE -> Material.LIME_STAINED_GLASS_PANE;
+            case WORLDEDIT -> Material.ORANGE_STAINED_GLASS_PANE;
+        };
+        var color = switch (settings.getMaskMode()) {
+            case DISABLED -> "§c";
+            case INTERFACE -> "§a";
+            case WORLDEDIT -> "§6";
+        };
+        var icon = switch (settings.getMaskMode()) {
+            case DISABLED -> Material.CARVED_PUMPKIN;
+            case INTERFACE -> Material.JACK_O_LANTERN;
+            case WORLDEDIT -> Material.WOODEN_AXE;
+        };
+
+        inventory.setItem(6, Items.create(pane));
+        inventory.setItem(15, Items.create(icon, 1,
+                "§6Mask Mode",
+                color + "§l" + settings.getMaskMode().getName() + "\n\n§7Click to cycle"
+        ));
+        inventory.setItem(24, Items.create(pane));
     }
 
     private static void addSurfaceModeSwitch(Inventory inventory, PlayerBrushSettings settings) {
@@ -245,12 +257,12 @@ public class GUI {
             case RELATIVE -> "§6";
         };
 
-        inventory.setItem(7, Items.create(pane, 1, "§7", ""));
+        inventory.setItem(7, Items.create(pane));
         inventory.setItem(16, Items.create(Material.LIGHT_WEIGHTED_PRESSURE_PLATE, 1,
                 "§6Surface Mode",
-                color + "§l" + settings.getSurfaceMode().getName() + "\n\n§7Click to toggle"
+                color + "§l" + settings.getSurfaceMode().getName() + "\n\n§7Click to cycle"
         ));
-        inventory.setItem(25, Items.create(pane, 1, "§7", ""));
+        inventory.setItem(25, Items.create(pane));
     }
 
 }

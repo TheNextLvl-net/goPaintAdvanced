@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
@@ -42,11 +43,12 @@ public class AngleBrush extends Brush {
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
-            blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
+            blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) >= 0.1
                             && Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
                             >= Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
-                    .forEach(block -> setBlock(session, block, brushSettings.getRandomBlock()));
+                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
+                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
         });
     }
 }

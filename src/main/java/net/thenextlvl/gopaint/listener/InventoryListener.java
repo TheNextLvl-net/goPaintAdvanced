@@ -141,7 +141,6 @@ public final class InventoryListener implements Listener {
             }
             event.setCancelled(true);
         } else if (event.getRawSlot() == 15 || event.getRawSlot() == 6 || event.getRawSlot() == 24) {
-            playerBrush.toggleMask();
             event.setCancelled(true);
         } else if (event.getRawSlot() == 16 || event.getRawSlot() == 7 || event.getRawSlot() == 25) {
             playerBrush.cycleSurfaceMode();

@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -41,19 +42,16 @@ public class SplatterBrush extends Brush {
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
             Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
-            blocks.filter(block -> passesDefaultChecks(brushSettings, player, block))
-                    .forEach(block -> {
-                        double rate = (block.getLocation().distance(location) - ((double) brushSettings.getSize() / 2.0)
-                                * ((100.0 - (double) brushSettings.getFalloffStrength()) / 100.0))
-                                / (((double) brushSettings.getSize() / 2.0) - ((double) brushSettings.getSize() / 2.0)
-                                                                              * ((100.0 - (double) brushSettings.getFalloffStrength()) / 100.0));
-
-                        if (brushSettings.getRandom().nextDouble() <= rate) {
-                            return;
-                        }
-
-                        setBlock(session, block, brushSettings.getRandomBlock());
-                    });
+            blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
+                    .filter(block -> brushSettings.getRandom().nextDouble() > getRate(location, brushSettings, block))
+                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
+                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
         });
+    }
+
+    private static double getRate(Location location, BrushSettings brushSettings, Block block) {
+        var size = (double) brushSettings.getSize() / 2.0;
+        var falloff = (100.0 - (double) brushSettings.getFalloffStrength()) / 100.0;
+        return (block.getLocation().distance(location) - size * falloff) / (size - size * falloff);
     }
 }

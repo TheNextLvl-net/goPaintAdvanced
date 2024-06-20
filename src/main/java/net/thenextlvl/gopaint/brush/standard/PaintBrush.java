@@ -18,6 +18,7 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import core.i18n.file.ComponentBundle;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.api.brush.Brush;
@@ -89,11 +90,12 @@ public class PaintBrush extends Brush {
                         for (int y = 0; y <= maxCount; y++) {
                             var point = spline.getPoint((y / maxCount) * (locations.size() - 1)).toLocation(world).getBlock();
 
-                            if (point.isEmpty() || !passesDefaultChecks(brushSettings, player, point)) {
+                            if (point.isEmpty() || !passesDefaultChecks(brushSettings, player, session, point)) {
                                 continue;
                             }
 
-                            setBlock(session, point, brushSettings.getRandomBlock());
+                            var vector3 = BlockVector3.at(block.getX(), block.getY(), block.getZ());
+                            setBlock(session, vector3, brushSettings.getRandomBlock());
                         }
                     });
         });
