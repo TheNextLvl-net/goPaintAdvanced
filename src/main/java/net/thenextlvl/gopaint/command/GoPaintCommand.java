@@ -39,9 +39,9 @@ public class GoPaintCommand {
     private int size(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
         var brush = plugin.brushController().getBrushSettings(player);
-        brush.setSize(context.getArgument("size", int.class));
+        brush.setBrushSize(context.getArgument("size", int.class));
         plugin.bundle().sendMessage(player, "command.gopaint.brush.size",
-                Placeholder.parsed("size", String.valueOf(brush.getSize())));
+                Placeholder.parsed("size", String.valueOf(brush.getBrushSize())));
         return Command.SINGLE_SUCCESS;
     }
 
