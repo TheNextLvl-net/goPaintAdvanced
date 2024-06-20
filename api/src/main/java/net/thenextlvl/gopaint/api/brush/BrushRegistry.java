@@ -1,9 +1,9 @@
 package net.thenextlvl.gopaint.api.brush;
 
-import java.util.List;
 import net.kyori.adventure.key.Key;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * The BrushRegistry interface represents a registry for brushes.
@@ -11,11 +11,11 @@ import java.util.Optional;
  */
 public interface BrushRegistry {
     /**
-     * Returns an immutable list of available brushes.
+     * Returns a stream of registered brushes.
      *
-     * @return The list of available brushes.
+     * @return The stream of available brushes.
      */
-    List<Brush> getBrushes();
+    Stream<Brush> getBrushes();
 
     /**
      * Checks if a brush is registered in the BrushController.
