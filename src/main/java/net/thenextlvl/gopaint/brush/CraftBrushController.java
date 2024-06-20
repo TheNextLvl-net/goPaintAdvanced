@@ -44,7 +44,8 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public PlayerBrushSettings getBrushSettings(Player player) {
-        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new CraftPlayerBrushSettings(plugin));
+        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored ->
+                new CraftPlayerBrushSettings(plugin, player));
     }
 
     @Override

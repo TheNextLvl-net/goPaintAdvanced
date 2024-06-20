@@ -19,11 +19,9 @@
 package net.thenextlvl.gopaint.listener;
 
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.TextComponent;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.brush.standard.*;
-import net.thenextlvl.gopaint.util.GUI;
-import org.bukkit.Material;
+import net.thenextlvl.gopaint.menu.MainMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @RequiredArgsConstructor
 public final class InventoryListener implements Listener {
@@ -42,7 +39,7 @@ public final class InventoryListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (!(event.getView().title() instanceof TextComponent text) || !text.content().equals("goPaint Menu")) {
+        if (!(event.getView().getTopInventory().getHolder(true) instanceof MainMenu)) {
             return;
         }
         if (event.getView().getTopInventory() != event.getClickedInventory()) {
@@ -52,94 +49,94 @@ public final class InventoryListener implements Listener {
             return;
         }
         event.setCancelled(true);
-        var playerBrush = plugin.brushController().getBrushSettings(player);
+        var settings = plugin.brushController().getBrushSettings(player);
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
             if (event.getClick().isLeftClick()) {
                 if (!event.getCursor().getType().isBlock()) {
-                    if (!event.getCursor().getType().equals(plugin.config().generic().defaultBrush())) {
-                        playerBrush.export(event.getCursor());
+                    if (!event.getCursor().getType().equals(plugin.config().brushConfig().defaultBrushType())) {
+                        settings.export(event.getCursor());
                     }
                 }
             } else if (event.getClick().isRightClick()) {
-                playerBrush.toggle();
+                settings.toggle();
             }
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {
-                playerBrush.cycleBrushForward();
+                settings.cycleBrushForward();
             } else if (event.getClick().equals(ClickType.RIGHT)) {
-                playerBrush.cycleBrushBackward();
+                settings.cycleBrushBackward();
             } else if (event.getClick().isShiftClick()) {
-                player.openInventory(GUI.generateBrushes());
+                settings.getBrushesMenu().open();
             }
         } else if (event.getRawSlot() == 12 || event.getRawSlot() == 3 || event.getRawSlot() == 21) {
-            var brush = playerBrush.getBrush();
+            var brush = settings.getBrush();
             if (brush instanceof SprayBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseChance();
+                    settings.increaseChance();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseChance();
+                    settings.decreaseChance();
                 }
             } else if (brush instanceof OverlayBrush || brush instanceof UnderlayBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseThickness();
+                    settings.increaseThickness();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseThickness();
+                    settings.decreaseThickness();
                 }
             } else if (brush instanceof FractureBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseFractureDistance();
+                    settings.increaseFractureDistance();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseFractureDistance();
+                    settings.decreaseFractureDistance();
                 }
             } else if (brush instanceof AngleBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseAngleDistance();
+                    settings.increaseAngleDistance();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseAngleDistance();
+                    settings.decreaseAngleDistance();
                 }
             } else if (brush instanceof GradientBrush || brush instanceof PaintBrush
                        || brush instanceof SplatterBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseFalloffStrength();
+                    settings.increaseFalloffStrength();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseFalloffStrength();
+                    settings.decreaseFalloffStrength();
                 }
             } else if (brush instanceof DiscBrush) {
-                playerBrush.cycleAxis();
+                settings.cycleAxis();
             }
         } else if (event.getRawSlot() == 13 || event.getRawSlot() == 4 || event.getRawSlot() == 22) {
-            var brush = playerBrush.getBrush();
+            var brush = settings.getBrush();
             if (brush instanceof AngleBrush) {
                 if (event.getClick().equals(ClickType.LEFT)) {
-                    playerBrush.increaseAngleHeightDifference(5);
+                    settings.increaseAngleHeightDifference(5);
                 } else if (event.getClick().equals(ClickType.RIGHT)) {
-                    playerBrush.decreaseAngleHeightDifference(5);
+                    settings.decreaseAngleHeightDifference(5);
                 } else if (event.getClick().equals(ClickType.SHIFT_LEFT)) {
-                    playerBrush.increaseAngleHeightDifference(15);
+                    settings.increaseAngleHeightDifference(15);
                 } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
-                    playerBrush.decreaseAngleHeightDifference(15);
+                    settings.decreaseAngleHeightDifference(15);
                 }
             } else if (brush instanceof GradientBrush) {
                 if (event.getClick().isLeftClick()) {
-                    playerBrush.increaseMixingStrength();
+                    settings.increaseMixingStrength();
                 } else if (event.getClick().isRightClick()) {
-                    playerBrush.decreaseMixingStrength();
+                    settings.decreaseMixingStrength();
                 }
             }
         } else if (event.getRawSlot() == 14 || event.getRawSlot() == 5 || event.getRawSlot() == 23) {
             if (event.getClick().equals(ClickType.LEFT)) {
-                playerBrush.increaseBrushSize(1);
+                settings.increaseBrushSize(1);
             } else if (event.getClick().equals(ClickType.RIGHT)) {
-                playerBrush.decreaseBrushSize(1);
+                settings.decreaseBrushSize(1);
             } else if (event.getClick().equals(ClickType.SHIFT_LEFT)) {
-                playerBrush.increaseBrushSize(10);
+                settings.increaseBrushSize(10);
             } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
-                playerBrush.decreaseBrushSize(10);
+                settings.decreaseBrushSize(10);
             }
         } else if (event.getRawSlot() == 15 || event.getRawSlot() == 6 || event.getRawSlot() == 24) {
-            playerBrush.cycleMaskMode();
+            settings.cycleMaskMode();
         } else if (event.getRawSlot() == 16 || event.getRawSlot() == 7 || event.getRawSlot() == 25) {
-            playerBrush.cycleSurfaceMode();
+            settings.cycleSurfaceMode();
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
                    || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
             int slot;
@@ -150,27 +147,17 @@ public final class InventoryListener implements Listener {
             }
             if (event.getClick().isLeftClick()) {
                 if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
-                    playerBrush.addBlock(event.getCursor().getType(), slot);
+                    settings.addBlock(event.getCursor().getType(), slot);
                 }
             } else if (event.getClick().isRightClick()) {
-                playerBrush.removeBlock(slot);
+                settings.removeBlock(slot);
             }
         } else if (event.getRawSlot() == 43 || event.getRawSlot() == 52) {
             if (event.getClick().isLeftClick()) {
                 if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
-                    playerBrush.setMask(event.getCursor().getType());
+                    settings.setMask(event.getCursor().getType());
                 }
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void menuBrushClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) {
-            return;
-        }
-        if (!(event.getView().title() instanceof TextComponent title) || !title.content().equals("goPaint Brushes")) {
-            return;
         }
     }
 }

@@ -18,8 +18,8 @@
  */
 package net.thenextlvl.gopaint.brush.setting;
 
+import core.paper.gui.AbstractGUI;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -30,13 +30,12 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
-import net.thenextlvl.gopaint.util.GUI;
+import net.thenextlvl.gopaint.menu.BrushesMenu;
+import net.thenextlvl.gopaint.menu.MainMenu;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,9 +49,10 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private static final Random random = new Random();
 
     private final GoPaintPlugin plugin;
+    private final Player player;
 
     private boolean enabled;
-    private int size;
+    private int brushSize;
     private int chance;
     private int thickness;
     private int fractureDistance;
@@ -64,31 +64,33 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private MaskMode maskMode;
     private SurfaceMode surfaceMode;
 
-    private @Setter Brush brush;
+    private Brush brush;
     private Material mask;
     private final List<Material> blocks = new ArrayList<>();
 
-    private final Inventory inventory;
+    private final MainMenu mainMenu;
 
-    public CraftPlayerBrushSettings(GoPaintPlugin plugin) {
+    public CraftPlayerBrushSettings(GoPaintPlugin plugin, Player player) {
         this.plugin = plugin;
+        this.player = player;
 
-        surfaceMode = plugin.config().generic().surfaceMode();
-        maskMode = plugin.config().generic().maskMode();
-        enabled = plugin.config().generic().enabledByDefault();
-        chance = plugin.config().generic().defaultChance();
-        thickness = plugin.config().thickness().defaultThickness();
-        fractureDistance = plugin.config().fracture().defaultFractureDistance();
-        angleDistance = plugin.config().angle().defaultAngleDistance();
-        angleHeightDifference = plugin.config().angle().defaultAngleHeightDifference();
-        falloffStrength = plugin.config().generic().defaultFalloffStrength();
-        mixingStrength = plugin.config().generic().defaultMixingStrength();
-        axis = plugin.config().generic().defaultAxis();
-        size = plugin.config().generic().defaultSize();
-        mask = plugin.config().generic().defaultMask();
-        brush = cycleForward(null);
+        surfaceMode = plugin.config().brushConfig().surfaceMode();
+        maskMode = plugin.config().brushConfig().maskMode();
+        enabled = plugin.config().brushConfig().enabledByDefault();
+        chance = plugin.config().brushConfig().defaultChance();
+        thickness = plugin.config().thicknessConfig().defaultThickness();
+        fractureDistance = plugin.config().fractureConfig().defaultFractureDistance();
+        angleDistance = plugin.config().angleConfig().defaultAngleDistance();
+        angleHeightDifference = plugin.config().angleConfig().defaultAngleHeightDifference();
+        falloffStrength = plugin.config().brushConfig().defaultFalloffStrength();
+        mixingStrength = plugin.config().brushConfig().defaultMixingStrength();
+        axis = plugin.config().brushConfig().defaultAxis();
+        brushSize = plugin.config().brushConfig().defaultSize();
+        mask = plugin.config().brushConfig().defaultMask();
+        brush = plugin.config().brushConfig().defaultBrush();
         blocks.add(Material.STONE);
-        inventory = GUI.create(this);
+
+        mainMenu = new MainMenu(plugin, this, player);
     }
 
     @Override
@@ -315,7 +317,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     public void export(ItemStack itemStack) {
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add("Size: " + size);
+        lore.add("Size: " + brushSize);
         if (getBrush() instanceof SprayBrush) {
             lore.add("Chance: " + getChance() + "%");
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
@@ -355,8 +357,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             itemMeta.lore(lore.stream().map(string -> Component.text(string).style(Style
                     .style(TextDecoration.ITALIC.withState(false))
                     .color(NamedTextColor.DARK_GRAY))).toList());
-            itemMeta.addEnchant(Enchantment.INFINITY, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.setEnchantmentGlintOverride(true);
         });
     }
 

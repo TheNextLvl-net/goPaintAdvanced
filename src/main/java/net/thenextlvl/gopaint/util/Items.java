@@ -18,21 +18,17 @@
  */
 package net.thenextlvl.gopaint.util;
 
-import com.destroystokyo.paper.profile.ProfileProperty;
+import core.paper.item.ItemBuilder;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public final class Items {
 
-    public static ItemStack create(Material material, int amount, String name, String lore) {
-        var itemStack = new ItemStack(material, amount);
+    public static ItemBuilder create(Material material, int amount, String name, String lore) {
+        var itemStack = new ItemBuilder(material, amount);
         itemStack.editMeta(itemMeta -> {
             if (!lore.isEmpty()) {
                 String[] loreListArray = lore.split("\n");
@@ -49,20 +45,11 @@ public final class Items {
         return itemStack;
     }
 
-    public static ItemStack create(Material material) {
-        var itemStack = new ItemStack(material);
-        itemStack.editMeta(itemMeta -> itemMeta.setHideTooltip(true));
-        return itemStack;
+    public static ItemBuilder create(Material material) {
+        return new ItemBuilder(material).hideTooltip(true);
     }
 
-    public static ItemStack createHead(String texture, int amount, String name, String lore) {
-        var head = create(Material.PLAYER_HEAD, amount, name, lore);
-        head.editMeta(SkullMeta.class, skullMeta -> {
-            var profile = Bukkit.createProfile(UUID.randomUUID());
-            profile.setProperty(new ProfileProperty("textures", texture));
-            skullMeta.setPlayerProfile(profile);
-        });
-        return head;
+    public static ItemBuilder createHead(String texture, int amount, String name, String lore) {
+        return create(Material.PLAYER_HEAD, amount, name, lore).headValue(texture);
     }
-
 }

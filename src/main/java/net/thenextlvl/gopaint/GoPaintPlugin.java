@@ -11,23 +11,26 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.thenextlvl.gopaint.adapter.BrushAdapter;
+import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.api.model.MaskMode;
+import net.thenextlvl.gopaint.api.model.PluginConfig;
+import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
+import net.thenextlvl.gopaint.brush.standard.SphereBrush;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
-import net.thenextlvl.gopaint.model.PluginConfig;
 import net.thenextlvl.gopaint.listener.ConnectListener;
 import net.thenextlvl.gopaint.listener.InteractListener;
 import net.thenextlvl.gopaint.listener.InventoryListener;
-import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,10 +39,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 @Accessors(fluent = true)
-public class GoPaintPlugin extends JavaPlugin implements Listener {
-    public static final String USE_PERMISSION = "gopaint.use";
-    public static final String ADMIN_PERMISSION = "gopaint.admin";
-    public static final String WORLD_BYPASS_PERMISSION = "gopaint.world.bypass";
+public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     private final File translations = new File(getDataFolder(), "translations");
     private final @Getter ComponentBundle bundle = new ComponentBundle(translations, audience ->
@@ -51,19 +51,21 @@ public class GoPaintPlugin extends JavaPlugin implements Listener {
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
+    private final @Getter BrushController brushController = new CraftBrushController(this);
+    private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
+
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
-            new PluginConfig.Generic(Material.FEATHER, 100, 10, 50, Axis.Y, 50, 50, new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
-            new PluginConfig.Thickness(1, 5),
-            new PluginConfig.Angle(2, 5, 10, 40, 85),
-            new PluginConfig.Fracture(2, 5)
+            new PluginConfig.BrushConfig(Material.FEATHER, SphereBrush.INSTANCE, 100, 10, 50, Axis.Y, 50, 50,
+                    new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
+            new PluginConfig.ThicknessConfig(1, 5),
+            new PluginConfig.AngleConfig(2, 5, 10, 40, 85),
+            new PluginConfig.FractureConfig(2, 5)
     ), new GsonBuilder()
             .registerTypeAdapter(Material.class, MaterialAdapter.NotNull.INSTANCE)
+            .registerTypeAdapter(Brush.class, new BrushAdapter(this))
             .setPrettyPrinting()
             .create()
     ).validate().save();
-
-    private final @Getter BrushController brushController = new CraftBrushController(this);
-    private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
 
     private final Metrics metrics = new Metrics(this, 22279);
 
