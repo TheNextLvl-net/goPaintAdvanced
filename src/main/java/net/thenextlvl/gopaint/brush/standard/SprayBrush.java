@@ -23,25 +23,28 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
 public class SprayBrush extends Brush {
-
-    private static final String DESCRIPTION = "Configurable random chance brush";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==";
-    private static final String NAME = "Spray Brush";
+    public static final SprayBrush INSTANCE = new SprayBrush();
 
     public SprayBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Spray Brush",
+                "Configurable random chance brush",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==",
+                new NamespacedKey("gopaint", "spray_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .filter(block -> brushSettings.getRandom().nextInt(100) < brushSettings.getChance())
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))

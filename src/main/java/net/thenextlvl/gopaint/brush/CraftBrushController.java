@@ -27,6 +27,7 @@ import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -43,7 +44,8 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public PlayerBrushSettings getBrushSettings(Player player) {
-        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored -> new CraftPlayerBrushSettings(plugin));
+        return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored ->
+                new CraftPlayerBrushSettings(plugin, player));
     }
 
     @Override
@@ -52,20 +54,15 @@ public class CraftBrushController implements BrushController {
         var meta = itemStack.getItemMeta();
         if (meta == null || !meta.hasLore() || !meta.hasDisplayName()) return Optional.empty();
         if (!(meta.displayName() instanceof TextComponent name)) return Optional.empty();
-        var brush = getBrushHandler(name.content());
+        var key = NamespacedKey.fromString(name.content());
+        if (key == null) return Optional.empty();
+        var brush = plugin.brushRegistry().getBrush(key);
         return brush.map(current -> parseBrushSettings(current, meta));
     }
 
     @Override
     public ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta) {
         return CraftItemBrushSettings.parse(brush, itemMeta);
-    }
-
-    @Override
-    public Optional<Brush> getBrushHandler(String name) {
-        return plugin.brushRegistry().getBrushes().stream()
-                .filter(brush -> name.contains(brush.getName()))
-                .findAny();
     }
 
     @Override

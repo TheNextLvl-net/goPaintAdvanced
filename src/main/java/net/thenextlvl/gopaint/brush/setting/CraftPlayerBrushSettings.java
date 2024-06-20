@@ -18,8 +18,8 @@
  */
 package net.thenextlvl.gopaint.brush.setting;
 
+import core.paper.gui.AbstractGUI;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -30,13 +30,12 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
-import net.thenextlvl.gopaint.util.GUI;
+import net.thenextlvl.gopaint.menu.BrushesMenu;
+import net.thenextlvl.gopaint.menu.MainMenu;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,9 +49,10 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private static final Random random = new Random();
 
     private final GoPaintPlugin plugin;
+    private final Player player;
 
     private boolean enabled;
-    private int size;
+    private int brushSize;
     private int chance;
     private int thickness;
     private int fractureDistance;
@@ -64,31 +64,33 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private MaskMode maskMode;
     private SurfaceMode surfaceMode;
 
-    private @Setter Brush brush;
+    private Brush brush;
     private Material mask;
     private final List<Material> blocks = new ArrayList<>();
 
-    private final Inventory inventory;
+    private final MainMenu mainMenu;
 
-    public CraftPlayerBrushSettings(GoPaintPlugin plugin) {
+    public CraftPlayerBrushSettings(GoPaintPlugin plugin, Player player) {
         this.plugin = plugin;
+        this.player = player;
 
-        surfaceMode = plugin.config().generic().surfaceMode();
-        maskMode = plugin.config().generic().maskMode();
-        enabled = plugin.config().generic().enabledByDefault();
-        chance = plugin.config().generic().defaultChance();
-        thickness = plugin.config().thickness().defaultThickness();
-        fractureDistance = plugin.config().fracture().defaultFractureDistance();
-        angleDistance = plugin.config().angle().defaultAngleDistance();
-        angleHeightDifference = plugin.config().angle().defaultAngleHeightDifference();
-        falloffStrength = plugin.config().generic().defaultFalloffStrength();
-        mixingStrength = plugin.config().generic().defaultMixingStrength();
-        axis = plugin.config().generic().defaultAxis();
-        size = plugin.config().generic().defaultSize();
-        mask = plugin.config().generic().defaultMask();
-        brush = cycleForward(null);
+        surfaceMode = plugin.config().brushConfig().surfaceMode();
+        maskMode = plugin.config().brushConfig().maskMode();
+        enabled = plugin.config().brushConfig().enabledByDefault();
+        chance = plugin.config().brushConfig().defaultChance();
+        thickness = plugin.config().thicknessConfig().defaultThickness();
+        fractureDistance = plugin.config().fractureConfig().defaultFractureDistance();
+        angleDistance = plugin.config().angleConfig().defaultAngleDistance();
+        angleHeightDifference = plugin.config().angleConfig().defaultAngleHeightDifference();
+        falloffStrength = plugin.config().brushConfig().defaultFalloffStrength();
+        mixingStrength = plugin.config().brushConfig().defaultMixingStrength();
+        axis = plugin.config().brushConfig().defaultAxis();
+        brushSize = plugin.config().brushConfig().defaultSize();
+        mask = plugin.config().brushConfig().defaultMask();
+        brush = plugin.config().brushConfig().defaultBrush();
         blocks.add(Material.STONE);
-        inventory = GUI.create(this);
+
+        mainMenu = new MainMenu(plugin, this, player);
     }
 
     @Override
@@ -102,92 +104,94 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void updateInventory() {
-        GUI.update(inventory, this);
-    }
-
-    @Override
     public void increaseFalloffStrength() {
         if (falloffStrength > 90) return;
         falloffStrength += 10;
-        updateInventory();
+        mainMenu.updateFalloffStrength();
     }
 
     @Override
     public void decreaseFalloffStrength() {
         if (falloffStrength < 10) return;
         falloffStrength -= 10;
-        updateInventory();
+        mainMenu.updateFalloffStrength();
     }
 
     @Override
     public void increaseMixingStrength() {
         if (mixingStrength > 90) return;
         mixingStrength += 10;
-        updateInventory();
+        mainMenu.updateMixingStrength();
     }
 
     @Override
     public void decreaseMixingStrength() {
         if (mixingStrength < 10) return;
         mixingStrength -= 10;
-        updateInventory();
+        mainMenu.updateMixingStrength();
     }
 
     @Override
     public void setMask(Material type) {
         mask = type;
-        updateInventory();
+        mainMenu.updateMask();
     }
 
     @Override
     public void addBlock(Material type, int slot) {
         if (blocks.size() < slot) blocks.add(type);
         else blocks.set(slot - 1, type);
-        updateInventory();
+        mainMenu.updateBlockPalette();
     }
 
     @Override
     public void removeBlock(int slot) {
         if (blocks.size() < slot) return;
         blocks.remove(slot - 1);
-        updateInventory();
+        mainMenu.updateBlockPalette();
+    }
+
+    @Override
+    public void setBrush(Brush brush) {
+        this.brush = brush;
+        mainMenu.updateBrush();
     }
 
     @Override
     public void cycleBrushForward() {
-        brush = cycleForward(brush);
-        updateInventory();
+        setBrush(cycleForward(brush));
     }
 
     @Override
     public void cycleBrushBackward() {
-        brush = cycleBackward(brush);
-        updateInventory();
+        setBrush(cycleBackward(brush));
     }
 
     @Override
-    public void setSize(int size) {
-        this.size = Math.clamp(size, 1, plugin.config().generic().maxSize());
-        updateInventory();
+    public void setBrushSize(int size) {
+        this.brushSize = Math.clamp(size, 1, plugin.config().brushConfig().maxSize());
+        mainMenu.updateSize();
+    }
+
+    @Override
+    public AbstractGUI getBrushesMenu() {
+        return new BrushesMenu(plugin, this, player);
     }
 
     @Override
     public void increaseBrushSize(int amount) {
-        size = Math.min(plugin.config().generic().maxSize(), size + amount);
-        updateInventory();
+        setBrushSize(getBrushSize() + amount);
     }
 
     @Override
     public void decreaseBrushSize(int amount) {
-        size = Math.max(1, size - amount);
-        updateInventory();
+        setBrushSize(getBrushSize() - amount);
     }
 
     @Override
     public boolean toggle() {
         enabled = !enabled;
-        updateInventory();
+        mainMenu.updateToggle();
         return enabled;
     }
 
@@ -195,70 +199,70 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     public void increaseChance() {
         if (chance >= 90) return;
         chance += 10;
-        updateInventory();
+        mainMenu.updateChance();
     }
 
     @Override
     public void decreaseChance() {
         if (chance <= 10) return;
         chance -= 10;
-        updateInventory();
+        mainMenu.updateChance();
     }
 
     @Override
     public void increaseThickness() {
-        if (thickness >= plugin.config().thickness().maxThickness()) return;
+        if (thickness >= plugin.config().thicknessConfig().maxThickness()) return;
         thickness += 1;
-        updateInventory();
+        mainMenu.updateThickness();
     }
 
     @Override
     public void decreaseThickness() {
         if (thickness <= 1) return;
         thickness -= 1;
-        updateInventory();
+        mainMenu.updateThickness();
     }
 
     @Override
     public void increaseAngleDistance() {
-        if (angleDistance >= plugin.config().angle().maxAngleDistance()) return;
+        if (angleDistance >= plugin.config().angleConfig().maxAngleDistance()) return;
         angleDistance += 1;
-        updateInventory();
+        mainMenu.updateAngleSettings();
     }
 
     @Override
     public void decreaseAngleDistance() {
         if (angleDistance <= 1) return;
         angleDistance -= 1;
-        updateInventory();
+        mainMenu.updateAngleSettings();
     }
 
     @Override
     public void increaseFractureDistance() {
-        if (this.fractureDistance >= plugin.config().fracture().maxFractureDistance()) return;
+        if (this.fractureDistance >= plugin.config().fractureConfig().maxFractureDistance()) return;
         this.fractureDistance += 1;
-        updateInventory();
+        mainMenu.updateFractureSettings();
     }
 
     @Override
     public void decreaseFractureDistance() {
         if (this.fractureDistance <= 1) return;
         this.fractureDistance -= 1;
-        updateInventory();
+        mainMenu.updateFractureSettings();
     }
 
     @Override
     public void increaseAngleHeightDifference(int amount) {
-        var max = plugin.config().angle().maxAngleHeightDifference();
+        var max = plugin.config().angleConfig().maxAngleHeightDifference();
         angleHeightDifference = Math.min(max, angleHeightDifference + amount);
-        updateInventory();
+        mainMenu.updateAngleSettings();
     }
 
     @Override
     public void decreaseAngleHeightDifference(int amount) {
-        var min = plugin.config().angle().minAngleHeightDifference();
+        var min = plugin.config().angleConfig().minAngleHeightDifference();
         angleHeightDifference = Math.max(min, angleHeightDifference - amount);
-        updateInventory();
+        mainMenu.updateAngleSettings();
     }
 
     @Override
@@ -268,7 +272,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             case WORLDEDIT -> MaskMode.DISABLED;
             case DISABLED -> MaskMode.INTERFACE;
         };
-        updateInventory();
+        mainMenu.updateMaskMode();
     }
 
     @Override
@@ -278,7 +282,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             case RELATIVE -> SurfaceMode.DISABLED;
             case DISABLED -> SurfaceMode.DIRECT;
         };
-        updateInventory();
+        mainMenu.updateSurfaceMode();
     }
 
     @Override
@@ -288,12 +292,12 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             case Y -> Axis.Z;
             case Z -> Axis.X;
         };
-        updateInventory();
+        mainMenu.updateAxis();
     }
 
     @Override
     public Brush cycleForward(@Nullable Brush brush) {
-        var brushes = plugin.brushRegistry().getBrushes();
+        var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int next = brushes.indexOf(brush) + 1;
         if (next < brushes.size()) return brushes.get(next);
@@ -302,7 +306,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
     @Override
     public Brush cycleBackward(@Nullable Brush brush) {
-        var brushes = plugin.brushRegistry().getBrushes();
+        var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int back = brushes.indexOf(brush) - 1;
         if (back >= 0) return brushes.get(back);
@@ -313,7 +317,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     public void export(ItemStack itemStack) {
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add("Size: " + size);
+        lore.add("Size: " + brushSize);
         if (getBrush() instanceof SprayBrush) {
             lore.add("Chance: " + getChance() + "%");
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
@@ -353,8 +357,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             itemMeta.lore(lore.stream().map(string -> Component.text(string).style(Style
                     .style(TextDecoration.ITALIC.withState(false))
                     .color(NamedTextColor.DARK_GRAY))).toList());
-            itemMeta.addEnchant(Enchantment.INFINITY, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.setEnchantmentGlintOverride(true);
         });
     }
 

@@ -27,6 +27,7 @@ import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.math.curve.BezierSpline;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -34,15 +35,15 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class PaintBrush extends Brush {
-
-    private static final String DESCRIPTION = "Paints strokes\n§8hold shift to end";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=";
-    private static final String NAME = "Paint Brush";
-
     private final ComponentBundle bundle;
 
     public PaintBrush(ComponentBundle bundle) {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Paint Brush",
+                "Paints strokes\n§8hold shift to end",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=",
+                new NamespacedKey("gopaint", "paint_brush")
+        );
         this.bundle = bundle;
     }
 
@@ -68,7 +69,7 @@ public class PaintBrush extends Brush {
         performEdit(player, session -> {
             var world = player.getWorld();
             Location first = locations.getFirst();
-            Sphere.getBlocksInRadius(first, brushSettings.getSize(), null, false)
+            Sphere.getBlocksInRadius(first, brushSettings.getBrushSize(), null, false)
                     .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
                                      || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
                                         < Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
@@ -102,7 +103,7 @@ public class PaintBrush extends Brush {
     }
 
     private double calculateRate(Block block, Location first, BrushSettings brushSettings) {
-        double sizeHalf = brushSettings.getSize() / 2.0;
+        double sizeHalf = brushSettings.getBrushSize() / 2.0;
         double falloffStrengthFactor = (100.0 - brushSettings.getFalloffStrength()) / 100.0;
         double numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
         double denominator = sizeHalf - sizeHalf * falloffStrengthFactor;

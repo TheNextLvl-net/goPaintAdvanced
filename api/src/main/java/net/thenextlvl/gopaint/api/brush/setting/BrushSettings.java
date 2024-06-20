@@ -104,7 +104,7 @@ public interface BrushSettings {
      *
      * @return The size of the brush settings.
      */
-    int getSize();
+    int getBrushSize();
 
     /**
      * Returns the thickness used by the brush settings.

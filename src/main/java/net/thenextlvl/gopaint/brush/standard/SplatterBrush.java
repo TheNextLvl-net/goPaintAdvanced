@@ -23,25 +23,28 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
 public class SplatterBrush extends Brush {
-
-    private static final String DESCRIPTION = "More chance when closer\n§8to the clicked point\n§8and configurable chance";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19";
-    private static final String NAME = "Splatter Brush";
+    public static final SplatterBrush INSTANCE = new SplatterBrush();
 
     public SplatterBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Splatter Brush",
+                "More chance when closer\n§8to the clicked point\n§8and configurable chance",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19",
+                new NamespacedKey("gopaint", "splatter_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .filter(block -> brushSettings.getRandom().nextDouble() > getRate(location, brushSettings, block))
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
@@ -50,7 +53,7 @@ public class SplatterBrush extends Brush {
     }
 
     private static double getRate(Location location, BrushSettings brushSettings, Block block) {
-        var size = (double) brushSettings.getSize() / 2.0;
+        var size = (double) brushSettings.getBrushSize() / 2.0;
         var falloff = (100.0 - (double) brushSettings.getFalloffStrength()) / 100.0;
         return (block.getLocation().distance(location) - size * falloff) / (size - size * falloff);
     }

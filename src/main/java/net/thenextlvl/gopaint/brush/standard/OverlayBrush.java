@@ -23,6 +23,7 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -30,19 +31,21 @@ import org.bukkit.entity.Player;
 import java.util.stream.Stream;
 
 public class OverlayBrush extends Brush {
-
-    private static final String DESCRIPTION = "Only paints blocks\n§8that have air above it";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGYzMWQ2Zjk2NTRmODc0ZWE5MDk3YWRlZWEwYzk2OTk2ZTc4ZTNmZDM3NTRmYmY5ZWJlOTYzYWRhZDliZTRjIn19fQ==";
-    private static final String NAME = "Overlay Brush";
+    public static final OverlayBrush INSTANCE = new OverlayBrush();
 
     public OverlayBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Overlay Brush",
+                "Only paints blocks\n§8that have air above it",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGYzMWQ2Zjk2NTRmODc0ZWE5MDk3YWRlZWEwYzk2OTk2ZTc4ZTNmZDM3NTRmYmY5ZWJlOTYzYWRhZDliZTRjIn19fQ==",
+                new NamespacedKey("gopaint", "overlay_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
             blocks.filter(block -> passesMaskCheck(brushSettings, session, block))
                     .filter(block -> isOverlay(block, brushSettings.getThickness()))
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))

@@ -2,10 +2,11 @@ package net.thenextlvl.gopaint.api.brush;
 
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -37,16 +38,6 @@ public interface BrushController {
      * @return The parsed brush settings.
      */
     ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta);
-
-    /**
-     * Retrieves the brush for the given name.
-     *
-     * @param name The name of the brush to look for.
-     * @return An optional containing the brush handler, or empty if not found.
-     */
-    @Deprecated(forRemoval = true, since = "1.1.1")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
-    Optional<Brush> getBrushHandler(String name);
 
     /**
      * Removes the brush settings for a specific player.

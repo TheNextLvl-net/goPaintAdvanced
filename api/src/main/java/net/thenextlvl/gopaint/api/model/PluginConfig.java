@@ -1,22 +1,22 @@
-package net.thenextlvl.gopaint.model;
+package net.thenextlvl.gopaint.api.model;
 
 import com.google.gson.annotations.SerializedName;
-import net.thenextlvl.gopaint.api.model.MaskMode;
-import net.thenextlvl.gopaint.api.model.SurfaceMode;
+import net.thenextlvl.gopaint.api.brush.Brush;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 
 import java.util.List;
 
 public record PluginConfig(
-        @SerializedName("generic") Generic generic,
-        @SerializedName("thickness") Thickness thickness,
-        @SerializedName("angle") Angle angle,
-        @SerializedName("fracture") Fracture fracture
+        @SerializedName("brush") BrushConfig brushConfig,
+        @SerializedName("thickness") ThicknessConfig thicknessConfig,
+        @SerializedName("angle") AngleConfig angleConfig,
+        @SerializedName("fracture") FractureConfig fractureConfig
 ) {
 
-    public record Generic(
-            @SerializedName("default-brush") Material defaultBrush,
+    public record BrushConfig(
+            @SerializedName("default-brush-type") Material defaultBrushType,
+            @SerializedName("default-brush") Brush defaultBrush,
             @SerializedName("max-size") int maxSize,
             @SerializedName("default-size") int defaultSize,
             @SerializedName("default-chance") int defaultChance,
@@ -31,13 +31,13 @@ public record PluginConfig(
     ) {
     }
 
-    public record Thickness(
+    public record ThicknessConfig(
             @SerializedName("default-thickness") int defaultThickness,
             @SerializedName("max-thickness") int maxThickness
     ) {
     }
 
-    public record Angle(
+    public record AngleConfig(
             @SerializedName("default-angle-distance") int defaultAngleDistance,
             @SerializedName("max-angle-distance") int maxAngleDistance,
             @SerializedName("min-angle-height-difference") double minAngleHeightDifference,
@@ -46,7 +46,7 @@ public record PluginConfig(
     ) {
     }
 
-    public record Fracture(
+    public record FractureConfig(
             @SerializedName("default-fracture-distance") int defaultFractureDistance,
             @SerializedName("max-fracture-distance") int maxFractureDistance
     ) {

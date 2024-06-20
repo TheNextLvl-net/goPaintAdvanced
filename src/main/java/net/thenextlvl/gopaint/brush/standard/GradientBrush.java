@@ -23,25 +23,28 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
 public class GradientBrush extends Brush {
-
-    private static final String DESCRIPTION = "Creates gradients";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19";
-    private static final String NAME = "Gradient Brush";
+    public static final GradientBrush INSTANCE = new GradientBrush();
 
     public GradientBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Gradient Brush",
+                "Creates gradients",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19",
+                new NamespacedKey("gopaint", "gradient_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .filter(block -> brushSettings.getRandom().nextDouble() > getRate(location, brushSettings, block))
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
@@ -54,15 +57,15 @@ public class GradientBrush extends Brush {
     }
 
     private static int getRandom(BrushSettings brushSettings, BlockVector3 vector3) {
-        var y = vector3.getY() - (brushSettings.getSize() / 2d);
+        var y = vector3.getY() - (brushSettings.getBrushSize() / 2d);
         var mixingStrength = brushSettings.getMixingStrength() / 100d;
         var random = brushSettings.getRandom().nextDouble() * 2 - 1;
-        var size = (vector3.getY() - y) / brushSettings.getSize() * brushSettings.getBlocks().size();
+        var size = (vector3.getY() - y) / brushSettings.getBrushSize() * brushSettings.getBlocks().size();
         return (int) (size + random * mixingStrength);
     }
 
     private static double getRate(Location location, BrushSettings brushSettings, Block block) {
-        double size = (brushSettings.getSize() / 2d) * ((100d - brushSettings.getFalloffStrength()) / 100d);
-        return (block.getLocation().distance(location) - size) / ((brushSettings.getSize() / 2d) - size);
+        double size = (brushSettings.getBrushSize() / 2d) * ((100d - brushSettings.getFalloffStrength()) / 100d);
+        return (block.getLocation().distance(location) - size) / ((brushSettings.getBrushSize() / 2d) - size);
     }
 }

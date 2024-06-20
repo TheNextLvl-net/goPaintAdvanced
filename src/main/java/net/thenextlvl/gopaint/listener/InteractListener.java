@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -39,14 +40,14 @@ public final class InteractListener implements Listener {
     public void onClick(PlayerInteractEvent event) {
         var player = event.getPlayer();
 
-        if (!player.hasPermission(GoPaintPlugin.USE_PERMISSION)) return;
+        if (!player.hasPermission(GoPaintProvider.USE_PERMISSION)) return;
 
         var item = event.getItem();
         if (item == null) return;
 
-        if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().generic().defaultBrush())) {
+        if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().brushConfig().defaultBrushType())) {
             var brush = plugin.brushController().getBrushSettings(player);
-            player.openInventory(brush.getInventory());
+            brush.getMainMenu().open();
             event.setCancelled(true);
             return;
         }
@@ -64,12 +65,12 @@ public final class InteractListener implements Listener {
             return;
         }
 
-        if (!player.hasPermission(GoPaintPlugin.WORLD_BYPASS_PERMISSION)
-            && plugin.config().generic().disabledWorlds().contains(location.getWorld().getName())) {
+        if (!player.hasPermission(GoPaintProvider.WORLD_BYPASS_PERMISSION)
+            && plugin.config().brushConfig().disabledWorlds().contains(location.getWorld().getName())) {
             return;
         }
 
-        var settings = !item.getType().equals(plugin.config().generic().defaultBrush())
+        var settings = !item.getType().equals(plugin.config().brushConfig().defaultBrushType())
                 ? plugin.brushController().parseBrushSettings(item).orElse(null)
                 : plugin.brushController().getBrushSettings(player);
 
