@@ -11,8 +11,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-group = "net.thenextlvl.gopaint"
-version = "1.1.2"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()

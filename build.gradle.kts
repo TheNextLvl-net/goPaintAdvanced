@@ -12,8 +12,8 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
-group = project(":api").group
-version = project(":api").version
+group = "net.thenextlvl.gopaint"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
