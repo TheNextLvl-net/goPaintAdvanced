@@ -48,4 +48,11 @@ public class CraftBrushRegistry implements BrushRegistry {
     public void unregisterBrush(Brush brush) throws IllegalStateException {
         if (!brushes.remove(brush)) throw new IllegalStateException("Brush not registered");
     }
+
+    @Override
+    public Optional<Brush> getBrush(Key key) {
+        return brushes.stream()
+                .filter(brush -> brush.key().equals(key))
+                .findAny();
+    }
 }

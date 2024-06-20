@@ -1,6 +1,9 @@
 package net.thenextlvl.gopaint.api.brush;
 
 import java.util.List;
+import net.kyori.adventure.key.Key;
+
+import java.util.Optional;
 
 /**
  * The BrushRegistry interface represents a registry for brushes.
@@ -37,4 +40,12 @@ public interface BrushRegistry {
      * @throws IllegalStateException if the brush is not registered.
      */
     void unregisterBrush(Brush brush) throws IllegalStateException;
+
+    /**
+     * Retrieves the brush associated with the provided NamespacedKey.
+     *
+     * @param key The NamespacedKey of the brush to retrieve.
+     * @return An Optional containing the brush if found, or an empty Optional if not found.
+     */
+    Optional<Brush> getBrush(Key key);
 }

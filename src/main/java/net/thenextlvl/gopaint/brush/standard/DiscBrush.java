@@ -23,25 +23,28 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
 public class DiscBrush extends Brush {
-
-    private static final String DESCRIPTION = "Paints blocks in the\n§8same selected axis\n§8from the block you clicked";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==";
-    private static final String NAME = "Disc Brush";
+    public static final DiscBrush INSTANCE = new DiscBrush();
 
     public DiscBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+        super(
+                "Disc Brush",
+                "Paints blocks in the\n§8same selected axis\n§8from the block you clicked",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==",
+                new NamespacedKey("gopaint", "disc_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), brushSettings.getAxis(), false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), brushSettings.getAxis(), false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
                     .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));

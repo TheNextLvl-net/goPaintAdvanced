@@ -40,7 +40,7 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final Axis axis;
     private final SurfaceMode surfaceMode;
     private final MaskMode maskMode;
-    private final int size;
+    private final int brushSize;
     private final int chance;
     private final int thickness;
     private final int angleDistance;
@@ -63,12 +63,15 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
 
     @Deprecated(forRemoval = true, since = "1.1.1")
     public static ItemBrushSettings parse(Brush brush, ItemMeta itemMeta) {
-        var builder = builder().brush(brush).surfaceMode(SurfaceMode.DISABLED);
+        var builder = builder()
+                .maskMode(MaskMode.DISABLED)
+                .surfaceMode(SurfaceMode.DISABLED)
+                .brush(brush);
         Optional.ofNullable(itemMeta.getLore()).ifPresent(lore -> lore.stream()
                 .map(line -> line.replace("§8", ""))
                 .forEach(line -> {
                     if (line.startsWith("Size: ")) {
-                        builder.size(Integer.parseInt(line.substring(6)));
+                        builder.brushSize(Integer.parseInt(line.substring(6)));
                     } else if (line.startsWith("Chance: ")) {
                         builder.chance(Integer.parseInt(line.substring(8, line.length() - 1)));
                     } else if (line.startsWith("Thickness: ")) {

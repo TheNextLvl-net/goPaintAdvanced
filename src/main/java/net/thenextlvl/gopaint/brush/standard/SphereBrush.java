@@ -23,25 +23,28 @@ import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Stream;
 
 public class SphereBrush extends Brush {
+    public static final SphereBrush INSTANCE = new SphereBrush();
 
-    private static final String DESCRIPTION = "Regular sphere brush";
-    private static final String HEAD = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmU5OGY0ODU2MDE0N2MwYTJkNGVkYzE3ZjZkOTg1ZThlYjVkOTRiZDcyZmM2MDc0NGE1YThmMmQ5MDVhMTgifX19";
-    private static final String NAME = "Sphere Brush";
-
-    public SphereBrush() {
-        super(NAME, DESCRIPTION, HEAD);
+    private SphereBrush() {
+        super(
+                "Sphere Brush",
+                "Regular sphere brush",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmU5OGY0ODU2MDE0N2MwYTJkNGVkYzE3ZjZkOTg1ZThlYjVkOTRiZDcyZmM2MDc0NGE1YThmMmQ5MDVhMTgifX19",
+                new NamespacedKey("gopaint", "sphere_brush")
+        );
     }
 
     @Override
     public void paint(Location location, Player player, BrushSettings brushSettings) {
         performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getSize(), null, false);
+            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
             blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
                     .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));

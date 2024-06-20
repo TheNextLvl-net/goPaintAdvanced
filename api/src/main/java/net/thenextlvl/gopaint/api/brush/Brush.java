@@ -7,14 +7,20 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.Keyed;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Surface;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -22,8 +28,10 @@ import java.util.function.Consumer;
  * This interface represents a brush used for painting blocks in a world.
  */
 @Getter
+@ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
-public abstract class Brush {
+public abstract class Brush implements Comparable<Brush>, Keyed {
     /**
      * Retrieves the name of the brush.
      */
@@ -36,6 +44,10 @@ public abstract class Brush {
      * Retrieves the base64 head value.
      */
     private final String headValue;
+    /**
+     * The key that identifies this brush
+     */
+    private final @Accessors(fluent = true) Key key;
 
     /**
      * Performs a painting action using the provided location, player, and brush settings.
@@ -120,5 +132,10 @@ public abstract class Brush {
             );
             case DISABLED -> true;
         };
+    }
+
+    @Override
+    public int compareTo(@NotNull Brush brush) {
+        return key().compareTo(brush.key());
     }
 }
