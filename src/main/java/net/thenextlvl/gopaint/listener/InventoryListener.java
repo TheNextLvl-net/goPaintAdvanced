@@ -50,6 +50,8 @@ public final class InventoryListener implements Listener {
         }
         event.setCancelled(true);
 
+        if (event.getAction().equals(InventoryAction.NOTHING)) return;
+
         var settings = plugin.brushController().getBrushSettings(player);
 
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
