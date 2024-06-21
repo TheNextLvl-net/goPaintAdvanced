@@ -118,10 +118,10 @@ public class MainMenu extends AbstractGUI {
     public void updateMixingStrength() {
         if (!(settings.getBrush() instanceof GradientBrush)) return;
 
-        inventory.setItem(13, Items.create(Material.MAGMA_CREAM, 1,
-                "§6Mixing Strength: §e" + settings.getMixingStrength() + "%",
-                "\n§7Left click to increase\n§7Right click to decrease"
-        ));
+        inventory.setItem(13, new ItemBuilder(Material.MAGMA_CREAM)
+                .itemName(plugin.bundle().component(owner, "brush.mixing",
+                        Placeholder.parsed("strength", String.valueOf(settings.getMixingStrength()))))
+                .lore(plugin.bundle().components(owner, "brush.mixing.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(4, placeholder);
