@@ -105,10 +105,10 @@ public class MainMenu extends AbstractGUI {
             && !(settings.getBrush() instanceof GradientBrush))
             return;
 
-        inventory.setItem(12, Items.create(Material.BLAZE_POWDER, 1,
-                "§6Falloff Strength: §e" + settings.getFalloffStrength() + "%",
-                "\n§7Left click to increase\n§7Right click to decrease"
-        ));
+        inventory.setItem(12, new ItemBuilder(Material.BLAZE_POWDER)
+                .itemName(plugin.bundle().component(owner, "brush.falloff",
+                        Placeholder.parsed("strength", String.valueOf(settings.getFalloffStrength()))))
+                .lore(plugin.bundle().components(owner, "brush.falloff.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(3, placeholder);
