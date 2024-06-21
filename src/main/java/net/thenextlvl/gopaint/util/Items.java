@@ -44,12 +44,4 @@ public final class Items {
         });
         return itemStack;
     }
-
-    public static ItemBuilder create(Material material) {
-        return new ItemBuilder(material).hideTooltip(true);
-    }
-
-    public static ItemBuilder createHead(String texture, int amount, String name, String lore) {
-        return create(Material.PLAYER_HEAD, amount, name, lore).headValue(texture);
-    }
 }
