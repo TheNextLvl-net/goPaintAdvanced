@@ -49,17 +49,20 @@ public final class InventoryListener implements Listener {
             return;
         }
         event.setCancelled(true);
+
         var settings = plugin.brushController().getBrushSettings(player);
+
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
-            if (event.getClick().isLeftClick()) {
-                if (!event.getCursor().getType().isBlock()) {
-                    if (!event.getCursor().getType().equals(plugin.config().brushConfig().defaultBrushType())) {
-                        settings.export(event.getCursor());
-                    }
-                }
-            } else if (event.getClick().isRightClick()) {
+
+            if (event.getCursor().isEmpty()) {
                 settings.toggle();
+                return;
             }
+
+            if (event.getCursor().getType().isBlock()) return;
+            if (event.getCursor().getType().equals(plugin.config().brushConfig().defaultBrushType())) return;
+            settings.export(event.getCursor());
+
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {
                 settings.cycleBrushForward();
@@ -139,25 +142,16 @@ public final class InventoryListener implements Listener {
             settings.cycleSurfaceMode();
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
                    || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
-            int slot;
-            if (event.getRawSlot() >= 37 && event.getRawSlot() <= 41) {
-                slot = event.getRawSlot() - 36;
-            } else {
-                slot = event.getRawSlot() - 45;
-            }
+            int slot = event.getRawSlot() - (event.getRawSlot() >= 37 && event.getRawSlot() <= 41 ? 36 : 45);
             if (event.getClick().isLeftClick()) {
-                if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
-                    settings.addBlock(event.getCursor().getType(), slot);
-                }
+                if (!event.getCursor().getType().isSolid()) return;
+                settings.addBlock(event.getCursor().getType(), slot);
             } else if (event.getClick().isRightClick()) {
                 settings.removeBlock(slot);
             }
         } else if (event.getRawSlot() == 43 || event.getRawSlot() == 52) {
-            if (event.getClick().isLeftClick()) {
-                if (event.getCursor().getType().isBlock() && event.getCursor().getType().isSolid()) {
-                    settings.setMask(event.getCursor().getType());
-                }
-            }
+            if (!event.getCursor().getType().isSolid()) return;
+            settings.setMask(event.getCursor().getType());
         }
     }
 }
