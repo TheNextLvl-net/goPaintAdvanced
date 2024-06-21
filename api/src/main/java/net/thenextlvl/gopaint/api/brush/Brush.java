@@ -12,8 +12,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
+import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Surface;
 import org.bukkit.Location;
@@ -33,14 +35,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public abstract class Brush implements Comparable<Brush>, Keyed {
     /**
-     * Retrieves the name of the brush.
-     */
-    private final String name;
-    /**
-     * Retrieves the description of the brush.
-     */
-    private final String description;
-    /**
      * Retrieves the base64 head value.
      */
     private final String headValue;
@@ -48,6 +42,22 @@ public abstract class Brush implements Comparable<Brush>, Keyed {
      * The key that identifies this brush
      */
     private final @Accessors(fluent = true) Key key;
+
+    /**
+     * Retrieves the localized name of this brush.
+     *
+     * @param audience The audience for whom the name is retrieved.
+     * @return The localized name of the brush.
+     */
+    public abstract Component getName(Audience audience);
+
+    /**
+     * Retrieves the localized description of this brush.
+     *
+     * @param audience The audience for whom the description is retrieved.
+     * @return The localized description of the brush.
+     */
+    public abstract Component[] getDescription(Audience audience);
 
     /**
      * Performs a painting action using the provided location, player, and brush settings.
