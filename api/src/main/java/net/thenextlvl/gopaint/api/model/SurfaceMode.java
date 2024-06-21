@@ -2,40 +2,34 @@ package net.thenextlvl.gopaint.api.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import net.kyori.adventure.translation.Translatable;
 import net.thenextlvl.gopaint.api.math.Surface;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 @Getter
 @RequiredArgsConstructor
-public enum SurfaceMode {
+@Accessors(fluent = true)
+public enum SurfaceMode implements Translatable {
     /**
      * This enumeration represents a more intuitive check.
      *
      * @see Surface#isDirectlyOnSurface(Block)
      */
-    DIRECT("Direct"),
+    DIRECT("surface.mode.direct"),
     /**
      * This enumeration represents that surface mode is disabled.
      *
      * @see Surface#isOnSurface(Block, SurfaceMode, Location)
      */
-    DISABLED("Disabled"),
+    DISABLED("surface.mode.disabled"),
     /**
      * This enumeration represents the original surface mode check.
      *
      * @see Surface#isRelativelyOnSurface(Block, Location)
      */
-    RELATIVE("Relative");
+    RELATIVE("surface.mode.relative");
 
-    private final String name;
-
-    public static Optional<SurfaceMode> byName(String name) {
-        return Arrays.stream(values())
-                .filter(surfaceMode -> surfaceMode.getName().equals(name))
-                .findAny();
-    }
+    private final String translationKey;
 }

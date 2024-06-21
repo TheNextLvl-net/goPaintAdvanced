@@ -6,13 +6,13 @@ import core.file.format.GsonFile;
 import core.i18n.file.ComponentBundle;
 import core.io.IO;
 import core.paper.adapters.inventory.MaterialAdapter;
+import core.paper.adapters.key.KeyAdapter;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.thenextlvl.gopaint.adapter.BrushAdapter;
-import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
@@ -21,7 +21,6 @@ import net.thenextlvl.gopaint.api.model.PluginConfig;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
-import net.thenextlvl.gopaint.brush.standard.SphereBrush;
 import net.thenextlvl.gopaint.command.GoPaintCommand;
 import net.thenextlvl.gopaint.listener.ConnectListener;
 import net.thenextlvl.gopaint.listener.InteractListener;
@@ -30,6 +29,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,14 +55,14 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
-            new PluginConfig.BrushConfig(Material.FEATHER, SphereBrush.INSTANCE, 100, 10, 50, Axis.Y, 50, 50,
-                    new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
+            new PluginConfig.BrushConfig(Material.FEATHER, new NamespacedKey("gopaint", "sphere_brush"), 100, 10, 50,
+                    Axis.Y, 50, 50, new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
             new PluginConfig.ThicknessConfig(1, 5),
             new PluginConfig.AngleConfig(2, 5, 10, 40, 85),
             new PluginConfig.FractureConfig(2, 5)
     ), new GsonBuilder()
             .registerTypeAdapter(Material.class, MaterialAdapter.NotNull.INSTANCE)
-            .registerTypeAdapter(Brush.class, new BrushAdapter(this))
+            .registerTypeAdapter(Key.class, KeyAdapter.Kyori.INSTANCE)
             .setPrettyPrinting()
             .create()
     ).validate().save();

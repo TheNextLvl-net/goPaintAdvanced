@@ -22,7 +22,6 @@ import core.paper.gui.AbstractGUI;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
@@ -74,6 +73,10 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         this.plugin = plugin;
         this.player = player;
 
+        var defaultBrush = plugin.config().brushConfig().defaultBrush();
+        brush = plugin.brushRegistry().getBrush(defaultBrush)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown default brush: " + defaultBrush.asString()));
+
         surfaceMode = plugin.config().brushConfig().surfaceMode();
         maskMode = plugin.config().brushConfig().maskMode();
         enabled = plugin.config().brushConfig().enabledByDefault();
@@ -87,7 +90,6 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         axis = plugin.config().brushConfig().defaultAxis();
         brushSize = plugin.config().brushConfig().defaultSize();
         mask = plugin.config().brushConfig().defaultMask();
-        brush = plugin.config().brushConfig().defaultBrush();
         blocks.add(Material.STONE);
 
         mainMenu = new MainMenu(plugin, this, player);
@@ -341,22 +343,24 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 .collect(Collectors.joining(", "))));
 
         if (!getMaskMode().equals(MaskMode.DISABLED)) {
-            lore.add("Mask Mode: " + getMaskMode().getName());
+            lore.add("Mask Mode: " + getMaskMode().translationKey());
         }
         if (getMaskMode().equals(MaskMode.INTERFACE)) {
             lore.add("Mask: " + getMask().getKey().asMinimalString());
         }
 
         if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-            lore.add("Surface Mode: " + getSurfaceMode().getName());
+            lore.add("Surface Mode: " + getSurfaceMode().translationKey());
         }
 
         itemStack.editMeta(itemMeta -> {
-            itemMeta.displayName(Component.text(" ♦ " + getBrush().getName() + " ♦ ", NamedTextColor.AQUA)
-                    .style(Style.style(TextDecoration.ITALIC.withState(false))));
-            itemMeta.lore(lore.stream().map(string -> Component.text(string).style(Style
-                    .style(TextDecoration.ITALIC.withState(false))
-                    .color(NamedTextColor.DARK_GRAY))).toList());
+            var diamond = Component.text(" ♦ ");
+            itemMeta.displayName(diamond.append(getBrush().getName(player)).append(diamond)
+                    .decoration(TextDecoration.ITALIC, false).color(NamedTextColor.AQUA));
+            itemMeta.lore(lore.stream().map(string -> Component.text(string)
+                            .decoration(TextDecoration.ITALIC, false)
+                            .color(NamedTextColor.DARK_GRAY))
+                    .toList());
             itemMeta.setEnchantmentGlintOverride(true);
         });
     }

@@ -19,9 +19,12 @@
 package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -30,15 +33,24 @@ import org.bukkit.entity.Player;
 import java.util.stream.Stream;
 
 public class GradientBrush extends Brush {
-    public static final GradientBrush INSTANCE = new GradientBrush();
+    private final GoPaintProvider provider;
 
-    public GradientBrush() {
+    public GradientBrush(GoPaintProvider provider) {
         super(
-                "Gradient Brush",
-                "Creates gradients",
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19",
                 new NamespacedKey("gopaint", "gradient_brush")
         );
+        this.provider = provider;
+    }
+
+    @Override
+    public Component getName(Audience audience) {
+        return provider.bundle().component(audience, "brush.name.gradient");
+    }
+
+    @Override
+    public Component[] getDescription(Audience audience) {
+        return provider.bundle().components(audience, "brush.description.gradient");
     }
 
     @Override

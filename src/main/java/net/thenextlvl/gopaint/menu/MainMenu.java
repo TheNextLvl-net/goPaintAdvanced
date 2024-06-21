@@ -3,16 +3,22 @@ package net.thenextlvl.gopaint.menu;
 import core.paper.gui.AbstractGUI;
 import core.paper.item.ItemBuilder;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.brush.standard.*;
-import net.thenextlvl.gopaint.util.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
-import java.util.stream.Collectors;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class MainMenu extends AbstractGUI {
@@ -50,203 +56,243 @@ public class MainMenu extends AbstractGUI {
     }
 
     private void resetSettingSlots() {
-        var placeholder = Items.create(Material.GRAY_STAINED_GLASS_PANE);
+        var placeholder = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true);
         IntStream.of(3, 4, 12, 13, 21, 22).forEach(value -> inventory.setItem(value, placeholder));
     }
 
     public void updateMask() {
-        inventory.setItem(52, Items.create(settings.getMask(), 1, "§6Current Mask", "\n§7Left click with a block to change"));
+        inventory.setItem(52, new ItemBuilder(settings.getMask())
+                .itemName(plugin.bundle().component(owner, "mask.block"))
+                .lore(plugin.bundle().components(owner, "mask.block.description")));
     }
 
     public void updateBlockPalette() {
-        for (int x = 46; x <= 50; x++) {
-            inventory.setItem(x, Items.create(Material.BARRIER, 1, "§cEmpty Slot", "\n§7Click with a block to set"));
-        }
-        int x = 46;
-        int size = settings.getBlocks().size();
-        int chance = size == 0 ? 0 : 100 / size;
-        for (Material material : settings.getBlocks()) {
-            if (chance > 64) {
-                inventory.setItem(x, Items.create(material, 1,
-                        "§aSlot " + (x - 45) + " §7" + chance + "%",
-                        "\n§7Left click with a block to change\n§7Right click to clear"
-                ));
-            } else {
-                inventory.setItem(x, Items.create(material, chance,
-                        "§aSlot " + (x - 45) + " §7" + chance + "%",
-                        "\n§7Left click with a block to change\n§7Right click to clear"
-                ));
-            }
-            x++;
+
+        var placeholder = new ItemBuilder(Material.BARRIER)
+                .itemName(plugin.bundle().component(owner, "slot.empty"))
+                .lore(plugin.bundle().components(owner, "slot.empty.description"));
+        IntStream.rangeClosed(46, 50)
+                .filter(value -> settings.getBlocks().size() <= value - 46)
+                .forEach(value -> inventory.setItem(value, placeholder));
+
+        if (settings.getBlocks().isEmpty()) return;
+
+        var chance = 100d / settings.getBlocks().size();
+        var formatter = DecimalFormat.getInstance(owner.locale());
+        formatter.setMaximumFractionDigits(2);
+
+        for (var i = 0; i < settings.getBlocks().size(); i++) {
+            inventory.setItem(i + 46, new ItemBuilder(settings.getBlocks().get(i))
+                    .amount(chance > 64 ? 1 : (int) chance)
+                    .itemName(plugin.bundle().component(owner, "slot.set",
+                            Placeholder.parsed("slot", String.valueOf(i + 1)),
+                            Placeholder.parsed("chance", formatter.format(chance))))
+                    .lore(plugin.bundle().components(owner, "slot.set.description")));
         }
     }
 
     public void updateSize() {
-        inventory.setItem(14, Items.create(Material.BROWN_MUSHROOM, 1,
-                "§6Brush Size: §e" + settings.getBrushSize(),
-                "\n§7Left click to increase\n§7Right click to decrease\n§7Shift click to change by 10"
-        ));
+        inventory.setItem(14, new ItemBuilder(Material.BROWN_MUSHROOM)
+                .itemName(plugin.bundle().component(owner, "brush.size",
+                        Placeholder.parsed("size", String.valueOf(settings.getBrushSize()))))
+                .lore(plugin.bundle().components(owner, "brush.size.description")));
     }
 
     public void updateFalloffStrength() {
-        var brush = settings.getBrush();
-        if (brush instanceof SplatterBrush || brush instanceof PaintBrush || brush instanceof GradientBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.BLAZE_POWDER, 1,
-                    "§6Falloff Strength: §e" + settings.getFalloffStrength() + "%",
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof SplatterBrush)
+            && !(settings.getBrush() instanceof PaintBrush)
+            && !(settings.getBrush() instanceof GradientBrush))
+            return;
+
+        inventory.setItem(12, new ItemBuilder(Material.BLAZE_POWDER)
+                .itemName(plugin.bundle().component(owner, "brush.falloff",
+                        Placeholder.parsed("strength", String.valueOf(settings.getFalloffStrength()))))
+                .lore(plugin.bundle().components(owner, "brush.falloff.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateMixingStrength() {
-        if (settings.getBrush() instanceof GradientBrush) {
-            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(13, Items.create(Material.MAGMA_CREAM, 1,
-                    "§6Mixing Strength: §e" + settings.getMixingStrength() + "%",
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof GradientBrush)) return;
+
+        inventory.setItem(13, new ItemBuilder(Material.MAGMA_CREAM)
+                .itemName(plugin.bundle().component(owner, "brush.mixing",
+                        Placeholder.parsed("strength", String.valueOf(settings.getMixingStrength()))))
+                .lore(plugin.bundle().components(owner, "brush.mixing.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(4, placeholder);
+        inventory.setItem(22, placeholder);
     }
 
     public void updateFractureSettings() {
-        if (settings.getBrush() instanceof FractureBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
-                    "§6Fracture Check Distance: §e" + settings.getFractureDistance(),
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof FractureBrush)) return;
+
+        inventory.setItem(12, new ItemBuilder(Material.DAYLIGHT_DETECTOR)
+                .itemName(plugin.bundle().component(owner, "brush.fracture",
+                        Placeholder.parsed("distance", String.valueOf(settings.getFractureDistance()))))
+                .lore(plugin.bundle().components(owner, "brush.fracture.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateAngleSettings() {
-        if (settings.getBrush() instanceof AngleBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
-                    "§6Angle Check Distance: §e" + settings.getAngleDistance(),
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
+        if (!(settings.getBrush() instanceof AngleBrush)) return;
 
-            inventory.setItem(4, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(13, Items.create(Material.BLAZE_ROD, 1,
-                    "§6Maximum Angle: §e" + settings.getAngleHeightDifference() + "°",
-                    "\n§7Left click to increase\n§7Right click to decrease\n§7Shift click to change by 15"
-            ));
-            inventory.setItem(22, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        inventory.setItem(12, new ItemBuilder(Material.DAYLIGHT_DETECTOR)
+                .itemName(plugin.bundle().component(owner, "brush.angle.distance",
+                        Placeholder.parsed("distance", String.valueOf(settings.getAngleDistance()))))
+                .lore(plugin.bundle().components(owner, "brush.angle.distance.description")));
+        inventory.setItem(13, new ItemBuilder(Material.BLAZE_ROD)
+                .itemName(plugin.bundle().component(owner, "brush.angle.maximum",
+                        Placeholder.parsed("angle", String.valueOf(settings.getAngleHeightDifference()))))
+                .lore(plugin.bundle().components(owner, "brush.angle.maximum.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(4, placeholder);
+        inventory.setItem(22, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateThickness() {
-        if (settings.getBrush() instanceof OverlayBrush || settings.getBrush() instanceof UnderlayBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.BOOK, 1,
-                    "§6Layer Thickness: §e" + settings.getThickness(),
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof OverlayBrush)
+            && !(settings.getBrush() instanceof UnderlayBrush))
+            return;
+
+        inventory.setItem(12, new ItemBuilder(Material.BOOK)
+                .itemName(plugin.bundle().component(owner, "brush.thickness",
+                        Placeholder.parsed("thickness", String.valueOf(settings.getThickness()))))
+                .lore(plugin.bundle().components(owner, "brush.thickness.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateAxis() {
-        if (settings.getBrush() instanceof DiscBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.COMPASS, 1,
-                    "§6Axis: §e" + settings.getAxis(), "\n§7Click to change"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof DiscBrush)) return;
+
+        inventory.setItem(12, new ItemBuilder(Material.COMPASS)
+                .itemName(plugin.bundle().component(owner, "brush.axis",
+                        Placeholder.parsed("axis", settings.getAxis().name())))
+                .lore(plugin.bundle().components(owner, "brush.axis.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateChance() {
-        if (settings.getBrush() instanceof SprayBrush) {
-            inventory.setItem(3, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-            inventory.setItem(12, Items.create(Material.GOLD_NUGGET, 1,
-                    "§6Place chance: §e" + settings.getChance() + "%",
-                    "\n§7Left click to increase\n§7Right click to decrease"
-            ));
-            inventory.setItem(21, Items.create(Material.WHITE_STAINED_GLASS_PANE));
-        }
+        if (!(settings.getBrush() instanceof SprayBrush)) return;
+
+        inventory.setItem(12, new ItemBuilder(Material.GOLD_NUGGET)
+                .itemName(plugin.bundle().component(owner, "brush.chance",
+                        Placeholder.parsed("chance", String.valueOf(settings.getChance()))))
+                .lore(plugin.bundle().components(owner, "brush.chance.description")));
+
+        var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
+        inventory.setItem(3, placeholder);
+        inventory.setItem(21, placeholder);
     }
 
     public void updateBrushSelection() {
         var brush = settings.getBrush();
 
-        var clicks = "\n§7Shift click to select\n§7Click to cycle brush\n\n";
+        var lore = new ArrayList<>(Arrays.asList(plugin.bundle().components(owner, "brush.selection.lore")));
 
-        var lore = plugin.brushRegistry().getBrushes().map(current -> {
-            if (current.equals(brush)) {
-                return "§e" + current.getName() + "\n";
-            } else {
-                return "§8" + current.getName() + "\n";
-            }
-        }).collect(Collectors.joining());
+        plugin.brushRegistry().getBrushes().map(current -> {
+            var color = current.equals(brush) ? NamedTextColor.YELLOW : NamedTextColor.DARK_GRAY;
+            return current.getName(owner).decoration(TextDecoration.ITALIC, false).color(color);
+        }).forEach(lore::addLast);
 
-        inventory.setItem(11, Items.createHead(brush.getHeadValue(), 1, "§6Selected Brush type", clicks + lore));
+        inventory.setItem(11, new ItemBuilder(Material.PLAYER_HEAD)
+                .headValue(brush.getHeadValue())
+                .itemName(plugin.bundle().component(owner, "brush.selection"))
+                .lore(lore.toArray(new Component[]{})));
     }
 
     public void updateToggle() {
-        if (settings.isEnabled()) {
-            inventory.setItem(1, Items.create(Material.LIME_STAINED_GLASS_PANE));
-            inventory.setItem(10, Items.create(plugin.config().brushConfig().defaultBrushType(), 1, "§6goPaint Brush",
-                    "§a§lEnabled\n\n§7Left click with item to export\n§7Right click to toggle"
-            ));
-            inventory.setItem(19, Items.create(Material.LIME_STAINED_GLASS_PANE));
-        } else {
-            inventory.setItem(1, Items.create(Material.RED_STAINED_GLASS_PANE));
-            inventory.setItem(10, Items.create(plugin.config().brushConfig().defaultBrushType(), 1, "§6goPaint Brush",
-                    "§c§lDisabled\n\n§7Left click with item to export\n§7Right click to toggle"
-            ));
-            inventory.setItem(19, Items.create(Material.RED_STAINED_GLASS_PANE));
-        }
+        var state = settings.isEnabled()
+                ? plugin.bundle().component(owner, "brush.state.enabled")
+                : plugin.bundle().component(owner, "brush.state.disabled");
+
+        inventory.setItem(10, new ItemBuilder(plugin.config().brushConfig().defaultBrushType())
+                .itemName(plugin.bundle().component(owner, "brush.toggle"))
+                .lore(plugin.bundle().components(owner, "brush.toggle.description",
+                        Placeholder.component("state", state))));
+
+        var placeholder = new ItemBuilder(settings.isEnabled()
+                ? Material.LIME_STAINED_GLASS_PANE
+                : Material.RED_STAINED_GLASS_PANE
+        ).hideTooltip(true);
+
+        inventory.setItem(1, placeholder);
+        inventory.setItem(19, placeholder);
     }
 
     public void updateMaskMode() {
-        var pane = switch (settings.getMaskMode()) {
-            case DISABLED -> Material.RED_STAINED_GLASS_PANE;
-            case INTERFACE -> Material.LIME_STAINED_GLASS_PANE;
-            case WORLDEDIT -> Material.ORANGE_STAINED_GLASS_PANE;
-        };
-        var color = switch (settings.getMaskMode()) {
-            case DISABLED -> "§c";
-            case INTERFACE -> "§a";
-            case WORLDEDIT -> "§6";
-        };
         var icon = switch (settings.getMaskMode()) {
             case DISABLED -> Material.CARVED_PUMPKIN;
             case INTERFACE -> Material.JACK_O_LANTERN;
             case WORLDEDIT -> Material.WOODEN_AXE;
         };
 
-        inventory.setItem(6, Items.create(pane));
-        inventory.setItem(15, Items.create(icon, 1,
-                "§6Mask Mode",
-                color + "§l" + settings.getMaskMode().getName() + "\n\n§7Click to cycle"
-        ));
-        inventory.setItem(24, Items.create(pane));
+        var mode = plugin.bundle().component(owner, settings.getMaskMode().translationKey())
+                .color(switch (settings.getMaskMode()) {
+                    case DISABLED -> NamedTextColor.RED;
+                    case INTERFACE -> NamedTextColor.GREEN;
+                    case WORLDEDIT -> NamedTextColor.GOLD;
+                });
+
+        inventory.setItem(15, new ItemBuilder(icon)
+                .itemName(plugin.bundle().component(owner, "mask.mode"))
+                .lore(plugin.bundle().components(owner, "mask.mode.description",
+                        Placeholder.component("mode", mode)))
+                .itemFlags(ItemFlag.HIDE_ATTRIBUTES));
+
+        var placeholder = new ItemBuilder(switch (settings.getMaskMode()) {
+            case DISABLED -> Material.RED_STAINED_GLASS_PANE;
+            case INTERFACE -> Material.LIME_STAINED_GLASS_PANE;
+            case WORLDEDIT -> Material.ORANGE_STAINED_GLASS_PANE;
+        }).hideTooltip(true);
+
+        inventory.setItem(6, placeholder);
+        inventory.setItem(24, placeholder);
     }
 
     public void updateSurfaceMode() {
-        var pane = switch (settings.getSurfaceMode()) {
+        var icon = switch (settings.getSurfaceMode()) {
+            case DIRECT -> Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+            case DISABLED -> Material.POLISHED_BLACKSTONE_PRESSURE_PLATE;
+            case RELATIVE -> Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
+        };
+
+        var mode = plugin.bundle().component(owner, settings.getSurfaceMode().translationKey())
+                .color(switch (settings.getSurfaceMode()) {
+                    case DIRECT -> NamedTextColor.GREEN;
+                    case DISABLED -> NamedTextColor.RED;
+                    case RELATIVE -> NamedTextColor.GOLD;
+                });
+
+        inventory.setItem(16, new ItemBuilder(icon)
+                .itemName(plugin.bundle().component(owner, "surface.mode"))
+                .lore(plugin.bundle().components(owner, "surface.mode.description",
+                        Placeholder.component("mode", mode)))
+                .itemFlags(ItemFlag.HIDE_ATTRIBUTES));
+
+        var placeholder = new ItemBuilder(switch (settings.getSurfaceMode()) {
             case DIRECT -> Material.LIME_STAINED_GLASS_PANE;
             case DISABLED -> Material.RED_STAINED_GLASS_PANE;
             case RELATIVE -> Material.ORANGE_STAINED_GLASS_PANE;
-        };
-        var color = switch (settings.getSurfaceMode()) {
-            case DIRECT -> "§a";
-            case DISABLED -> "§c";
-            case RELATIVE -> "§6";
-        };
+        }).hideTooltip(true);
 
-        inventory.setItem(7, Items.create(pane));
-        inventory.setItem(16, Items.create(Material.LIGHT_WEIGHTED_PRESSURE_PLATE, 1,
-                "§6Surface Mode",
-                color + "§l" + settings.getSurfaceMode().getName() + "\n\n§7Click to cycle"
-        ));
-        inventory.setItem(25, Items.create(pane));
+        inventory.setItem(7, placeholder);
+        inventory.setItem(25, placeholder);
     }
 
     private void formatDefault() {

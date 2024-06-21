@@ -1,7 +1,7 @@
 package net.thenextlvl.gopaint.api.model;
 
 import com.google.gson.annotations.SerializedName;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 
@@ -16,7 +16,7 @@ public record PluginConfig(
 
     public record BrushConfig(
             @SerializedName("default-brush-type") Material defaultBrushType,
-            @SerializedName("default-brush") Brush defaultBrush,
+            @SerializedName("default-brush") Key defaultBrush,
             @SerializedName("max-size") int maxSize,
             @SerializedName("default-size") int defaultSize,
             @SerializedName("default-chance") int defaultChance,

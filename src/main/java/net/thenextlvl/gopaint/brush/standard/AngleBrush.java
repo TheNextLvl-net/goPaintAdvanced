@@ -19,10 +19,13 @@
 package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -31,15 +34,24 @@ import org.bukkit.entity.Player;
 import java.util.stream.Stream;
 
 public class AngleBrush extends Brush {
-    public static final AngleBrush INSTANCE = new AngleBrush();
+    private final GoPaintProvider provider;
 
-    public AngleBrush() {
+    public AngleBrush(GoPaintProvider provider) {
         super(
-                "Angle Brush",
-                "Only works on cliffs",
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmRlNDQ4ZjBkYmU3NmJiOGE4MzJjOGYzYjJhMDNkMzViZDRlMjc4NWZhNWU4Mjk4YzI2MTU1MDNmNDdmZmEyIn19fQ==",
                 new NamespacedKey("gopaint", "angle_brush")
         );
+        this.provider = provider;
+    }
+
+    @Override
+    public Component getName(Audience audience) {
+        return provider.bundle().component(audience, "brush.name.angle");
+    }
+
+    @Override
+    public Component[] getDescription(Audience audience) {
+        return provider.bundle().components(audience, "brush.description.angle");
     }
 
     @Override

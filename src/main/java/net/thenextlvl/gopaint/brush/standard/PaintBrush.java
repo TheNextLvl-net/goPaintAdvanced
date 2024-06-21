@@ -19,13 +19,15 @@
 package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import core.i18n.file.ComponentBundle;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.math.curve.BezierSpline;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -35,16 +37,24 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class PaintBrush extends Brush {
-    private final ComponentBundle bundle;
+    private final GoPaintProvider provider;
 
-    public PaintBrush(ComponentBundle bundle) {
+    public PaintBrush(GoPaintProvider provider) {
         super(
-                "Paint Brush",
-                "Paints strokes\n§8hold shift to end",
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=",
                 new NamespacedKey("gopaint", "paint_brush")
         );
-        this.bundle = bundle;
+        this.provider = provider;
+    }
+
+    @Override
+    public Component getName(Audience audience) {
+        return provider.bundle().component(audience, "brush.name.paint");
+    }
+
+    @Override
+    public Component[] getDescription(Audience audience) {
+        return provider.bundle().components(audience, "brush.description.paint");
     }
 
     private static final HashMap<UUID, List<Location>> selectedPoints = new HashMap<>();
@@ -55,7 +65,7 @@ public class PaintBrush extends Brush {
         locations.add(target);
 
         if (!player.isSneaking()) {
-            bundle.sendMessage(player, "brush.paint.point.set",
+            provider.bundle().sendMessage(player, "brush.paint.point.set",
                     Placeholder.parsed("x", String.valueOf(target.getBlockX())),
                     Placeholder.parsed("y", String.valueOf(target.getBlockY())),
                     Placeholder.parsed("z", String.valueOf(target.getBlockZ())),
@@ -73,6 +83,7 @@ public class PaintBrush extends Brush {
                     .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
                                      || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
                                         < Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
+
                     .filter(block -> {
                         var rate = calculateRate(block, first, brushSettings);
                         return brushSettings.getRandom().nextDouble() > rate;

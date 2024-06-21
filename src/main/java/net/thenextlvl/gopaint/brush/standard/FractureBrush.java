@@ -19,10 +19,13 @@
 package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -31,15 +34,24 @@ import org.bukkit.entity.Player;
 import java.util.stream.Stream;
 
 public class FractureBrush extends Brush {
-    public static final FractureBrush INSTANCE = new FractureBrush();
+    private final GoPaintProvider provider;
 
-    public FractureBrush() {
+    public FractureBrush(GoPaintProvider provider) {
         super(
-                "Fracture Brush",
-                "Places blocks in cracks/fisures",
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNkZjczZWVlNjIyNGM1YzVkOTQ4ZDJhMzQ1ZGUyNWYyMDhjYmQ5YWY3MTA4Y2UxZTFiNjFhNTg2ZGU5OGIyIn19fQ==",
                 new NamespacedKey("gopaint", "fracture_brush")
         );
+        this.provider = provider;
+    }
+
+    @Override
+    public Component getName(Audience audience) {
+        return provider.bundle().component(audience, "brush.name.fracture");
+    }
+
+    @Override
+    public Component[] getDescription(Audience audience) {
+        return provider.bundle().components(audience, "brush.description.fracture");
     }
 
     @Override

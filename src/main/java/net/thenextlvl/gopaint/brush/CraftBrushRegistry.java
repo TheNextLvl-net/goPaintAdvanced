@@ -16,17 +16,17 @@ public class CraftBrushRegistry implements BrushRegistry {
     private final List<Brush> brushes = new LinkedList<>();
 
     public CraftBrushRegistry(GoPaintPlugin plugin) {
-        registerBrush(SphereBrush.INSTANCE);
-        registerBrush(SprayBrush.INSTANCE);
-        registerBrush(SplatterBrush.INSTANCE);
-        registerBrush(DiscBrush.INSTANCE);
-        registerBrush(BucketBrush.INSTANCE);
-        registerBrush(AngleBrush.INSTANCE);
-        registerBrush(OverlayBrush.INSTANCE);
-        registerBrush(UnderlayBrush.INSTANCE);
-        registerBrush(FractureBrush.INSTANCE);
-        registerBrush(GradientBrush.INSTANCE);
-        registerBrush(new PaintBrush(plugin.bundle()));
+        registerBrush(new SphereBrush(plugin));
+        registerBrush(new SprayBrush(plugin));
+        registerBrush(new SplatterBrush(plugin));
+        registerBrush(new DiscBrush(plugin));
+        registerBrush(new BucketBrush(plugin));
+        registerBrush(new AngleBrush(plugin));
+        registerBrush(new OverlayBrush(plugin));
+        registerBrush(new UnderlayBrush(plugin));
+        registerBrush(new FractureBrush(plugin));
+        registerBrush(new GradientBrush(plugin));
+        registerBrush(new PaintBrush(plugin));
     }
 
     @Override
