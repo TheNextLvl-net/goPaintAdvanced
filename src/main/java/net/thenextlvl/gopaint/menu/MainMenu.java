@@ -10,7 +10,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.brush.standard.*;
-import net.thenextlvl.gopaint.util.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -178,9 +177,10 @@ public class MainMenu extends AbstractGUI {
     public void updateAxis() {
         if (!(settings.getBrush() instanceof DiscBrush)) return;
 
-        inventory.setItem(12, Items.create(Material.COMPASS, 1,
-                "§6Axis: §e" + settings.getAxis(), "\n§7Click to change"
-        ));
+        inventory.setItem(12, new ItemBuilder(Material.COMPASS)
+                .itemName(plugin.bundle().component(owner, "brush.axis",
+                        Placeholder.parsed("axis", settings.getAxis().name())))
+                .lore(plugin.bundle().components(owner, "brush.axis.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(3, placeholder);
