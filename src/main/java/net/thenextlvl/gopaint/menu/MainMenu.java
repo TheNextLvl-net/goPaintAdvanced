@@ -131,10 +131,10 @@ public class MainMenu extends AbstractGUI {
     public void updateFractureSettings() {
         if (!(settings.getBrush() instanceof FractureBrush)) return;
 
-        inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
-                "§6Fracture Check Distance: §e" + settings.getFractureDistance(),
-                "\n§7Left click to increase\n§7Right click to decrease"
-        ));
+        inventory.setItem(12, new ItemBuilder(Material.DAYLIGHT_DETECTOR)
+                .itemName(plugin.bundle().component(owner, "brush.fracture",
+                        Placeholder.parsed("distance", String.valueOf(settings.getFractureDistance()))))
+                .lore(plugin.bundle().components(owner, "brush.fracture.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(3, placeholder);
@@ -144,14 +144,14 @@ public class MainMenu extends AbstractGUI {
     public void updateAngleSettings() {
         if (!(settings.getBrush() instanceof AngleBrush)) return;
 
-        inventory.setItem(12, Items.create(Material.DAYLIGHT_DETECTOR, 1,
-                "§6Angle Check Distance: §e" + settings.getAngleDistance(),
-                "\n§7Left click to increase\n§7Right click to decrease"
-        ));
-        inventory.setItem(13, Items.create(Material.BLAZE_ROD, 1,
-                "§6Maximum Angle: §e" + settings.getAngleHeightDifference() + "°",
-                "\n§7Left click to increase\n§7Right click to decrease\n§7Shift click to change by 15"
-        ));
+        inventory.setItem(12, new ItemBuilder(Material.DAYLIGHT_DETECTOR)
+                .itemName(plugin.bundle().component(owner, "brush.angle.distance",
+                        Placeholder.parsed("distance", String.valueOf(settings.getAngleDistance()))))
+                .lore(plugin.bundle().components(owner, "brush.angle.distance.description")));
+        inventory.setItem(13, new ItemBuilder(Material.BLAZE_ROD)
+                .itemName(plugin.bundle().component(owner, "brush.angle.maximum",
+                        Placeholder.parsed("angle", String.valueOf(settings.getAngleHeightDifference()))))
+                .lore(plugin.bundle().components(owner, "brush.angle.maximum.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(3, placeholder);
@@ -165,10 +165,10 @@ public class MainMenu extends AbstractGUI {
             && !(settings.getBrush() instanceof UnderlayBrush))
             return;
 
-        inventory.setItem(12, Items.create(Material.BOOK, 1,
-                "§6Layer Thickness: §e" + settings.getThickness(),
-                "\n§7Left click to increase\n§7Right click to decrease"
-        ));
+        inventory.setItem(12, new ItemBuilder(Material.BOOK)
+                .itemName(plugin.bundle().component(owner, "brush.thickness",
+                        Placeholder.parsed("thickness", String.valueOf(settings.getThickness()))))
+                .lore(plugin.bundle().components(owner, "brush.thickness.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);
         inventory.setItem(3, placeholder);
