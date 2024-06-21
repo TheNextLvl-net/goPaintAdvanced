@@ -5,10 +5,10 @@ import core.paper.item.ActionItem;
 import core.paper.item.ItemBuilder;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import net.thenextlvl.gopaint.util.Items;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -37,12 +37,14 @@ public class BrushesMenu extends PagedGUI<GoPaintProvider, Brush> {
 
     @Override
     public ActionItem constructItem(Brush brush) {
-        return Items.createHead(brush.getHeadValue(), 1, "§6" + brush.getName(),
-                "\n§7Click to select\n\n§8" + brush.getDescription()
-        ).withAction(() -> {
-            settings.setBrush(brush);
-            settings.getMainMenu().open();
-        });
+        return new ItemBuilder(Material.PLAYER_HEAD)
+                .headValue(brush.getHeadValue())
+                .itemName(brush.getName(owner).color(NamedTextColor.GOLD))
+                .lore(brush.getDescription(owner))
+                .withAction(() -> {
+                    settings.setBrush(brush);
+                    settings.getMainMenu().open();
+                });
     }
 
     @Override

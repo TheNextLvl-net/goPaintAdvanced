@@ -95,10 +95,6 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
                                 .toList());
                     } else if (line.startsWith("Mask: ")) {
                         builder.mask(Material.matchMaterial(line.substring(6)));
-                    } else if (line.startsWith("Mask Mode: ")) {
-                        MaskMode.byName(line.substring(11)).ifPresent(builder::maskMode);
-                    } else if (line.startsWith("Surface Mode: ")) {
-                        SurfaceMode.byName(line.substring(14)).ifPresent(builder::surfaceMode);
                     }
                 }));
         return builder.build();

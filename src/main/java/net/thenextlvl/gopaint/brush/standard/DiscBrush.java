@@ -19,9 +19,12 @@
 package net.thenextlvl.gopaint.brush.standard;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
+import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -30,15 +33,24 @@ import org.bukkit.entity.Player;
 import java.util.stream.Stream;
 
 public class DiscBrush extends Brush {
-    public static final DiscBrush INSTANCE = new DiscBrush();
+    private final GoPaintProvider provider;
 
-    public DiscBrush() {
+    public DiscBrush(GoPaintProvider provider) {
         super(
-                "Disc Brush",
-                "Paints blocks in the\n§8same selected axis\n§8from the block you clicked",
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==",
                 new NamespacedKey("gopaint", "disc_brush")
         );
+        this.provider = provider;
+    }
+
+    @Override
+    public Component getName(Audience audience) {
+        return provider.bundle().component(audience, "brush.name.disc");
+    }
+
+    @Override
+    public Component[] getDescription(Audience audience) {
+        return provider.bundle().components(audience, "brush.description.disc");
     }
 
     @Override
