@@ -15,11 +15,11 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 
 ### Done
 
+- **100%** customizable messages
 - Better WorldEdit integration
 - Brigadier commands
 - Improved configuration file
 - Improved algorithms
-- Added internationalization
 - Dropped XMaterial Support
 - Hangar auto deployment
 - New CI Development builds
