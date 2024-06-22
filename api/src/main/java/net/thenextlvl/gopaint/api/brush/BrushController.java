@@ -2,11 +2,9 @@ package net.thenextlvl.gopaint.api.brush;
 
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -31,13 +29,12 @@ public interface BrushController {
     Optional<ItemBrushSettings> parseBrushSettings(ItemStack itemStack);
 
     /**
-     * Parses the brush settings from the given brush and item metadata.
+     * Parses the brush settings from the given item metadata.
      *
-     * @param brush    The brush used for painting.
-     * @param itemMeta The metadata of the item.
-     * @return The parsed brush settings.
+     * @param itemMeta The metadata to parse the brush settings from.
+     * @return An optional containing the parsed brush settings, or empty if the meta does not contain brush settings.
      */
-    ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta);
+    Optional<ItemBrushSettings> parseBrushSettings(ItemMeta itemMeta);
 
     /**
      * Removes the brush settings for a specific player.

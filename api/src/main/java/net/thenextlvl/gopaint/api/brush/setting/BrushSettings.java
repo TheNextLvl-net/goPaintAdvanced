@@ -90,7 +90,7 @@ public interface BrushSettings {
      *
      * @return The fracture distance used by the brush settings.
      */
-    int getFractureDistance();
+    int getFractureStrength();
 
     /**
      * Returns the mixing strength used by the brush settings.

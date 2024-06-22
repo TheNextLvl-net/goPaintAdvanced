@@ -67,7 +67,7 @@ public class FractureBrush extends Brush {
                     .filter(block -> Height.getAverageHeightDiffFracture(
                             block.getLocation(),
                             Height.getNearestNonEmptyBlock(block.getLocation()),
-                            brushSettings.getFractureDistance()
+                            brushSettings.getFractureStrength()
                     ) >= 0.1)
                     .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
                     .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));

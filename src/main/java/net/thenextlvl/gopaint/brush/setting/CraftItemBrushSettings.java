@@ -26,10 +26,10 @@ import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 @Getter
 @Builder(builderClassName = "Builder")
@@ -44,7 +44,7 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final int chance;
     private final int thickness;
     private final int angleDistance;
-    private final int fractureDistance;
+    private final int fractureStrength;
     private final int falloffStrength;
     private final int mixingStrength;
     private final double angleHeightDifference;
@@ -60,44 +60,4 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     public Random getRandom() {
         return random;
     }
-
-    @Deprecated(forRemoval = true, since = "1.1.1")
-    public static ItemBrushSettings parse(Brush brush, ItemMeta itemMeta) {
-        var builder = builder()
-                .maskMode(MaskMode.DISABLED)
-                .surfaceMode(SurfaceMode.DISABLED)
-                .brush(brush);
-        Optional.ofNullable(itemMeta.getLore()).ifPresent(lore -> lore.stream()
-                .map(line -> line.replace("§8", ""))
-                .forEach(line -> {
-                    if (line.startsWith("Size: ")) {
-                        builder.brushSize(Integer.parseInt(line.substring(6)));
-                    } else if (line.startsWith("Chance: ")) {
-                        builder.chance(Integer.parseInt(line.substring(8, line.length() - 1)));
-                    } else if (line.startsWith("Thickness: ")) {
-                        builder.thickness(Integer.parseInt(line.substring(11)));
-                    } else if (line.startsWith("Axis: ")) {
-                        builder.axis(Axis.valueOf(line.substring(6).toUpperCase()));
-                    } else if (line.startsWith("FractureDistance: ")) {
-                        builder.fractureDistance(Integer.parseInt(line.substring(18)));
-                    } else if (line.startsWith("AngleDistance: ")) {
-                        builder.angleDistance(Integer.parseInt(line.substring(15)));
-                    } else if (line.startsWith("AngleHeightDifference: ")) {
-                        builder.angleHeightDifference(Double.parseDouble(line.substring(23)));
-                    } else if (line.startsWith("Mixing: ")) {
-                        builder.mixingStrength(Integer.parseInt(line.substring(8)));
-                    } else if (line.startsWith("Falloff: ")) {
-                        builder.falloffStrength(Integer.parseInt(line.substring(9)));
-                    } else if (line.startsWith("Blocks: ")) {
-                        builder.blocks(Arrays.stream(line.substring(8).split(", "))
-                                .map(Material::matchMaterial)
-                                .filter(Objects::nonNull)
-                                .toList());
-                    } else if (line.startsWith("Mask: ")) {
-                        builder.mask(Material.matchMaterial(line.substring(6)));
-                    }
-                }));
-        return builder.build();
-    }
-
 }

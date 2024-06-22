@@ -87,7 +87,8 @@ public class GoPaintCommand {
     private int toggle(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
         var settings = plugin.brushController().getBrushSettings(player);
-        var message = settings.toggle() ? "command.gopaint.brush.enabled"
+        settings.setEnabled(!settings.isEnabled());
+        var message = settings.isEnabled() ? "command.gopaint.brush.enabled"
                 : "command.gopaint.brush.disabled";
         plugin.bundle().sendMessage(player, message);
         return Command.SINGLE_SUCCESS;

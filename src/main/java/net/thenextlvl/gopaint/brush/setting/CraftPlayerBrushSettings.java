@@ -20,11 +20,13 @@ package net.thenextlvl.gopaint.brush.setting;
 
 import core.paper.gui.AbstractGUI;
 import lombok.Getter;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
@@ -36,7 +38,9 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +58,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private int brushSize;
     private int chance;
     private int thickness;
-    private int fractureDistance;
+    private int fractureStrength;
     private int angleDistance;
     private int falloffStrength;
     private int mixingStrength;
@@ -82,7 +86,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         enabled = plugin.config().brushConfig().enabledByDefault();
         chance = plugin.config().brushConfig().defaultChance();
         thickness = plugin.config().thicknessConfig().defaultThickness();
-        fractureDistance = plugin.config().fractureConfig().defaultFractureDistance();
+        fractureStrength = plugin.config().fractureConfig().defaultFractureStrength();
         angleDistance = plugin.config().angleConfig().defaultAngleDistance();
         angleHeightDifference = plugin.config().angleConfig().defaultAngleHeightDifference();
         falloffStrength = plugin.config().brushConfig().defaultFalloffStrength();
@@ -90,7 +94,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         axis = plugin.config().brushConfig().defaultAxis();
         brushSize = plugin.config().brushConfig().defaultSize();
         mask = plugin.config().brushConfig().defaultMask();
-        blocks.add(Material.STONE);
+        blocks.addAll(plugin.config().brushConfig().defaultBlocks());
 
         mainMenu = new MainMenu(plugin, this, player);
     }
@@ -106,37 +110,15 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void increaseFalloffStrength() {
-        if (falloffStrength > 90) return;
-        falloffStrength += 10;
-        mainMenu.updateFalloffStrength();
-    }
-
-    @Override
-    public void decreaseFalloffStrength() {
-        if (falloffStrength < 10) return;
-        falloffStrength -= 10;
-        mainMenu.updateFalloffStrength();
-    }
-
-    @Override
-    public void increaseMixingStrength() {
-        if (mixingStrength > 90) return;
-        mixingStrength += 10;
-        mainMenu.updateMixingStrength();
-    }
-
-    @Override
-    public void decreaseMixingStrength() {
-        if (mixingStrength < 10) return;
-        mixingStrength -= 10;
-        mainMenu.updateMixingStrength();
-    }
-
-    @Override
     public void setMask(Material type) {
         mask = type;
         mainMenu.updateMask();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        mainMenu.updateToggle();
     }
 
     @Override
@@ -160,18 +142,8 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void cycleBrushForward() {
-        setBrush(cycleForward(brush));
-    }
-
-    @Override
-    public void cycleBrushBackward() {
-        setBrush(cycleBackward(brush));
-    }
-
-    @Override
-    public void setBrushSize(int size) {
-        this.brushSize = Math.clamp(size, 1, plugin.config().brushConfig().maxSize());
+    public void setBrushSize(@Range(from = 1, to = Integer.MAX_VALUE) int size) {
+        this.brushSize = Math.clamp(size, 1, plugin.config().brushConfig().maxBrushSize());
         mainMenu.updateSize();
     }
 
@@ -181,124 +153,76 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void increaseBrushSize(int amount) {
-        setBrushSize(getBrushSize() + amount);
-    }
-
-    @Override
-    public void decreaseBrushSize(int amount) {
-        setBrushSize(getBrushSize() - amount);
-    }
-
-    @Override
-    public boolean toggle() {
-        enabled = !enabled;
-        mainMenu.updateToggle();
-        return enabled;
-    }
-
-    @Override
-    public void increaseChance() {
-        if (chance >= 90) return;
-        chance += 10;
+    public void setChance(@Range(from = 10, to = 90) int chance) {
+        this.chance = Math.clamp(chance, 10, 90);
         mainMenu.updateChance();
     }
 
     @Override
-    public void decreaseChance() {
-        if (chance <= 10) return;
-        chance -= 10;
-        mainMenu.updateChance();
-    }
-
-    @Override
-    public void increaseThickness() {
-        if (thickness >= plugin.config().thicknessConfig().maxThickness()) return;
-        thickness += 1;
+    public void setThickness(@Range(from = 1, to = Integer.MAX_VALUE) int thickness) {
+        this.thickness = Math.clamp(thickness, 1, plugin.config().thicknessConfig().maxThickness());
         mainMenu.updateThickness();
     }
 
     @Override
-    public void decreaseThickness() {
-        if (thickness <= 1) return;
-        thickness -= 1;
-        mainMenu.updateThickness();
-    }
-
-    @Override
-    public void increaseAngleDistance() {
-        if (angleDistance >= plugin.config().angleConfig().maxAngleDistance()) return;
-        angleDistance += 1;
+    public void setAngleDistance(@Range(from = 1, to = Integer.MAX_VALUE) int distance) {
+        this.angleDistance = Math.clamp(distance, 1, plugin.config().angleConfig().maxAngleDistance());
         mainMenu.updateAngleSettings();
     }
 
     @Override
-    public void decreaseAngleDistance() {
-        if (angleDistance <= 1) return;
-        angleDistance -= 1;
+    public void setFalloffStrength(@Range(from = 10, to = 90) int strength) {
+        this.falloffStrength = Math.clamp(strength, 10, 90);
+        mainMenu.updateFalloffStrength();
+    }
+
+    @Override
+    public void setMixingStrength(@Range(from = 10, to = 90) int strength) {
+        this.mixingStrength = Math.clamp(strength, 10, 90);
+        mainMenu.updateMixingStrength();
+    }
+
+    @Override
+    public void setAngleHeightDifference(double difference) {
+        this.angleHeightDifference = Math.clamp(difference,
+                plugin.config().angleConfig().minAngleHeightDifference(),
+                plugin.config().angleConfig().maxAngleHeightDifference());
         mainMenu.updateAngleSettings();
     }
 
     @Override
-    public void increaseFractureDistance() {
-        if (this.fractureDistance >= plugin.config().fractureConfig().maxFractureDistance()) return;
-        this.fractureDistance += 1;
-        mainMenu.updateFractureSettings();
-    }
-
-    @Override
-    public void decreaseFractureDistance() {
-        if (this.fractureDistance <= 1) return;
-        this.fractureDistance -= 1;
-        mainMenu.updateFractureSettings();
-    }
-
-    @Override
-    public void increaseAngleHeightDifference(int amount) {
-        var max = plugin.config().angleConfig().maxAngleHeightDifference();
-        angleHeightDifference = Math.min(max, angleHeightDifference + amount);
-        mainMenu.updateAngleSettings();
-    }
-
-    @Override
-    public void decreaseAngleHeightDifference(int amount) {
-        var min = plugin.config().angleConfig().minAngleHeightDifference();
-        angleHeightDifference = Math.max(min, angleHeightDifference - amount);
-        mainMenu.updateAngleSettings();
-    }
-
-    @Override
-    public void cycleMaskMode() {
-        maskMode = switch (maskMode) {
-            case INTERFACE -> MaskMode.WORLDEDIT;
-            case WORLDEDIT -> MaskMode.DISABLED;
-            case DISABLED -> MaskMode.INTERFACE;
-        };
+    public void setMaskMode(MaskMode maskMode) {
+        this.maskMode = maskMode;
         mainMenu.updateMaskMode();
     }
 
     @Override
-    public void cycleSurfaceMode() {
-        surfaceMode = switch (surfaceMode) {
-            case DIRECT -> SurfaceMode.RELATIVE;
-            case RELATIVE -> SurfaceMode.DISABLED;
-            case DISABLED -> SurfaceMode.DIRECT;
-        };
+    public void setSurfaceMode(SurfaceMode surfaceMode) {
+        this.surfaceMode = surfaceMode;
         mainMenu.updateSurfaceMode();
     }
 
     @Override
-    public void cycleAxis() {
-        axis = switch (axis) {
-            case X -> Axis.Y;
-            case Y -> Axis.Z;
-            case Z -> Axis.X;
-        };
+    public void setAxis(Axis axis) {
+        this.axis = axis;
         mainMenu.updateAxis();
     }
 
     @Override
-    public Brush cycleForward(@Nullable Brush brush) {
+    public void setBlocks(List<Material> blocks) {
+        this.blocks.clear();
+        this.blocks.addAll(blocks);
+        mainMenu.updateBlockPalette();
+    }
+
+    @Override
+    public void setFractureStrength(@Range(from = 1, to = Integer.MAX_VALUE) int fractureStrength) {
+        this.fractureStrength = Math.clamp(fractureStrength, 1, plugin.config().fractureConfig().maxFractureStrength());
+        mainMenu.updateFractureSettings();
+    }
+
+    @Override
+    public Brush getNextBrush(@Nullable Brush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int next = brushes.indexOf(brush) + 1;
@@ -307,7 +231,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Brush cycleBackward(@Nullable Brush brush) {
+    public Brush getPreviousBrush(@Nullable Brush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int back = brushes.indexOf(brush) - 1;
@@ -316,10 +240,10 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void export(ItemStack itemStack) {
+    public void exportSettings(ItemStack itemStack) {
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add("Size: " + brushSize);
+        lore.add("Size: " + getBrushSize());
         if (getBrush() instanceof SprayBrush) {
             lore.add("Chance: " + getChance() + "%");
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
@@ -335,7 +259,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             lore.add("Mixing: " + getMixingStrength());
             lore.add("Falloff: " + getFalloffStrength());
         } else if (getBrush() instanceof FractureBrush) {
-            lore.add("FractureDistance: " + getFractureDistance());
+            lore.add("Fracture Strength: " + this.getFractureStrength());
         }
         lore.add("Blocks: " + (getBlocks().isEmpty() ? "none" : getBlocks().stream()
                 .map(Material::getKey)
@@ -362,7 +286,44 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                             .color(NamedTextColor.DARK_GRAY))
                     .toList());
             itemMeta.setEnchantmentGlintOverride(true);
+
+            var container = itemMeta.getPersistentDataContainer();
+
+            container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
+            container.set(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, getChance());
+            container.set(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, getThickness());
+            container.set(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, this.getFractureStrength());
+            container.set(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, getAngleDistance());
+            container.set(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, getFalloffStrength());
+            container.set(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, getMixingStrength());
+            container.set(new NamespacedKey("gopaint", "angle_height_difference"), PersistentDataType.DOUBLE, getAngleHeightDifference());
+            container.set(new NamespacedKey("gopaint", "axis"), PersistentDataType.STRING, getAxis().name());
+            container.set(new NamespacedKey("gopaint", "mask_mode"), PersistentDataType.STRING, getMaskMode().name());
+            container.set(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING, getSurfaceMode().name());
+            container.set(new NamespacedKey("gopaint", "brush"), PersistentDataType.STRING, getBrush().key().asString());
+            container.set(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING, getMask().key().asString());
+            container.set(new NamespacedKey("gopaint", "blocks"), PersistentDataType.STRING, getBlocks().stream()
+                    .map(Material::key)
+                    .map(Key::asString)
+                    .collect(Collectors.joining(",")));
         });
     }
 
+    @Override
+    public void importSettings(ItemBrushSettings settings) {
+        setBrushSize(settings.getBrushSize());
+        setChance(settings.getBrushSize());
+        setThickness(settings.getThickness());
+        setFractureStrength(settings.getFractureStrength());
+        setAngleDistance(settings.getAngleDistance());
+        setFalloffStrength(settings.getFalloffStrength());
+        setMixingStrength(settings.getMixingStrength());
+        setAngleHeightDifference(settings.getAngleHeightDifference());
+        setAxis(settings.getAxis());
+        setMaskMode(settings.getMaskMode());
+        setSurfaceMode(settings.getSurfaceMode());
+        setBrush(settings.getBrush());
+        setMask(settings.getMask());
+        setBlocks(settings.getBlocks());
+    }
 }

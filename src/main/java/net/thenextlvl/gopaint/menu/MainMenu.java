@@ -132,7 +132,7 @@ public class MainMenu extends AbstractGUI {
 
         inventory.setItem(12, new ItemBuilder(Material.DAYLIGHT_DETECTOR)
                 .itemName(plugin.bundle().component(owner, "brush.fracture",
-                        Placeholder.parsed("distance", String.valueOf(settings.getFractureDistance()))))
+                        Placeholder.parsed("distance", String.valueOf(settings.getFractureStrength()))))
                 .lore(plugin.bundle().components(owner, "brush.fracture.description")));
 
         var placeholder = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).hideTooltip(true);

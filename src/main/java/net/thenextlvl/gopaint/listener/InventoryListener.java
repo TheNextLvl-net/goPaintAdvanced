@@ -20,8 +20,11 @@ package net.thenextlvl.gopaint.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
+import net.thenextlvl.gopaint.api.model.MaskMode;
+import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.menu.MainMenu;
+import org.bukkit.Axis;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -53,11 +56,12 @@ public final class InventoryListener implements Listener {
         if (event.getAction().equals(InventoryAction.NOTHING)) return;
 
         var settings = plugin.brushController().getBrushSettings(player);
+        var itemType = event.getCursor().getType();
 
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
 
             if (event.getCursor().isEmpty()) {
-                settings.toggle();
+                settings.setEnabled(!settings.isEnabled());
                 return;
             }
 
@@ -70,9 +74,9 @@ public final class InventoryListener implements Listener {
 
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {
-                settings.cycleBrushForward();
+                settings.setBrush(settings.getNextBrush(settings.getBrush()));
             } else if (event.getClick().equals(ClickType.RIGHT)) {
-                settings.cycleBrushBackward();
+                settings.setBrush(settings.getPreviousBrush(settings.getBrush()));
             } else if (event.getClick().isShiftClick()) {
                 settings.getBrushesMenu().open();
             }
@@ -80,83 +84,95 @@ public final class InventoryListener implements Listener {
             var brush = settings.getBrush();
             if (brush instanceof SprayBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseChance();
+                    settings.setChance(settings.getChance() + 10);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseChance();
+                    settings.setChance(settings.getChance() - 10);
                 }
             } else if (brush instanceof OverlayBrush || brush instanceof UnderlayBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseThickness();
+                    settings.setThickness(settings.getThickness() + 1);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseThickness();
+                    settings.setThickness(settings.getThickness() - 1);
                 }
             } else if (brush instanceof FractureBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseFractureDistance();
+                    settings.setFractureStrength(settings.getFractureStrength() + 1);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseFractureDistance();
+                    settings.setFractureStrength(settings.getFractureStrength() - 1);
                 }
             } else if (brush instanceof AngleBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseAngleDistance();
+                    settings.setAngleDistance(settings.getAngleDistance() + 1);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseAngleDistance();
+                    settings.setAngleDistance(settings.getAngleDistance() - 1);
                 }
             } else if (brush instanceof GradientBrush || brush instanceof PaintBrush
                        || brush instanceof SplatterBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseFalloffStrength();
+                    settings.setFalloffStrength(settings.getFalloffStrength() + 10);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseFalloffStrength();
+                    settings.setFalloffStrength(settings.getFalloffStrength() - 10);
                 }
             } else if (brush instanceof DiscBrush) {
-                settings.cycleAxis();
+                settings.setAxis(switch (settings.getAxis()) {
+                    case X -> Axis.Y;
+                    case Y -> Axis.Z;
+                    case Z -> Axis.X;
+                });
             }
         } else if (event.getRawSlot() == 13 || event.getRawSlot() == 4 || event.getRawSlot() == 22) {
             var brush = settings.getBrush();
             if (brush instanceof AngleBrush) {
                 if (event.getClick().equals(ClickType.LEFT)) {
-                    settings.increaseAngleHeightDifference(5);
+                    settings.setAngleHeightDifference(settings.getAngleHeightDifference() + 5);
                 } else if (event.getClick().equals(ClickType.RIGHT)) {
-                    settings.decreaseAngleHeightDifference(5);
+                    settings.setAngleHeightDifference(settings.getAngleHeightDifference() - 5);
                 } else if (event.getClick().equals(ClickType.SHIFT_LEFT)) {
-                    settings.increaseAngleHeightDifference(15);
+                    settings.setAngleHeightDifference(settings.getAngleHeightDifference() + 15);
                 } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
-                    settings.decreaseAngleHeightDifference(15);
+                    settings.setAngleHeightDifference(settings.getAngleHeightDifference() - 15);
                 }
             } else if (brush instanceof GradientBrush) {
                 if (event.getClick().isLeftClick()) {
-                    settings.increaseMixingStrength();
+                    settings.setMixingStrength(settings.getMixingStrength() + 10);
                 } else if (event.getClick().isRightClick()) {
-                    settings.decreaseMixingStrength();
+                    settings.setMixingStrength(settings.getMixingStrength() - 10);
                 }
             }
         } else if (event.getRawSlot() == 14 || event.getRawSlot() == 5 || event.getRawSlot() == 23) {
             if (event.getClick().equals(ClickType.LEFT)) {
-                settings.increaseBrushSize(1);
+                settings.setBrushSize(settings.getBrushSize() + 1);
             } else if (event.getClick().equals(ClickType.RIGHT)) {
-                settings.decreaseBrushSize(1);
+                settings.setBrushSize(settings.getBrushSize() - 1);
             } else if (event.getClick().equals(ClickType.SHIFT_LEFT)) {
-                settings.increaseBrushSize(10);
+                settings.setBrushSize(settings.getBrushSize() + 10);
             } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
-                settings.decreaseBrushSize(10);
+                settings.setBrushSize(settings.getBrushSize() - 10);
             }
         } else if (event.getRawSlot() == 15 || event.getRawSlot() == 6 || event.getRawSlot() == 24) {
-            settings.cycleMaskMode();
+            settings.setMaskMode(switch (settings.getMaskMode()) {
+                case INTERFACE -> MaskMode.WORLDEDIT;
+                case WORLDEDIT -> MaskMode.DISABLED;
+                case DISABLED -> MaskMode.INTERFACE;
+            });
         } else if (event.getRawSlot() == 16 || event.getRawSlot() == 7 || event.getRawSlot() == 25) {
-            settings.cycleSurfaceMode();
+            settings.setSurfaceMode(switch (settings.getSurfaceMode()) {
+                case DIRECT -> SurfaceMode.RELATIVE;
+                case RELATIVE -> SurfaceMode.DISABLED;
+                case DISABLED -> SurfaceMode.DIRECT;
+            });
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
                    || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
             int slot = event.getRawSlot() - (event.getRawSlot() >= 37 && event.getRawSlot() <= 41 ? 36 : 45);
             if (event.getClick().isLeftClick()) {
-                if (!event.getCursor().getType().isSolid()) return;
-                settings.addBlock(event.getCursor().getType(), slot);
+                if (!itemType.isSolid()) return;
+                settings.addBlock(itemType, slot);
             } else if (event.getClick().isRightClick()) {
                 settings.removeBlock(slot);
             }
         } else if (event.getRawSlot() == 43 || event.getRawSlot() == 52) {
-            if (!event.getCursor().getType().isSolid()) return;
-            settings.setMask(event.getCursor().getType());
+            if (!itemType.isSolid()) return;
+            settings.setMask(itemType);
         }
     }
 }
