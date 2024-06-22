@@ -61,9 +61,12 @@ public final class InventoryListener implements Listener {
                 return;
             }
 
-            if (event.getCursor().getType().isBlock()) return;
-            if (event.getCursor().getType().equals(plugin.config().brushConfig().defaultBrushType())) return;
-            settings.export(event.getCursor());
+
+            plugin.brushController().parseBrushSettings(event.getCursor())
+                    .ifPresentOrElse(settings::importSettings, () -> {
+                        if (itemType.equals(plugin.config().brushConfig().defaultBrushType())) return;
+                        if (itemType.isItem()) settings.exportSettings(event.getCursor());
+                    });
 
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {

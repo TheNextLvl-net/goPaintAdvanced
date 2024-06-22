@@ -19,23 +19,24 @@
 package net.thenextlvl.gopaint.brush;
 
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.key.Key;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
+import net.thenextlvl.gopaint.api.model.MaskMode;
+import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
+import org.bukkit.Axis;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class CraftBrushController implements BrushController {
@@ -51,18 +52,70 @@ public class CraftBrushController implements BrushController {
     @Override
     public Optional<ItemBrushSettings> parseBrushSettings(ItemStack itemStack) {
         if (!itemStack.hasItemMeta()) return Optional.empty();
-        var meta = itemStack.getItemMeta();
-        if (meta == null || !meta.hasLore() || !meta.hasDisplayName()) return Optional.empty();
-        if (!(meta.displayName() instanceof TextComponent name)) return Optional.empty();
-        var key = NamespacedKey.fromString(name.content());
-        if (key == null) return Optional.empty();
-        var brush = plugin.brushRegistry().getBrush(key);
-        return brush.map(current -> parseBrushSettings(current, meta));
+        return Optional.ofNullable(itemStack.getItemMeta())
+                .flatMap(this::parseBrushSettings);
     }
 
     @Override
-    public ItemBrushSettings parseBrushSettings(Brush brush, ItemMeta itemMeta) {
-        return CraftItemBrushSettings.parse(brush, itemMeta);
+    public Optional<ItemBrushSettings> parseBrushSettings(ItemMeta itemMeta) {
+        var container = itemMeta.getPersistentDataContainer();
+
+        var brushSize = container.get(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER);
+
+        var maskMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask_mode"), PersistentDataType.STRING))
+                .map(MaskMode::valueOf)
+                .orElse(null);
+
+        var surfaceMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING))
+                .map(SurfaceMode::valueOf)
+                .orElse(null);
+
+        var brush = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "brush"), PersistentDataType.STRING))
+                .map(Key::key)
+                .flatMap(plugin.brushRegistry()::getBrush)
+                .orElse(null);
+
+        if (brushSize == null || maskMode == null || surfaceMode == null || brush == null)
+            return Optional.empty();
+
+        var chance = container.getOrDefault(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, 0);
+        var thickness = container.getOrDefault(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, 0);
+        var fractureStrength = container.getOrDefault(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, 0);
+        var angleDistance = container.getOrDefault(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, 0);
+        var falloffStrength = container.getOrDefault(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, 0);
+        var mixingStrength = container.getOrDefault(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, 0);
+
+        var angleHeightDifference = container.getOrDefault(new NamespacedKey("gopaint", "angle_height_difference"), PersistentDataType.DOUBLE, 0d);
+
+        var axis = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "axis"), PersistentDataType.STRING))
+                .map(Axis::valueOf)
+                .orElse(Axis.Y);
+        var mask = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING))
+                .map(Material::matchMaterial)
+                .orElse(null);
+        var blocks = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "blocks"), PersistentDataType.STRING))
+                .map(string -> string.split(","))
+                .stream()
+                .flatMap(Arrays::stream)
+                .map(Material::matchMaterial)
+                .filter(Objects::nonNull)
+                .toList();
+
+        return Optional.of(CraftItemBrushSettings.builder()
+                .brushSize(brushSize)
+                .maskMode(maskMode)
+                .surfaceMode(surfaceMode)
+                .brush(brush)
+                .chance(chance)
+                .thickness(thickness)
+                .fractureStrength(fractureStrength)
+                .angleDistance(angleDistance)
+                .falloffStrength(falloffStrength)
+                .mixingStrength(mixingStrength)
+                .angleHeightDifference(angleHeightDifference)
+                .axis(axis)
+                .mask(mask)
+                .blocks(blocks).build());
     }
 
     @Override
