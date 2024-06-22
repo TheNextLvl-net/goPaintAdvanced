@@ -22,8 +22,8 @@ import core.paper.gui.AbstractGUI;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.Brush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
@@ -241,50 +241,66 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
     @Override
     public void exportSettings(ItemStack itemStack) {
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add("Size: " + getBrushSize());
+        var lore = new ArrayList<Component>();
+        lore.add(Component.empty());
+        lore.add(plugin.bundle().component(player, "brush.exported.size",
+                Placeholder.parsed("size", String.valueOf(getBrushSize()))));
         if (getBrush() instanceof SprayBrush) {
-            lore.add("Chance: " + getChance() + "%");
+            lore.add(plugin.bundle().component(player, "brush.exported.chance",
+                    Placeholder.parsed("chance", String.valueOf(getChance()))));
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
-            lore.add("Thickness: " + getThickness());
+            lore.add(plugin.bundle().component(player, "brush.exported.thickness",
+                    Placeholder.parsed("thickness", String.valueOf(getThickness()))));
         } else if (getBrush() instanceof DiscBrush) {
-            lore.add("Axis: " + getAxis().name());
+            lore.add(plugin.bundle().component(player, "brush.exported.axis",
+                    Placeholder.parsed("axis", getAxis().name())));
         } else if (getBrush() instanceof AngleBrush) {
-            lore.add("AngleDistance: " + getAngleDistance());
-            lore.add("AngleHeightDifference: " + getAngleHeightDifference());
+            lore.add(plugin.bundle().component(player, "brush.exported.angle.distance",
+                    Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
+            lore.add(plugin.bundle().component(player, "brush.exported.angle.height",
+                    Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
         } else if (getBrush() instanceof SplatterBrush) {
-            lore.add("Falloff: " + getFalloffStrength());
+            lore.add(plugin.bundle().component(player, "brush.exported.falloff",
+                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
         } else if (getBrush() instanceof GradientBrush) {
-            lore.add("Mixing: " + getMixingStrength());
-            lore.add("Falloff: " + getFalloffStrength());
+            lore.add(plugin.bundle().component(player, "brush.exported.mixing",
+                    Placeholder.parsed("mixing", String.valueOf(getMixingStrength()))));
+            lore.add(plugin.bundle().component(player, "brush.exported.falloff",
+                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
         } else if (getBrush() instanceof FractureBrush) {
-            lore.add("Fracture Strength: " + this.getFractureStrength());
+            lore.add(plugin.bundle().component(player, "brush.exported.fracture",
+                    Placeholder.parsed("fracture", String.valueOf(getFractureStrength()))));
         }
-        lore.add("Blocks: " + (getBlocks().isEmpty() ? "none" : getBlocks().stream()
-                .map(Material::getKey)
-                .map(NamespacedKey::asMinimalString)
-                .collect(Collectors.joining(", "))));
+        if (!blocks.isEmpty()) {
+            var blocks = getBlocks().stream()
+                    .map(Material::translationKey)
+                    .map(Component::translatable)
+                    .toList();
+            lore.add(plugin.bundle().component(player, "brush.exported.blocks",
+                    Placeholder.component("blocks", Component.join(JoinConfiguration.commas(true), blocks))));
+        }
+
 
         if (!getMaskMode().equals(MaskMode.DISABLED)) {
-            lore.add("Mask Mode: " + getMaskMode().translationKey());
+            var mode = plugin.bundle().component(player, getMaskMode().translationKey());
+            lore.add(plugin.bundle().component(player, "brush.exported.mask-mode",
+                    Placeholder.component("mode", mode)));
         }
         if (getMaskMode().equals(MaskMode.INTERFACE)) {
-            lore.add("Mask: " + getMask().getKey().asMinimalString());
+            lore.add(plugin.bundle().component(player, "brush.exported.mask",
+                    Placeholder.component("mask", Component.translatable(getMask().translationKey()))));
         }
 
         if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-            lore.add("Surface Mode: " + getSurfaceMode().translationKey());
+            var mode = plugin.bundle().component(player, getSurfaceMode().translationKey());
+            lore.add(plugin.bundle().component(player, "brush.exported.surface-mode",
+                    Placeholder.component("mode", mode)));
         }
 
         itemStack.editMeta(itemMeta -> {
-            var diamond = Component.text(" ♦ ");
-            itemMeta.displayName(diamond.append(getBrush().getName(player)).append(diamond)
-                    .decoration(TextDecoration.ITALIC, false).color(NamedTextColor.AQUA));
-            itemMeta.lore(lore.stream().map(string -> Component.text(string)
-                            .decoration(TextDecoration.ITALIC, false)
-                            .color(NamedTextColor.DARK_GRAY))
-                    .toList());
+            itemMeta.itemName(plugin.bundle().component(player, "brush.exported.name",
+                    Placeholder.component("brush", getBrush().getName(player))));
+            itemMeta.lore(lore);
             itemMeta.setEnchantmentGlintOverride(true);
 
             var container = itemMeta.getPersistentDataContainer();
