@@ -61,38 +61,88 @@ public interface PlayerBrushSettings extends BrushSettings {
      */
     void removeBlock(int slot);
 
+    /**
+     * Sets the placement chance of the brush.
+     *
+     * @param chance The placement chance of the brush.
+     */
     void setChance(@Range(from = 10, to = 90) int chance);
 
     /**
-     * @param thickness
+     * Sets the thickness of the brush.
+     *
+     * @param thickness The thickness to set
      * @see PluginConfig.ThicknessConfig#maxThickness()
      */
     void setThickness(@Range(from = 1, to = Integer.MAX_VALUE) int thickness);
 
     /**
-     * @param strength
+     * Sets the fracture strength of the brush.
+     *
+     * @param strength The fracture strength to set
      * @see PluginConfig.FractureConfig#maxFractureStrength()
      */
     void setFractureStrength(@Range(from = 1, to = Integer.MAX_VALUE) int strength);
 
     /**
-     * @param distance
+     * Sets the angle distance of the brush.
+     *
+     * @param distance The angle distance to set
      * @see PluginConfig.AngleConfig#maxAngleDistance()
      */
     void setAngleDistance(@Range(from = 1, to = Integer.MAX_VALUE) int distance);
 
+    /**
+     * Sets the falloff strength of the brush.
+     *
+     * @param strength The falloff strength to set.
+     */
     void setFalloffStrength(@Range(from = 10, to = 90) int strength);
 
+    /**
+     * Sets the mixing strength of the brush.
+     * This determines how strongly the brush blends colors between adjacent blocks.
+     *
+     * @param strength The mixing strength to set.
+     */
     void setMixingStrength(@Range(from = 10, to = 90) int strength);
 
+    /**
+     * Sets the angle height difference of the brush.
+     * The angle height difference specifies the difference in height between adjacent blocks when applying the brush.
+     *
+     * @param difference The angle height difference to set.
+     * @see PluginConfig.AngleConfig#minAngleHeightDifference()
+     * @see PluginConfig.AngleConfig#maxAngleHeightDifference()
+     */
     void setAngleHeightDifference(double difference);
 
+    /**
+     * Sets the mask mode of the brush.
+     *
+     * @param maskMode The mask mode to set.
+     */
     void setMaskMode(MaskMode maskMode);
 
+    /**
+     * Sets the surface mode of the brush.
+     *
+     * @param surfaceMode The surface mode to set for the brush.
+     */
     void setSurfaceMode(SurfaceMode surfaceMode);
 
+    /**
+     * Sets the axis for the brush.
+     *
+     * @param axis The axis to set for the brush.
+     */
     void setAxis(Axis axis);
 
+    /**
+     * Sets the list of blocks used by the brush settings.
+     *
+     * @param blocks The list of blocks to set.
+     */
     void setBlocks(List<Material> blocks);
 
     /**
