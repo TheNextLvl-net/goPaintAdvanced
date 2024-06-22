@@ -6,6 +6,7 @@ import org.bukkit.Axis;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.Set;
 
 public record PluginConfig(
         @SerializedName("brush") BrushConfig brushConfig,
@@ -17,17 +18,18 @@ public record PluginConfig(
     public record BrushConfig(
             @SerializedName("default-brush-type") Material defaultBrushType,
             @SerializedName("default-brush") Key defaultBrush,
-            @SerializedName("max-size") int maxSize,
+            @SerializedName("max-brush-size") int maxBrushSize,
             @SerializedName("default-size") int defaultSize,
             @SerializedName("default-chance") int defaultChance,
             @SerializedName("default-axis") Axis defaultAxis,
             @SerializedName("default-falloff-strength") int defaultFalloffStrength,
             @SerializedName("default-mixing-strength") int defaultMixingStrength,
-            @SerializedName("disabled-worlds") List<String> disabledWorlds,
+            @SerializedName("disabled-worlds") Set<String> disabledWorlds,
             @SerializedName("enabled-by-default") boolean enabledByDefault,
             @SerializedName("default-mask") Material defaultMask,
             @SerializedName("mask-mode") MaskMode maskMode,
-            @SerializedName("surface-mode") SurfaceMode surfaceMode
+            @SerializedName("surface-mode") SurfaceMode surfaceMode,
+            @SerializedName("default-blocks") List<Material> defaultBlocks
     ) {
     }
 
@@ -47,8 +49,8 @@ public record PluginConfig(
     }
 
     public record FractureConfig(
-            @SerializedName("default-fracture-distance") int defaultFractureDistance,
-            @SerializedName("max-fracture-distance") int maxFractureDistance
+            @SerializedName("default-fracture-strength") int defaultFractureStrength,
+            @SerializedName("max-fracture-strength") int maxFractureStrength
     ) {
     }
 }

@@ -35,8 +35,9 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @Accessors(fluent = true)
 public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
@@ -56,7 +57,8 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
             new PluginConfig.BrushConfig(Material.FEATHER, new NamespacedKey("gopaint", "sphere_brush"), 100, 10, 50,
-                    Axis.Y, 50, 50, new ArrayList<>(), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT),
+                    Axis.Y, 50, 50, Set.of("disabled"), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT,
+                    List.of(Material.STONE)),
             new PluginConfig.ThicknessConfig(1, 5),
             new PluginConfig.AngleConfig(2, 5, 10, 40, 85),
             new PluginConfig.FractureConfig(2, 5)
