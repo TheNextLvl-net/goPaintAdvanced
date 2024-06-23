@@ -106,7 +106,7 @@ public class PaintBrush extends Brush {
                                 continue;
                             }
 
-                            var vector3 = BlockVector3.at(block.getX(), block.getY(), block.getZ());
+                            var vector3 = BlockVector3.at(point.getX(), point.getY(), point.getZ());
                             setBlock(session, vector3, brushSettings.getRandomBlock());
                         }
                     });
