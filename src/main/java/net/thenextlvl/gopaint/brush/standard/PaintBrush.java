@@ -57,7 +57,7 @@ public class PaintBrush extends Brush {
         return provider.bundle().components(audience, "brush.description.paint");
     }
 
-    private static final HashMap<UUID, List<Location>> selectedPoints = new HashMap<>();
+    private static final Map<UUID, List<Location>> selectedPoints = new HashMap<>();
 
     @Override
     public void paint(Location target, Player player, BrushSettings brushSettings) {

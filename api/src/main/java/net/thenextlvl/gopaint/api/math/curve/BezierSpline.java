@@ -23,7 +23,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.OptionalDouble;
 
 @Getter
@@ -33,7 +33,7 @@ public class BezierSpline {
     private final BezierSplineSegment[] segments;
     private final double curveLength;
 
-    public BezierSpline(LinkedList<Vector> curve) {
+    public BezierSpline(List<Vector> curve) {
         this.knots = curve.toArray(new Vector[0]);
         this.segments = new BezierSplineSegment[knots.length - 1];
         for (var segment = 0; segment < knots.length - 1; segment++) {
