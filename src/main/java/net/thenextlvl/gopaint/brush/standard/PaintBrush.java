@@ -83,7 +83,6 @@ public class PaintBrush extends Brush {
                     .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
                                      || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
                                         < Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
-
                     .filter(block -> {
                         var rate = calculateRate(block, first, brushSettings);
                         return brushSettings.getRandom().nextDouble() > rate;
@@ -118,7 +117,6 @@ public class PaintBrush extends Brush {
         double falloffStrengthFactor = (100.0 - brushSettings.getFalloffStrength()) / 100.0;
         double numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
         double denominator = sizeHalf - sizeHalf * falloffStrengthFactor;
-
         return numerator / denominator;
     }
 }
