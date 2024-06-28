@@ -61,7 +61,7 @@ public class PaintBrush extends Brush {
 
     @Override
     public void paint(Location target, Player player, BrushSettings brushSettings) {
-        List<Location> locations = selectedPoints.computeIfAbsent(player.getUniqueId(), ignored -> new ArrayList<>());
+        var locations = selectedPoints.computeIfAbsent(player.getUniqueId(), ignored -> new ArrayList<>());
         locations.add(target);
 
         if (!player.isSneaking()) {
@@ -78,7 +78,7 @@ public class PaintBrush extends Brush {
 
         performEdit(player, session -> {
             var world = player.getWorld();
-            Location first = locations.getFirst();
+            var first = locations.getFirst();
             Sphere.getBlocksInRadius(first, brushSettings.getBrushSize(), null, false)
                     .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
                                      || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
@@ -113,10 +113,10 @@ public class PaintBrush extends Brush {
     }
 
     private double calculateRate(Block block, Location first, BrushSettings brushSettings) {
-        double sizeHalf = brushSettings.getBrushSize() / 2.0;
-        double falloffStrengthFactor = (100.0 - brushSettings.getFalloffStrength()) / 100.0;
-        double numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
-        double denominator = sizeHalf - sizeHalf * falloffStrengthFactor;
+        var sizeHalf = brushSettings.getBrushSize() / 2.0;
+        var falloffStrengthFactor = (100.0 - brushSettings.getFalloffStrength()) / 100.0;
+        var numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
+        var denominator = sizeHalf - sizeHalf * falloffStrengthFactor;
         return numerator / denominator;
     }
 }
