@@ -40,6 +40,11 @@ public final class InteractListener implements Listener {
 
         if (!player.hasPermission(GoPaintProvider.USE_PERMISSION)) return;
 
+        if (!player.hasPermission(GoPaintProvider.WORLD_BYPASS_PERMISSION)
+            && plugin.config().brushConfig().disabledWorlds().contains(player.getWorld().getName())) {
+            return;
+        }
+
         var item = event.getItem();
         if (item == null) return;
 
@@ -51,11 +56,6 @@ public final class InteractListener implements Listener {
         }
 
         if (!event.getAction().isRightClick()) return;
-
-        if (!player.hasPermission(GoPaintProvider.WORLD_BYPASS_PERMISSION)
-            && plugin.config().brushConfig().disabledWorlds().contains(location.getWorld().getName())) {
-            return;
-        }
 
         var settings = !item.getType().equals(plugin.config().brushConfig().defaultBrushType())
                 ? plugin.brushController().parseBrushSettings(item).orElse(null)
