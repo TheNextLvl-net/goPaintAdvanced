@@ -20,6 +20,7 @@ package net.thenextlvl.gopaint.listener;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.session.request.Request;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
@@ -75,11 +76,14 @@ public final class InteractListener implements Listener {
         var blockTrace = player.getBlockTrace(250, true, session.getMask());
         if (blockTrace != null) player.queueAction(() -> {
             try (var editSession = session.createEditSession(player)) {
+                Request.request().setEditSession(editSession);
                 try {
                     settings.getBrush().paint(editSession, blockTrace.toBlockPoint(), player, settings);
                 } finally {
                     session.remember(editSession);
                 }
+            } finally {
+                Request.reset();
             }
         });
     }
