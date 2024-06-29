@@ -19,17 +19,15 @@
 package net.thenextlvl.gopaint.listener;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Player;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
+import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 @RequiredArgsConstructor
@@ -54,17 +52,6 @@ public final class InteractListener implements Listener {
 
         if (!event.getAction().isRightClick()) return;
 
-        Location location;
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-            Block targetBlock = player.getTargetBlockExact(250, FluidCollisionMode.NEVER);
-            if (targetBlock == null) return;
-            location = targetBlock.getLocation().clone();
-        } else if (event.getClickedBlock() != null) {
-            location = event.getClickedBlock().getLocation();
-        } else {
-            return;
-        }
-
         if (!player.hasPermission(GoPaintProvider.WORLD_BYPASS_PERMISSION)
             && plugin.config().brushConfig().disabledWorlds().contains(location.getWorld().getName())) {
             return;
@@ -76,12 +63,24 @@ public final class InteractListener implements Listener {
 
         if (settings == null || settings.getBlocks().isEmpty()) return;
 
-        if (!(settings instanceof PlayerBrushSettings playerSettings) || playerSettings.isEnabled()) {
-            BukkitAdapter.adapt(player).runAction(
-                    () -> settings.getBrush().paint(location, player, settings), false, true
-            );
-        } else plugin.bundle().sendMessage(player, "brush.disabled");
+        if (!(settings instanceof PlayerBrushSettings playerSettings) || playerSettings.isEnabled())
+            handleInteract(BukkitAdapter.adapt(player), settings);
+        else plugin.bundle().sendMessage(player, "brush.disabled");
 
         event.setCancelled(true);
+    }
+
+    private static void handleInteract(Player player, BrushSettings settings) {
+        var session = player.getSession();
+        var blockTrace = player.getBlockTrace(250, true, session.getMask());
+        if (blockTrace != null) player.queueAction(() -> {
+            try (var editSession = session.createEditSession(player)) {
+                try {
+                    settings.getBrush().paint(editSession, blockTrace.toBlockPoint(), player, settings);
+                } finally {
+                    session.remember(editSession);
+                }
+            }
+        });
     }
 }
