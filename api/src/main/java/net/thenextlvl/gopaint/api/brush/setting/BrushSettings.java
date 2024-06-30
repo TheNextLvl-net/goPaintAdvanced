@@ -44,7 +44,14 @@ public interface BrushSettings {
     Material getMask();
 
     /**
-     * Retrieves the mask mode used by the brush settings.
+     * Determines whether the mask is enabled or not.
+     *
+     * @return true if the mask is enabled, false otherwise
+     */
+    boolean isMaskEnabled();
+
+    /**
+     * Retrieves the WorldEdit mask for the given session according to the brush settings.
      *
      * @return The mask mode used by the brush settings.
      */

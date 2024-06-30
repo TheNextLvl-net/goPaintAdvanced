@@ -39,7 +39,7 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final List<Material> blocks;
     private final Axis axis;
     private final SurfaceMode surfaceMode;
-    private final MaskMode maskMode;
+    private final boolean maskEnabled;
     private final int brushSize;
     private final int chance;
     private final int thickness;
