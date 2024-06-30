@@ -96,7 +96,7 @@ public interface PlayerBrushSettings extends BrushSettings {
      *
      * @param strength The falloff strength to set.
      */
-    void setFalloffStrength(@Range(from = 10, to = 90) int strength);
+    void setFalloffStrength(@Range(from = 0, to = 100) int strength);
 
     /**
      * Sets the mixing strength of the brush.
@@ -104,7 +104,7 @@ public interface PlayerBrushSettings extends BrushSettings {
      *
      * @param strength The mixing strength to set.
      */
-    void setMixingStrength(@Range(from = 10, to = 90) int strength);
+    void setMixingStrength(@Range(from = 0, to = 100) int strength);
 
     /**
      * Sets the angle height difference of the brush.

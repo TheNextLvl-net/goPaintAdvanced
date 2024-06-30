@@ -170,14 +170,14 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setFalloffStrength(@Range(from = 10, to = 90) int strength) {
-        this.falloffStrength = Math.clamp(strength, 10, 90);
+    public void setFalloffStrength(@Range(from = 0, to = 100) int strength) {
+        this.falloffStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateFalloffStrength();
     }
 
     @Override
-    public void setMixingStrength(@Range(from = 10, to = 90) int strength) {
-        this.mixingStrength = Math.clamp(strength, 10, 90);
+    public void setMixingStrength(@Range(from = 0, to = 100) int strength) {
+        this.mixingStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateMixingStrength();
     }
 
