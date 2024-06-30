@@ -258,7 +258,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                     Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
             lore.add(plugin.bundle().component(player, "brush.exported.angle.height",
                     Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
-        } else if (getBrush() instanceof SplatterBrush) {
+        } else if (getBrush() instanceof SplatterBrush || getBrush() instanceof PaintBrush) {
             lore.add(plugin.bundle().component(player, "brush.exported.falloff",
                     Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
         } else if (getBrush() instanceof GradientBrush) {
