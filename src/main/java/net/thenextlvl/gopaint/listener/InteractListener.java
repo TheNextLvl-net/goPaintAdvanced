@@ -74,11 +74,10 @@ public final class InteractListener implements Listener {
         event.setCancelled(true);
     }
 
-    private static void handleInteract(Player player, BrushSettings settings) {
-        var session = player.getSession();
-        var blockTrace = player.getBlockTrace(250, true, session.getMask());
-        if (blockTrace != null) player.queueAction(() -> {
+    private void handleInteract(BukkitPlayer player, BrushSettings settings) {
         player.runAsyncIfFree(() -> {
+            var session = player.getSession();
+
             try (var editSession = session.createEditSession(player)) {
 
                 var blockTrace = player.getSolidBlockTrace(250);
@@ -91,15 +90,24 @@ public final class InteractListener implements Listener {
                 var bag = session.getBlockBag(player);
 
                 try {
-                    settings.getBrush().paint(editSession, blockTrace.toBlockPoint(), player, settings);
+                    Request.request().setEditSession(editSession);
+
+                    var position = blockTrace.toBlockPoint();
+                    var mask = MaskIntersection.of(new InverseMask(new AirMask(player.getWorld())),
+                            settings.getMask(session), settings.getSurfaceMask(player));
+                    var pattern = settings.getBrush().buildPattern(editSession, position, player, settings);
+
+                    editSession.setMask(mask);
+
+                    settings.getBrush().build(editSession, position, pattern, settings.getBrushSize() / 2d);
+
                 } finally {
 
                     if (bag != null) bag.flushChanges();
 
                     session.remember(editSession);
+                    Request.reset();
                 }
-            } finally {
-                Request.reset();
             }
         });
     }
