@@ -18,10 +18,11 @@
  */
 package net.thenextlvl.gopaint.api.math.curve;
 
+import com.fastasyncworldedit.core.math.MutableBlockVector3;
+import com.sk89q.worldedit.math.BlockVector3;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,11 +33,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BezierSplineSegment {
 
-    private final Vector startPoint;
-    private final Vector endPoint;
+    private final MutableBlockVector3 startPoint;
+    private final MutableBlockVector3 endPoint;
 
-    private Vector intermediatePoint1 = new Vector(0, 0, 0);
-    private Vector intermediatePoint2 = new Vector(0, 0, 0);
+    private MutableBlockVector3 intermediatePoint1 = MutableBlockVector3.at(0, 0, 0);
+    private MutableBlockVector3 intermediatePoint2 = MutableBlockVector3.at(0, 0, 0);
 
     private float coefficient1;
     private float coefficient2;
@@ -44,35 +45,35 @@ public class BezierSplineSegment {
 
     private @Nullable Double xFlat, yFlat, zFlat;
 
-    private Vector result = new Vector(0, 0, 0);
+    private MutableBlockVector3 result = MutableBlockVector3.at(0, 0, 0);
 
     public void setX(double xFlat) {
-        startPoint.setX(xFlat);
-        intermediatePoint1.setX(xFlat);
-        intermediatePoint2.setX(xFlat);
-        endPoint.setX(xFlat);
+        startPoint.mutX(xFlat);
+        intermediatePoint1.mutX(xFlat);
+        intermediatePoint2.mutX(xFlat);
+        endPoint.mutX(xFlat);
         this.xFlat = xFlat;
     }
 
     public void setY(double yFlat) {
-        startPoint.setY(yFlat);
-        intermediatePoint1.setY(yFlat);
-        intermediatePoint2.setY(yFlat);
-        endPoint.setY(yFlat);
+        startPoint.mutY(yFlat);
+        intermediatePoint1.mutY(yFlat);
+        intermediatePoint2.mutY(yFlat);
+        endPoint.mutY(yFlat);
         this.yFlat = yFlat;
     }
 
     public void setZ(double zFlat) {
-        startPoint.setZ(zFlat);
-        intermediatePoint1.setZ(zFlat);
-        intermediatePoint2.setZ(zFlat);
-        endPoint.setZ(zFlat);
+        startPoint.mutZ(zFlat);
+        intermediatePoint1.mutZ(zFlat);
+        intermediatePoint2.mutZ(zFlat);
+        endPoint.mutZ(zFlat);
         this.zFlat = zFlat;
     }
 
     @Contract(pure = true)
     public double getCurveLength() {
-        var current = startPoint.clone();
+        BlockVector3 current = startPoint;
         var lengths = new double[20];
         for (int i = 1; i < lengths.length; i++) {
             var point = getPoint(i * 0.05);
@@ -83,7 +84,7 @@ public class BezierSplineSegment {
     }
 
     @Contract(pure = true)
-    public Vector getPoint(double factor) {
+    public BlockVector3 getPoint(double factor) {
         var x = Objects.requireNonNullElseGet(xFlat, () -> calculatePoint(
                 factor, startPoint.getX(), intermediatePoint1.getX(), intermediatePoint2.getX(), endPoint.getX()
         ));
@@ -93,7 +94,7 @@ public class BezierSplineSegment {
         var z = Objects.requireNonNullElseGet(zFlat, () -> calculatePoint(
                 factor, startPoint.getZ(), intermediatePoint1.getZ(), intermediatePoint2.getZ(), endPoint.getZ()
         ));
-        return new Vector(x, y, z);
+        return BlockVector3.at(x, y, z);
     }
 
     @Contract(pure = true)

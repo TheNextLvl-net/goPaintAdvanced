@@ -18,80 +18,27 @@
  */
 package net.thenextlvl.gopaint.api.math;
 
-import org.bukkit.Axis;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.jetbrains.annotations.Nullable;
+import com.sk89q.worldedit.math.BlockVector3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Sphere {
 
-    /**
-     * Returns a stream of blocks within a specified radius from a given middle point.
-     *
-     * @param middlePoint The middle point from which to calculate the radius.
-     * @param radius      The radius value.
-     * @param axis        The axis along which to calculate the radius (optional).
-     * @param air         Whether air blocks should be included.
-     * @return A stream of blocks within the specified radius.
-     */
-    public static Stream<Block> getBlocksInRadius(Location middlePoint, int radius, @Nullable Axis axis, boolean air) {
-        List<Block> blocks = new ArrayList<>();
-        Location loc1 = middlePoint.clone().add(-radius / 2d, -radius / 2d, -radius / 2d).getBlock().getLocation();
-        Location loc2 = middlePoint.clone().add(radius / 2d, radius / 2d, radius / 2d).getBlock().getLocation();
+    public static Set<BlockVector3> getBlocksInRadius(BlockVector3 position, double radius) {
+        var vectors = new HashSet<BlockVector3>();
+        var loc1 = position.subtract((int) radius, (int) radius, (int) radius);
+        var loc2 = position.add((int) radius, (int) radius, (int) radius);
 
-        switch (axis) {
-            case Y:
-                for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
-                    for (int z = loc1.getBlockZ(); z <= loc2.getBlockZ(); z++) {
-                        Location location = new Location(loc1.getWorld(), x, middlePoint.getBlockY(), z);
-                        if (passesDefaultChecks(location, middlePoint, radius)) {
-                            blocks.add(location.getBlock());
-                        }
-                    }
+        for (var x = loc1.getX(); x <= loc2.getX(); x++) {
+            for (var y = loc1.getY(); y <= loc2.getY(); y++) {
+                for (var z = loc1.getZ(); z <= loc2.getZ(); z++) {
+                    var vector3 = BlockVector3.at(x, y, z);
+                    if (vector3.distance(position) >= radius) continue;
+                    vectors.add(vector3);
                 }
-                break;
-            case X:
-                for (int y = loc1.getBlockY(); y <= loc2.getBlockY(); y++) {
-                    for (int z = loc1.getBlockZ(); z <= loc2.getBlockZ(); z++) {
-                        Location location = new Location(loc1.getWorld(), middlePoint.getBlockX(), y, z);
-                        if (passesDefaultChecks(location, middlePoint, radius)) {
-                            blocks.add(location.getBlock());
-                        }
-                    }
-                }
-                break;
-            case Z:
-                for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
-                    for (int y = loc1.getBlockY(); y <= loc2.getBlockY(); y++) {
-                        Location location = new Location(loc1.getWorld(), x, y, middlePoint.getBlockZ());
-                        if (passesDefaultChecks(location, middlePoint, radius)) {
-                            blocks.add(location.getBlock());
-                        }
-                    }
-                }
-                break;
-            case null:
-                for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
-                    for (int y = loc1.getBlockY(); y <= loc2.getBlockY(); y++) {
-                        for (int z = loc1.getBlockZ(); z <= loc2.getBlockZ(); z++) {
-                            Location location = new Location(loc1.getWorld(), x, y, z);
-                            if (passesDefaultChecks(location, middlePoint, radius)) {
-                                blocks.add(location.getBlock());
-                            }
-                        }
-                    }
-                }
-                break;
+            }
         }
-        if (air) return blocks.stream();
-        return blocks.stream().filter(block -> !block.isEmpty());
-    }
-
-    private static boolean passesDefaultChecks(Location location, Location middlePoint, int radius) {
-        return location.distance(middlePoint) < radius / 2d;
+        return vectors;
     }
 }
