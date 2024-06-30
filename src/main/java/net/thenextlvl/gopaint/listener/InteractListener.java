@@ -78,8 +78,17 @@ public final class InteractListener implements Listener {
         var session = player.getSession();
         var blockTrace = player.getBlockTrace(250, true, session.getMask());
         if (blockTrace != null) player.queueAction(() -> {
+        player.runAsyncIfFree(() -> {
             try (var editSession = session.createEditSession(player)) {
-                Request.request().setEditSession(editSession);
+
+                var blockTrace = player.getSolidBlockTrace(250);
+
+                if (blockTrace == null) {
+                    plugin.bundle().sendMessage(player.getPlayer(), "brush.block.sight");
+                    editSession.cancel();
+                    return;
+                }
+                var bag = session.getBlockBag(player);
 
                 try {
                     settings.getBrush().paint(editSession, blockTrace.toBlockPoint(), player, settings);
