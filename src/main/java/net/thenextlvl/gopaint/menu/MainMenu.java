@@ -37,7 +37,7 @@ public class MainMenu extends AbstractGUI {
         updateToggle();
         updateBrush();
         updateSize();
-        updateMaskMode();
+        updateMaskToggle();
         updateSurfaceMode();
         updateBlockPalette();
         updateMask();
@@ -235,31 +235,20 @@ public class MainMenu extends AbstractGUI {
         inventory.setItem(19, placeholder);
     }
 
-    public void updateMaskMode() {
-        var icon = switch (settings.getMaskMode()) {
-            case DISABLED -> Material.CARVED_PUMPKIN;
-            case INTERFACE -> Material.JACK_O_LANTERN;
-            case WORLDEDIT -> Material.WOODEN_AXE;
-        };
+    public void updateMaskToggle() {
+        var icon = settings.isMaskEnabled() ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN;
 
-        var mode = plugin.bundle().component(owner, settings.getMaskMode().translationKey())
-                .color(switch (settings.getMaskMode()) {
-                    case DISABLED -> NamedTextColor.RED;
-                    case INTERFACE -> NamedTextColor.GREEN;
-                    case WORLDEDIT -> NamedTextColor.GOLD;
-                });
+        var state = plugin.bundle().component(owner, settings.isMaskEnabled() ? "mask.enabled" : "mask.disabled")
+                .color(settings.isMaskEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED);
 
         inventory.setItem(15, new ItemBuilder(icon)
-                .itemName(plugin.bundle().component(owner, "mask.mode"))
-                .lore(plugin.bundle().components(owner, "mask.mode.description",
-                        Placeholder.component("mode", mode)))
+                .itemName(plugin.bundle().component(owner, "mask.state"))
+                .lore(plugin.bundle().components(owner, "mask.state.description",
+                        Placeholder.component("state", state)))
                 .itemFlags(ItemFlag.HIDE_ATTRIBUTES));
 
-        var placeholder = new ItemBuilder(switch (settings.getMaskMode()) {
-            case DISABLED -> Material.RED_STAINED_GLASS_PANE;
-            case INTERFACE -> Material.LIME_STAINED_GLASS_PANE;
-            case WORLDEDIT -> Material.ORANGE_STAINED_GLASS_PANE;
-        }).hideTooltip(true);
+        var pane = settings.isMaskEnabled() ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
+        var placeholder = new ItemBuilder(pane).hideTooltip(true);
 
         inventory.setItem(6, placeholder);
         inventory.setItem(24, placeholder);
@@ -267,16 +256,16 @@ public class MainMenu extends AbstractGUI {
 
     public void updateSurfaceMode() {
         var icon = switch (settings.getSurfaceMode()) {
-            case DIRECT -> Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+            case EXPOSED -> Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
             case DISABLED -> Material.POLISHED_BLACKSTONE_PRESSURE_PLATE;
-            case RELATIVE -> Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
+            case VISIBLE -> Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
         };
 
         var mode = plugin.bundle().component(owner, settings.getSurfaceMode().translationKey())
                 .color(switch (settings.getSurfaceMode()) {
-                    case DIRECT -> NamedTextColor.GREEN;
+                    case EXPOSED -> NamedTextColor.GREEN;
                     case DISABLED -> NamedTextColor.RED;
-                    case RELATIVE -> NamedTextColor.GOLD;
+                    case VISIBLE -> NamedTextColor.GOLD;
                 });
 
         inventory.setItem(16, new ItemBuilder(icon)
@@ -286,9 +275,9 @@ public class MainMenu extends AbstractGUI {
                 .itemFlags(ItemFlag.HIDE_ATTRIBUTES));
 
         var placeholder = new ItemBuilder(switch (settings.getSurfaceMode()) {
-            case DIRECT -> Material.LIME_STAINED_GLASS_PANE;
+            case EXPOSED -> Material.LIME_STAINED_GLASS_PANE;
             case DISABLED -> Material.RED_STAINED_GLASS_PANE;
-            case RELATIVE -> Material.ORANGE_STAINED_GLASS_PANE;
+            case VISIBLE -> Material.ORANGE_STAINED_GLASS_PANE;
         }).hideTooltip(true);
 
         inventory.setItem(7, placeholder);

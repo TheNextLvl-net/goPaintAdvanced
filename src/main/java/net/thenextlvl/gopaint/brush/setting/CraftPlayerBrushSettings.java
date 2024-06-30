@@ -25,7 +25,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
@@ -66,7 +66,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private boolean maskEnabled;
     private SurfaceMode surfaceMode;
 
-    private Brush brush;
+    private PatternBrush brush;
     private Material mask;
     private final List<Material> blocks = new ArrayList<>();
 
@@ -130,7 +130,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setBrush(Brush brush) {
+    public void setBrush(PatternBrush brush) {
         this.brush = brush;
         mainMenu.updateBrush();
     }
@@ -216,7 +216,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Brush getNextBrush(@Nullable Brush brush) {
+    public PatternBrush getNextBrush(@Nullable PatternBrush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int next = brushes.indexOf(brush) + 1;
@@ -225,7 +225,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Brush getPreviousBrush(@Nullable Brush brush) {
+    public PatternBrush getPreviousBrush(@Nullable PatternBrush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int back = brushes.indexOf(brush) - 1;

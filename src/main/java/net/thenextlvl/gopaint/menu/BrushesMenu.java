@@ -6,7 +6,7 @@ import core.paper.item.ItemBuilder;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Material;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 import java.util.stream.IntStream;
 
-public class BrushesMenu extends PagedGUI<GoPaintProvider, Brush> {
+public class BrushesMenu extends PagedGUI<GoPaintProvider, PatternBrush> {
     private final @Getter Options options = new Options(
             IntStream.range(0, getSize() - 9).toArray(),
             getSize() - 6,
@@ -36,7 +36,7 @@ public class BrushesMenu extends PagedGUI<GoPaintProvider, Brush> {
     }
 
     @Override
-    public ActionItem constructItem(Brush brush) {
+    public ActionItem constructItem(PatternBrush brush) {
         return new ItemBuilder(Material.PLAYER_HEAD)
                 .headValue(brush.getHeadValue())
                 .itemName(brush.getName(owner).color(NamedTextColor.GOLD))
@@ -54,7 +54,7 @@ public class BrushesMenu extends PagedGUI<GoPaintProvider, Brush> {
     }
 
     @Override
-    public Collection<Brush> getElements() {
+    public Collection<PatternBrush> getElements() {
         return plugin.brushRegistry().getBrushes().toList();
     }
 }
