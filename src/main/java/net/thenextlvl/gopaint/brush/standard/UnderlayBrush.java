@@ -1,21 +1,18 @@
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.SpherePatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
-import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import org.bukkit.Location;
+import net.thenextlvl.gopaint.brush.pattern.UnderlayPattern;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 
-import java.util.stream.Stream;
-
-public class UnderlayBrush extends Brush {
+public class UnderlayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public UnderlayBrush(GoPaintProvider provider) {
@@ -37,23 +34,7 @@ public class UnderlayBrush extends Brush {
     }
 
     @Override
-    public void paint(Location location, Player player, BrushSettings brushSettings) {
-        performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
-            blocks.filter(block -> passesMaskCheck(brushSettings, session, block))
-                    .filter(block -> isUnderlay(block, brushSettings.getThickness()))
-                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
-                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
-        });
+    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+        return new UnderlayPattern(session, position, player, settings);
     }
-
-    private boolean isUnderlay(Block block, int thickness) {
-        for (int i = 1; i <= thickness; i++) {
-            if (!block.isSolid() || !block.getRelative(BlockFace.UP, i).isSolid()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

@@ -18,25 +18,28 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.fastasyncworldedit.core.math.MutableBlockVector3;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
-import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.math.curve.BezierSpline;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import org.bukkit.Location;
+import net.thenextlvl.gopaint.brush.pattern.SplinePattern;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class PaintBrush extends Brush {
+public class PaintBrush extends PatternBrush {
+    private final Map<UUID, List<BlockVector3>> selectedPoints = new HashMap<>();
     private final GoPaintProvider provider;
 
     public PaintBrush(GoPaintProvider provider) {
@@ -57,66 +60,63 @@ public class PaintBrush extends Brush {
         return provider.bundle().components(audience, "brush.description.paint");
     }
 
-    private static final Map<UUID, List<Location>> selectedPoints = new HashMap<>();
+    @Override
+    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+        return new SplinePattern(session, position, player, settings);
+    }
 
     @Override
-    public void paint(Location target, Player player, BrushSettings brushSettings) {
-        var locations = selectedPoints.computeIfAbsent(player.getUniqueId(), ignored -> new ArrayList<>());
-        locations.add(target);
+    public void build(EditSession session, BlockVector3 position, Pattern original, double size) throws MaxChangedBlocksException {
+        if (!(original instanceof SplinePattern pattern)) return;
 
-        if (!player.isSneaking()) {
-            provider.bundle().sendMessage(player, "brush.paint.point.set",
-                    Placeholder.parsed("x", String.valueOf(target.getBlockX())),
-                    Placeholder.parsed("y", String.valueOf(target.getBlockY())),
-                    Placeholder.parsed("z", String.valueOf(target.getBlockZ())),
-                    Placeholder.parsed("point", String.valueOf(locations.size()))
+        var id = pattern.player().getUniqueId();
+        selectedPoints.computeIfAbsent(id, ignored -> new ArrayList<>()).add(position);
+
+        if (pattern.player() instanceof BukkitPlayer bukkit && !bukkit.getPlayer().isSneaking()) {
+            provider.bundle().sendMessage(bukkit.getPlayer(), "brush.paint.point.set",
+                    Placeholder.parsed("x", String.valueOf(position.getX())),
+                    Placeholder.parsed("y", String.valueOf(position.getY())),
+                    Placeholder.parsed("z", String.valueOf(position.getZ())),
+                    Placeholder.parsed("point", String.valueOf(selectedPoints.get(id).size()))
             );
             return;
         }
 
-        selectedPoints.remove(player.getUniqueId());
+        if (selectedPoints.get(id).size() <= 1) return;
 
-        performEdit(player, session -> {
-            var world = player.getWorld();
-            var first = locations.getFirst();
-            Sphere.getBlocksInRadius(first, brushSettings.getBrushSize(), null, false)
-                    .filter(block -> Height.getAverageHeightDiffAngle(block.getLocation(), 1) < 0.1
-                                     || Height.getAverageHeightDiffAngle(block.getLocation(), brushSettings.getAngleDistance())
-                                        < Math.tan(Math.toRadians(brushSettings.getAngleHeightDifference())))
-                    .filter(block -> {
-                        var rate = calculateRate(block, first, brushSettings);
-                        return brushSettings.getRandom().nextDouble() > rate;
-                    }).forEach(block -> {
-                        var curve = new LinkedList<Vector>();
-                        curve.add(new Vector(block.getX(), block.getY(), block.getZ()));
-                        locations.stream().map(location -> new Vector(
-                                block.getX() + location.getX() - first.getX(),
-                                block.getY() + location.getY() - first.getY(),
-                                block.getZ() + location.getZ() - first.getZ()
-                        )).forEach(curve::add);
+        var vectors = selectedPoints.remove(id);
 
-                        var spline = new BezierSpline(curve);
-                        var maxCount = (spline.getCurveLength() * 2.5) + 1;
+        var first = vectors.getFirst();
+        var settings = pattern.settings();
 
-                        for (int y = 0; y <= maxCount; y++) {
-                            var point = spline.getPoint((y / maxCount) * (locations.size() - 1)).toLocation(world).getBlock();
+        Sphere.getBlocksInRadius(first, size).stream()
+                .filter(vector3 -> {
+                    var rate = getRate(settings.getFalloffStrength(), size, vector3, first);
+                    return settings.getRandom().nextDouble() > rate;
+                }).forEach(vector3 -> {
+                    pattern.random(settings.getRandom().nextInt(settings.getBlocks().size()));
 
-                            if (point.isEmpty() || !passesDefaultChecks(brushSettings, player, session, point)) {
-                                continue;
-                            }
+                    var curve = new LinkedList<MutableBlockVector3>();
+                    curve.add(MutableBlockVector3.at(vector3.getX(), vector3.getY(), vector3.getZ()));
+                    vectors.stream().skip(1).map(location -> MutableBlockVector3.at(
+                            vector3.getX() + location.getX() - first.getX(),
+                            vector3.getY() + location.getY() - first.getY(),
+                            vector3.getZ() + location.getZ() - first.getZ()
+                    )).forEach(curve::add);
 
-                            var vector3 = BlockVector3.at(point.getX(), point.getY(), point.getZ());
-                            setBlock(session, vector3, brushSettings.getRandomBlock());
-                        }
-                    });
-        });
+                    var spline = new BezierSpline(curve);
+                    var maxCount = (spline.getCurveLength() * 2.5) + 1;
+
+                    for (var y = 0; y <= maxCount; y++) {
+                        session.setBlock(spline.getPoint((y / maxCount) * (vectors.size() - 1)), pattern);
+                    }
+                });
     }
 
-    private double calculateRate(Block block, Location first, BrushSettings brushSettings) {
-        var sizeHalf = brushSettings.getBrushSize() / 2.0;
-        var falloffStrengthFactor = (100.0 - brushSettings.getFalloffStrength()) / 100.0;
-        var numerator = block.getLocation().distance(first) - sizeHalf * falloffStrengthFactor;
-        var denominator = sizeHalf - sizeHalf * falloffStrengthFactor;
+    private double getRate(double falloffStrength, double size, BlockVector3 vector3, BlockVector3 first) {
+        var falloffFactor = (100.0 - falloffStrength) / 100.0;
+        var numerator = vector3.distance(first) - size * falloffFactor;
+        var denominator = size - size * falloffFactor;
         return numerator / denominator;
     }
 }

@@ -18,23 +18,22 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.ConnectedBlocks;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import org.bukkit.Location;
+import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-public class BucketBrush extends Brush {
+public class BucketBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
     public BucketBrush(GoPaintProvider provider) {
@@ -56,13 +55,14 @@ public class BucketBrush extends Brush {
     }
 
     @Override
-    public void paint(Location location, Player player, BrushSettings brushSettings) {
-        performEdit(player, session -> {
-            List<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false).toList();
-            Stream<Block> connectedBlocks = ConnectedBlocks.getConnectedBlocks(location, blocks);
-            connectedBlocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
-                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
-                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
-        });
+    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+        return new ShufflePattern(session, position, player, settings);
+    }
+
+    @Override
+    public void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
+        var blocks = Sphere.getBlocksInRadius(position, size);
+        ConnectedBlocks.getConnectedBlocks(session.getWorld(), position, blocks)
+                .forEach(vector3 -> session.setBlock(vector3, pattern));
     }
 }

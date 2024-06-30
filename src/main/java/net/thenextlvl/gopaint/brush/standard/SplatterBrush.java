@@ -18,21 +18,19 @@
  */
 package net.thenextlvl.gopaint.brush.standard;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.SpherePatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
-import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import org.bukkit.Location;
+import net.thenextlvl.gopaint.brush.pattern.SplatterPattern;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
-import java.util.stream.Stream;
-
-public class SplatterBrush extends Brush {
+public class SplatterBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public SplatterBrush(GoPaintProvider provider) {
@@ -54,19 +52,7 @@ public class SplatterBrush extends Brush {
     }
 
     @Override
-    public void paint(Location location, Player player, BrushSettings brushSettings) {
-        performEdit(player, session -> {
-            Stream<Block> blocks = Sphere.getBlocksInRadius(location, brushSettings.getBrushSize(), null, false);
-            blocks.filter(block -> passesDefaultChecks(brushSettings, player, session, block))
-                    .filter(block -> brushSettings.getRandom().nextDouble() > getRate(location, brushSettings, block))
-                    .map(block -> BlockVector3.at(block.getX(), block.getY(), block.getZ()))
-                    .forEach(vector3 -> setBlock(session, vector3, brushSettings.getRandomBlock()));
-        });
-    }
-
-    private static double getRate(Location location, BrushSettings brushSettings, Block block) {
-        var size = (double) brushSettings.getBrushSize() / 2.0;
-        var falloff = (100.0 - (double) brushSettings.getFalloffStrength()) / 100.0;
-        return (block.getLocation().distance(location) - size * falloff) / (size - size * falloff);
+    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+        return new SplatterPattern(session, position, player, settings);
     }
 }
