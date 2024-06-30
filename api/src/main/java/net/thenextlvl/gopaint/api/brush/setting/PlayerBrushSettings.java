@@ -1,8 +1,7 @@
 package net.thenextlvl.gopaint.api.brush.setting;
 
 import core.paper.gui.AbstractGUI;
-import net.thenextlvl.gopaint.api.brush.Brush;
-import net.thenextlvl.gopaint.api.model.MaskMode;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.model.PluginConfig;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
@@ -118,11 +117,11 @@ public interface PlayerBrushSettings extends BrushSettings {
     void setAngleHeightDifference(double difference);
 
     /**
-     * Sets the mask mode of the brush.
+     * Sets whether the mask is enabled or disabled for the brush.
      *
-     * @param maskMode The mask mode to set.
+     * @param enabled true to enable the mask, false to disable it
      */
-    void setMaskMode(MaskMode maskMode);
+    void setMaskEnabled(boolean enabled);
 
     /**
      * Sets the surface mode of the brush.
@@ -150,7 +149,7 @@ public interface PlayerBrushSettings extends BrushSettings {
      *
      * @param brush The brush to set.
      */
-    void setBrush(Brush brush);
+    void setBrush(PatternBrush brush);
 
     /**
      * Sets the mask for the brush.
@@ -191,7 +190,7 @@ public interface PlayerBrushSettings extends BrushSettings {
      * @param brush The current brush, if null returns the first brush in the list.
      * @return The next brush in the list, or the first brush if the current brush is null.
      */
-    Brush getNextBrush(@Nullable Brush brush);
+    PatternBrush getNextBrush(@Nullable PatternBrush brush);
 
     /**
      * Retrieves the previous brush in the list of available brushes.
@@ -199,5 +198,5 @@ public interface PlayerBrushSettings extends BrushSettings {
      * @param brush The current brush.
      * @return The previous brush in the list, or the first brush if the current brush is null.
      */
-    Brush getPreviousBrush(@Nullable Brush brush);
+    PatternBrush getPreviousBrush(@Nullable PatternBrush brush);
 }
