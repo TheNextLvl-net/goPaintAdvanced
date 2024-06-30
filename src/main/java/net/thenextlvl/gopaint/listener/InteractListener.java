@@ -18,8 +18,11 @@
  */
 package net.thenextlvl.gopaint.listener;
 
+import com.fastasyncworldedit.core.function.mask.AirMask;
+import com.fastasyncworldedit.core.function.mask.InverseMask;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.function.mask.MaskIntersection;
 import com.sk89q.worldedit.session.request.Request;
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
@@ -77,9 +80,13 @@ public final class InteractListener implements Listener {
         if (blockTrace != null) player.queueAction(() -> {
             try (var editSession = session.createEditSession(player)) {
                 Request.request().setEditSession(editSession);
+
                 try {
                     settings.getBrush().paint(editSession, blockTrace.toBlockPoint(), player, settings);
                 } finally {
+
+                    if (bag != null) bag.flushChanges();
+
                     session.remember(editSession);
                 }
             } finally {
