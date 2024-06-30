@@ -26,10 +26,6 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 - Better build gradle
 - **Dropped legacy support. _Update or use the original plugin!_**
 
-### To-Do
-
-- Fluid mode setting
-
 ## Links
 
 * [Download](https://hangar.papermc.io/TheNextLvl/goPaintAdvanced)
