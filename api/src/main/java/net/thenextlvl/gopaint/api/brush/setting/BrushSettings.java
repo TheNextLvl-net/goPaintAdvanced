@@ -1,12 +1,22 @@
 package net.thenextlvl.gopaint.api.brush.setting;
 
-import net.thenextlvl.gopaint.api.brush.Brush;
-import net.thenextlvl.gopaint.api.model.MaskMode;
+import com.fastasyncworldedit.core.function.mask.SingleBlockTypeMask;
+import com.fastasyncworldedit.core.function.mask.SurfaceMask;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.function.mask.ExistingBlockMask;
+import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.MaskIntersection;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
+import net.thenextlvl.gopaint.api.brush.mask.VisibleMask;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -27,7 +37,7 @@ public interface BrushSettings {
      *
      * @return The brush used by the brush settings.
      */
-    Brush getBrush();
+    PatternBrush getBrush();
 
     /**
      * Returns the list of blocks used by the brush settings.
@@ -44,11 +54,35 @@ public interface BrushSettings {
     Material getMask();
 
     /**
-     * Retrieves the mask mode used by the brush settings.
+     * Determines whether the mask is enabled or not.
      *
-     * @return The mask mode used by the brush settings.
+     * @return true if the mask is enabled, false otherwise
      */
-    MaskMode getMaskMode();
+    boolean isMaskEnabled();
+
+    /**
+     * Retrieves the WorldEdit mask for the given session according to the brush settings.
+     *
+     * @param session The session used for retrieving the mask.
+     * @return The WorldEdit mask
+     */
+    default Mask getMask(LocalSession session) {
+        var mask = Optional.ofNullable(session.getMask())
+                .orElseGet(() -> new ExistingBlockMask(session.getSelectionWorld()));
+        return isMaskEnabled() ? Optional.of(getMask())
+                .map(BukkitAdapter::asBlockType)
+                .map(blockType -> new SingleBlockTypeMask(session.getSelectionWorld(), blockType))
+                .map(single -> MaskIntersection.of(single, mask))
+                .orElse(mask) : mask;
+    }
+
+    default @Nullable Mask getSurfaceMask(Player player) {
+        return switch (getSurfaceMode()) {
+            case VISIBLE -> new VisibleMask(player.getWorld(), player.getLocation().add(0, 1.5, 0));
+            case EXPOSED -> new SurfaceMask(player.getWorld());
+            case DISABLED -> null;
+        };
+    }
 
     /**
      * Returns the surface mode used by the brush settings.
@@ -112,13 +146,6 @@ public interface BrushSettings {
      * @return The thickness used by the brush settings.
      */
     int getThickness();
-
-    /**
-     * Picks a random block material from {@link #getBlocks()}.
-     *
-     * @return The randomly picked block material.
-     */
-    Material getRandomBlock();
 
     /**
      * The random number generator instance.

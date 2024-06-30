@@ -20,7 +20,6 @@ package net.thenextlvl.gopaint.listener;
 
 import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.menu.MainMenu;
@@ -37,7 +36,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public final class InventoryListener implements Listener {
     private final GoPaintPlugin plugin;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void menuClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
@@ -150,16 +149,12 @@ public final class InventoryListener implements Listener {
                 settings.setBrushSize(settings.getBrushSize() - 10);
             }
         } else if (event.getRawSlot() == 15 || event.getRawSlot() == 6 || event.getRawSlot() == 24) {
-            settings.setMaskMode(switch (settings.getMaskMode()) {
-                case INTERFACE -> MaskMode.WORLDEDIT;
-                case WORLDEDIT -> MaskMode.DISABLED;
-                case DISABLED -> MaskMode.INTERFACE;
-            });
+            settings.setMaskEnabled(!settings.isMaskEnabled());
         } else if (event.getRawSlot() == 16 || event.getRawSlot() == 7 || event.getRawSlot() == 25) {
             settings.setSurfaceMode(switch (settings.getSurfaceMode()) {
-                case DIRECT -> SurfaceMode.RELATIVE;
-                case RELATIVE -> SurfaceMode.DISABLED;
-                case DISABLED -> SurfaceMode.DIRECT;
+                case EXPOSED -> SurfaceMode.VISIBLE;
+                case VISIBLE -> SurfaceMode.DISABLED;
+                case DISABLED -> SurfaceMode.EXPOSED;
             });
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
                    || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {

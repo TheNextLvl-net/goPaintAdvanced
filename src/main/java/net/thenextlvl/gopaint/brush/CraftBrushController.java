@@ -24,7 +24,6 @@ import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.setting.CraftItemBrushSettings;
 import net.thenextlvl.gopaint.brush.setting.CraftPlayerBrushSettings;
@@ -61,10 +60,7 @@ public class CraftBrushController implements BrushController {
         var container = itemMeta.getPersistentDataContainer();
 
         var brushSize = container.get(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER);
-
-        var maskMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask_mode"), PersistentDataType.STRING))
-                .map(MaskMode::valueOf)
-                .orElse(null);
+        var maskEnabled = container.get(new NamespacedKey("gopaint", "mask_enabled"), PersistentDataType.BOOLEAN);
 
         var surfaceMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING))
                 .map(SurfaceMode::valueOf)
@@ -75,7 +71,7 @@ public class CraftBrushController implements BrushController {
                 .flatMap(plugin.brushRegistry()::getBrush)
                 .orElse(null);
 
-        if (brushSize == null || maskMode == null || surfaceMode == null || brush == null)
+        if (brushSize == null || maskEnabled == null || surfaceMode == null || brush == null)
             return Optional.empty();
 
         var chance = container.getOrDefault(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, 0);
@@ -92,7 +88,7 @@ public class CraftBrushController implements BrushController {
                 .orElse(Axis.Y);
         var mask = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING))
                 .map(Material::matchMaterial)
-                .orElse(null);
+                .orElseThrow();
         var blocks = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "blocks"), PersistentDataType.STRING))
                 .map(string -> string.split(","))
                 .stream()
@@ -103,7 +99,7 @@ public class CraftBrushController implements BrushController {
 
         return Optional.of(CraftItemBrushSettings.builder()
                 .brushSize(brushSize)
-                .maskMode(maskMode)
+                .maskEnabled(maskEnabled)
                 .surfaceMode(surfaceMode)
                 .brush(brush)
                 .chance(chance)

@@ -25,10 +25,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
-import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.standard.*;
 import net.thenextlvl.gopaint.menu.BrushesMenu;
@@ -64,10 +63,10 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private int mixingStrength;
     private double angleHeightDifference;
     private Axis axis;
-    private MaskMode maskMode;
+    private boolean maskEnabled;
     private SurfaceMode surfaceMode;
 
-    private Brush brush;
+    private PatternBrush brush;
     private Material mask;
     private final List<Material> blocks = new ArrayList<>();
 
@@ -82,7 +81,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown default brush: " + defaultBrush.asString()));
 
         surfaceMode = plugin.config().brushConfig().surfaceMode();
-        maskMode = plugin.config().brushConfig().maskMode();
+        maskEnabled = plugin.config().brushConfig().mask();
         enabled = plugin.config().brushConfig().enabledByDefault();
         chance = plugin.config().brushConfig().defaultChance();
         thickness = plugin.config().thicknessConfig().defaultThickness();
@@ -102,11 +101,6 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     @Override
     public Random getRandom() {
         return random;
-    }
-
-    @Override
-    public Material getRandomBlock() {
-        return getBlocks().get(random.nextInt(getBlocks().size()));
     }
 
     @Override
@@ -136,7 +130,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setBrush(Brush brush) {
+    public void setBrush(PatternBrush brush) {
         this.brush = brush;
         mainMenu.updateBrush();
     }
@@ -171,14 +165,14 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setFalloffStrength(@Range(from = 10, to = 90) int strength) {
-        this.falloffStrength = Math.clamp(strength, 10, 90);
+    public void setFalloffStrength(@Range(from = 0, to = 100) int strength) {
+        this.falloffStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateFalloffStrength();
     }
 
     @Override
-    public void setMixingStrength(@Range(from = 10, to = 90) int strength) {
-        this.mixingStrength = Math.clamp(strength, 10, 90);
+    public void setMixingStrength(@Range(from = 0, to = 100) int strength) {
+        this.mixingStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateMixingStrength();
     }
 
@@ -191,9 +185,9 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setMaskMode(MaskMode maskMode) {
-        this.maskMode = maskMode;
-        mainMenu.updateMaskMode();
+    public void setMaskEnabled(boolean maskEnabled) {
+        this.maskEnabled = maskEnabled;
+        mainMenu.updateMaskToggle();
     }
 
     @Override
@@ -222,7 +216,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Brush getNextBrush(@Nullable Brush brush) {
+    public PatternBrush getNextBrush(@Nullable PatternBrush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int next = brushes.indexOf(brush) + 1;
@@ -231,7 +225,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Brush getPreviousBrush(@Nullable Brush brush) {
+    public PatternBrush getPreviousBrush(@Nullable PatternBrush brush) {
         var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
         int back = brushes.indexOf(brush) - 1;
@@ -259,7 +253,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                     Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
             lore.add(plugin.bundle().component(player, "brush.exported.angle.height",
                     Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
-        } else if (getBrush() instanceof SplatterBrush) {
+        } else if (getBrush() instanceof SplatterBrush || getBrush() instanceof PaintBrush) {
             lore.add(plugin.bundle().component(player, "brush.exported.falloff",
                     Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
         } else if (getBrush() instanceof GradientBrush) {
@@ -280,13 +274,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                     Placeholder.component("blocks", Component.join(JoinConfiguration.commas(true), blocks))));
         }
 
-
-        if (!getMaskMode().equals(MaskMode.DISABLED)) {
-            var mode = plugin.bundle().component(player, getMaskMode().translationKey());
-            lore.add(plugin.bundle().component(player, "brush.exported.mask-mode",
-                    Placeholder.component("mode", mode)));
-        }
-        if (getMaskMode().equals(MaskMode.INTERFACE)) {
+        if (isMaskEnabled()) {
             lore.add(plugin.bundle().component(player, "brush.exported.mask",
                     Placeholder.component("mask", Component.translatable(getMask().translationKey()))));
         }
@@ -314,7 +302,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             container.set(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, getMixingStrength());
             container.set(new NamespacedKey("gopaint", "angle_height_difference"), PersistentDataType.DOUBLE, getAngleHeightDifference());
             container.set(new NamespacedKey("gopaint", "axis"), PersistentDataType.STRING, getAxis().name());
-            container.set(new NamespacedKey("gopaint", "mask_mode"), PersistentDataType.STRING, getMaskMode().name());
+            container.set(new NamespacedKey("gopaint", "mask_enabled"), PersistentDataType.BOOLEAN, isMaskEnabled());
             container.set(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING, getSurfaceMode().name());
             container.set(new NamespacedKey("gopaint", "brush"), PersistentDataType.STRING, getBrush().key().asString());
             container.set(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING, getMask().key().asString());
@@ -336,7 +324,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         setMixingStrength(settings.getMixingStrength());
         setAngleHeightDifference(settings.getAngleHeightDifference());
         setAxis(settings.getAxis());
-        setMaskMode(settings.getMaskMode());
+        setMaskEnabled(settings.isMaskEnabled());
         setSurfaceMode(settings.getSurfaceMode());
         setBrush(settings.getBrush());
         setMask(settings.getMask());

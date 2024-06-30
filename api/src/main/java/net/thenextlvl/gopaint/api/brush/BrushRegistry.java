@@ -15,7 +15,7 @@ public interface BrushRegistry {
      *
      * @return The stream of available brushes.
      */
-    Stream<Brush> getBrushes();
+    Stream<PatternBrush> getBrushes();
 
     /**
      * Checks if a brush is registered in the BrushController.
@@ -23,7 +23,7 @@ public interface BrushRegistry {
      * @param brush The brush to check if it is registered.
      * @return true if the brush is registered, false otherwise.
      */
-    boolean isRegistered(Brush brush);
+    boolean isRegistered(PatternBrush brush);
 
     /**
      * Registers a brush in the BrushManager.
@@ -31,7 +31,7 @@ public interface BrushRegistry {
      * @param brush The brush to be registered.
      * @throws IllegalStateException if the brush is already registered.
      */
-    void registerBrush(Brush brush) throws IllegalStateException;
+    void registerBrush(PatternBrush brush) throws IllegalStateException;
 
     /**
      * Unregisters a brush from the Brush Controller.
@@ -39,7 +39,7 @@ public interface BrushRegistry {
      * @param brush The brush to be unregistered.
      * @throws IllegalStateException if the brush is not registered.
      */
-    void unregisterBrush(Brush brush) throws IllegalStateException;
+    void unregisterBrush(PatternBrush brush) throws IllegalStateException;
 
     /**
      * Retrieves the brush associated with the provided NamespacedKey.
@@ -47,5 +47,5 @@ public interface BrushRegistry {
      * @param key The NamespacedKey of the brush to retrieve.
      * @return An Optional containing the brush if found, or an empty Optional if not found.
      */
-    Optional<Brush> getBrush(Key key);
+    Optional<PatternBrush> getBrush(Key key);
 }

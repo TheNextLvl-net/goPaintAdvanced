@@ -16,7 +16,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
-import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.PluginConfig;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
@@ -57,7 +56,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
             new PluginConfig.BrushConfig(Material.FEATHER, new NamespacedKey("gopaint", "sphere_brush"), 100, 10, 50,
-                    Axis.Y, 50, 50, Set.of("disabled"), true, Material.SPONGE, MaskMode.INTERFACE, SurfaceMode.DIRECT,
+                    Axis.Y, 50, 50, Set.of("disabled"), true, Material.SPONGE, true, SurfaceMode.EXPOSED,
                     List.of(Material.STONE)),
             new PluginConfig.ThicknessConfig(1, 5),
             new PluginConfig.AngleConfig(2, 5, 10, 40, 85),

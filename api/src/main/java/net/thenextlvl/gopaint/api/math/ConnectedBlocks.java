@@ -18,24 +18,23 @@
  */
 package net.thenextlvl.gopaint.api.math;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
+import com.sk89q.worldedit.extent.Extent;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConnectedBlocks {
 
     private static final BlockFace[] faces = new BlockFace[]{
             BlockFace.NORTH,
-            BlockFace.EAST,
             BlockFace.SOUTH,
+            BlockFace.EAST,
             BlockFace.WEST,
             BlockFace.UP,
             BlockFace.DOWN,
@@ -45,26 +44,26 @@ public class ConnectedBlocks {
      * Returns a stream of connected blocks starting from a given location, based on a list of blocks.
      * Only blocks of the same type as the start block are considered.
      *
-     * @param loc    the starting location
-     * @param blocks the list of blocks to check for connectivity
+     * @param vector3 the starting location
+     * @param blocks  the list of blocks to check for connectivity
      * @return a stream of connected blocks
      */
-    public static Stream<Block> getConnectedBlocks(Location loc, List<Block> blocks) {
-        Block startBlock = loc.getBlock();
-        Set<Block> connected = new HashSet<>();
-        Queue<Block> toCheck = new LinkedList<>();
+    public static Stream<BlockVector3> getConnectedBlocks(Extent world, BlockVector3 vector3, Set<BlockVector3> blocks) {
+        var startBlock = world.getFullBlock(vector3);
+        var connected = new HashSet<BlockVector3>();
+        var toCheck = new LinkedList<BlockVector3>();
 
-        toCheck.add(startBlock);
-        connected.add(startBlock);
+        toCheck.add(vector3);
+        connected.add(vector3);
 
         while (!toCheck.isEmpty() && connected.size() < blocks.size()) {
-            Block current = toCheck.poll();
-            List<Block> neighbors = Arrays.stream(faces)
-                    .map(current::getRelative)
-                    .filter(relative -> relative.getType().equals(startBlock.getType())
-                            && !connected.contains(relative)
-                            && blocks.contains(relative))
-                    .toList();
+            var current = toCheck.poll();
+            var neighbors = Arrays.stream(faces)
+                    .map(face -> current.add(face.getModX(), face.getModY(), face.getModZ()))
+                    .filter(relative -> !connected.contains(relative))
+                    .filter(blocks::contains)
+                    .filter(relative -> world.getBlock(relative).getMaterial().equals(startBlock.getMaterial()))
+                    .collect(Collectors.toSet());
 
             connected.addAll(neighbors);
             toCheck.addAll(neighbors);

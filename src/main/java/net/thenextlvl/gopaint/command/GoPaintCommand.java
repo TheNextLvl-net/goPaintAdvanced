@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.entity.Player;
 
@@ -36,7 +36,7 @@ public class GoPaintCommand {
                         .then(Commands.argument("brush", ArgumentTypes.key())
                                 .suggests((context, builder) -> {
                                     plugin.brushRegistry().getBrushes()
-                                            .map(Brush::key)
+                                            .map(PatternBrush::key)
                                             .map(Key::asString)
                                             .filter(key -> key.contains(builder.getRemaining()))
                                             .forEach(builder::suggest);

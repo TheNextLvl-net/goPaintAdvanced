@@ -27,7 +27,7 @@ public record PluginConfig(
             @SerializedName("disabled-worlds") Set<String> disabledWorlds,
             @SerializedName("enabled-by-default") boolean enabledByDefault,
             @SerializedName("default-mask") Material defaultMask,
-            @SerializedName("mask-mode") MaskMode maskMode,
+            @SerializedName("mask") boolean mask,
             @SerializedName("surface-mode") SurfaceMode surfaceMode,
             @SerializedName("default-blocks") List<Material> defaultBlocks
     ) {

@@ -3,7 +3,7 @@ package net.thenextlvl.gopaint.brush;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.brush.standard.*;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CraftBrushRegistry implements BrushRegistry {
-    private final List<Brush> brushes = new LinkedList<>();
+    private final List<PatternBrush> brushes = new LinkedList<>();
 
     public CraftBrushRegistry(GoPaintPlugin plugin) {
         registerBrush(new SphereBrush(plugin));
@@ -30,28 +30,28 @@ public class CraftBrushRegistry implements BrushRegistry {
     }
 
     @Override
-    public Stream<Brush> getBrushes() {
+    public Stream<PatternBrush> getBrushes() {
         return brushes.stream().sorted();
     }
 
     @Override
-    public boolean isRegistered(Brush brush) {
+    public boolean isRegistered(PatternBrush brush) {
         return brushes.contains(brush);
     }
 
     @Override
-    public void registerBrush(Brush brush) throws IllegalStateException {
+    public void registerBrush(PatternBrush brush) throws IllegalStateException {
         Preconditions.checkState(!isRegistered(brush), "Brush already registered");
         brushes.add(brush);
     }
 
     @Override
-    public void unregisterBrush(Brush brush) throws IllegalStateException {
+    public void unregisterBrush(PatternBrush brush) throws IllegalStateException {
         if (!brushes.remove(brush)) throw new IllegalStateException("Brush not registered");
     }
 
     @Override
-    public Optional<Brush> getBrush(Key key) {
+    public Optional<PatternBrush> getBrush(Key key) {
         return brushes.stream()
                 .filter(brush -> brush.key().equals(key))
                 .findAny();
