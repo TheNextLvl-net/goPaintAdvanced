@@ -20,13 +20,11 @@ package net.thenextlvl.gopaint.brush.setting;
 
 import lombok.Builder;
 import lombok.Getter;
-import net.thenextlvl.gopaint.api.brush.Brush;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
-import net.thenextlvl.gopaint.api.model.MaskMode;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -34,8 +32,8 @@ import java.util.Random;
 @Getter
 @Builder(builderClassName = "Builder")
 public final class CraftItemBrushSettings implements ItemBrushSettings {
-    private final Brush brush;
-    private final @Nullable Material mask;
+    private final PatternBrush brush;
+    private final Material mask;
     private final List<Material> blocks;
     private final Axis axis;
     private final SurfaceMode surfaceMode;
@@ -50,11 +48,6 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final double angleHeightDifference;
 
     private static final Random random = new Random();
-
-    @Override
-    public Material getRandomBlock() {
-        return getBlocks().get(getRandom().nextInt(getBlocks().size()));
-    }
 
     @Override
     public Random getRandom() {

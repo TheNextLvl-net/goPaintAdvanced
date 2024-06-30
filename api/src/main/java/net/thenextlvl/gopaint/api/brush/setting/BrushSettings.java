@@ -63,9 +63,26 @@ public interface BrushSettings {
     /**
      * Retrieves the WorldEdit mask for the given session according to the brush settings.
      *
-     * @return The mask mode used by the brush settings.
+     * @param session The session used for retrieving the mask.
+     * @return The WorldEdit mask
      */
-    MaskMode getMaskMode();
+    default Mask getMask(LocalSession session) {
+        var mask = Optional.ofNullable(session.getMask())
+                .orElseGet(() -> new ExistingBlockMask(session.getSelectionWorld()));
+        return isMaskEnabled() ? Optional.of(getMask())
+                .map(BukkitAdapter::asBlockType)
+                .map(blockType -> new SingleBlockTypeMask(session.getSelectionWorld(), blockType))
+                .map(single -> MaskIntersection.of(single, mask))
+                .orElse(mask) : mask;
+    }
+
+    default @Nullable Mask getSurfaceMask(Player player) {
+        return switch (getSurfaceMode()) {
+            case VISIBLE -> new VisibleMask(player.getWorld(), player.getLocation().add(0, 1.5, 0));
+            case EXPOSED -> new SurfaceMask(player.getWorld());
+            case DISABLED -> null;
+        };
+    }
 
     /**
      * Returns the surface mode used by the brush settings.

@@ -104,11 +104,6 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public Material getRandomBlock() {
-        return getBlocks().get(random.nextInt(getBlocks().size()));
-    }
-
-    @Override
     public void setMask(Material type) {
         mask = type;
         mainMenu.updateMask();
