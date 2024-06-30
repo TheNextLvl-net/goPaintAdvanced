@@ -37,7 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public final class InventoryListener implements Listener {
     private final GoPaintPlugin plugin;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void menuClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
