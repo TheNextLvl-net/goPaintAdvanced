@@ -114,4 +114,7 @@ modrinth {
     uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
     gameVersions.set(versions)
     loaders.add("paper")
+    dependencies {
+        optional.project("fastasyncworldedit")
+    }
 }
