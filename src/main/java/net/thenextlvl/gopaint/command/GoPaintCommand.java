@@ -50,7 +50,7 @@ public class GoPaintCommand {
                         .executes(this::wand))
                 .then(Commands.literal("export")
                         .requires(stack -> stack.getSender() instanceof Player)
-                        .executes(this::export))
+                        .executes(this::exportSettings))
                 .then(Commands.literal("import")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::importSettings))
@@ -65,7 +65,7 @@ public class GoPaintCommand {
                 event.registrar().register(command, List.of("gp"))));
     }
 
-    private int export(CommandContext<CommandSourceStack> context) {
+    private int exportSettings(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
 
         var mainHand = player.getInventory().getItemInMainHand();
