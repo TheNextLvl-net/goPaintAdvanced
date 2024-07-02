@@ -17,7 +17,7 @@ public record SprayPattern(
 
     @Override
     public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
-        if (settings.getRandom().nextInt(100) < settings.getChance()) return false;
+        if (settings.getRandom().nextInt(100) >= settings.getChance()) return false;
         return set.setBlock(extent, getRandomBlockState());
     }
 }

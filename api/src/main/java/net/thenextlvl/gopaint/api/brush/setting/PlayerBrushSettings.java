@@ -43,8 +43,9 @@ public interface PlayerBrushSettings extends BrushSettings {
      * Exports the brush settings visually onto the given ItemStack.
      *
      * @param itemStack The ItemStack to export the brush settings to.
+     * @return whether the settings could be exported to the item
      */
-    void exportSettings(ItemStack itemStack);
+    boolean exportSettings(ItemStack itemStack);
 
     /**
      * Imports the item brush settings.

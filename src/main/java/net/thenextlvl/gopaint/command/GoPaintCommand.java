@@ -3,6 +3,7 @@ package net.thenextlvl.gopaint.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import core.paper.item.ItemBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -44,6 +45,15 @@ public class GoPaintCommand {
                                 })
                                 .requires(stack -> stack.getSender() instanceof Player)
                                 .executes(this::brush)))
+                .then(Commands.literal("wand")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::wand))
+                .then(Commands.literal("export")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::exportSettings))
+                .then(Commands.literal("import")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::importSettings))
                 .then(Commands.literal("toggle")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::toggle))
@@ -53,6 +63,33 @@ public class GoPaintCommand {
                 .build();
         plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
                 event.registrar().register(command, List.of("gp"))));
+    }
+
+    private int exportSettings(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+
+        var mainHand = player.getInventory().getItemInMainHand();
+        var settings = plugin.brushController().getBrushSettings(player);
+
+        plugin.bundle().sendMessage(player, settings.exportSettings(mainHand) ?
+                "command.gopaint.export.success" : "command.gopaint.export.failed");
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int importSettings(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+
+        var mainHand = player.getInventory().getItemInMainHand();
+        var settings = plugin.brushController().getBrushSettings(player);
+        var parsed = plugin.brushController().parseBrushSettings(mainHand);
+
+        parsed.ifPresent(settings::importSettings);
+
+        plugin.bundle().sendMessage(player, parsed.isPresent() ?
+                "command.gopaint.import.success" : "command.gopaint.import.failed");
+
+        return Command.SINGLE_SUCCESS;
     }
 
     private int brush(CommandContext<CommandSourceStack> context) {
@@ -99,5 +136,48 @@ public class GoPaintCommand {
         plugin.reloadConfig();
         plugin.bundle().sendMessage(sender, "command.gopaint.reloaded");
         return Command.SINGLE_SUCCESS;
+    }
+
+    private int wand(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+        plugin.bundle().sendMessage(player, giveWand(player)
+                ? "command.gopaint.wand.success"
+                : "command.gopaint.wand.failed");
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private boolean giveWand(Player player) {
+        var type = plugin.config().brushConfig().defaultBrushType();
+
+        var inventory = player.getInventory();
+        var first = inventory.first(type);
+
+        if (first != -1) {
+            if (inventory.getHeldItemSlot() == first) return true;
+
+            if (first >= 0 && first <= 8) {
+                inventory.setHeldItemSlot(first);
+                return true;
+            }
+
+            var item = inventory.getItem(first);
+
+            inventory.setItem(first, inventory.getItemInMainHand());
+            inventory.setItemInMainHand(item);
+
+            return true;
+        }
+
+        if (inventory.getItemInMainHand().isEmpty()) {
+            inventory.setItemInMainHand(new ItemBuilder(type));
+            return true;
+        }
+
+        var empty = inventory.firstEmpty();
+        if (empty == -1) return false;
+
+        inventory.setItem(empty, inventory.getItemInMainHand());
+        inventory.setItemInMainHand(new ItemBuilder(type));
+        return true;
     }
 }

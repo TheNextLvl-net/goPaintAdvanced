@@ -66,10 +66,7 @@ public final class InventoryListener implements Listener {
 
 
             plugin.brushController().parseBrushSettings(event.getCursor())
-                    .ifPresentOrElse(settings::importSettings, () -> {
-                        if (itemType.equals(plugin.config().brushConfig().defaultBrushType())) return;
-                        if (!itemType.isBlock()) settings.exportSettings(event.getCursor());
-                    });
+                    .ifPresentOrElse(settings::importSettings, () -> settings.exportSettings(event.getCursor()));
 
         } else if (event.getRawSlot() == 11 || event.getRawSlot() == 2 || event.getRawSlot() == 20) {
             if (event.getClick().equals(ClickType.LEFT)) {
@@ -112,7 +109,7 @@ public final class InventoryListener implements Listener {
                 } else if (event.getClick().isRightClick()) {
                     settings.setFalloffStrength(settings.getFalloffStrength() - 10);
                 }
-            } else if (brush instanceof DiscBrush) {
+            } else if (brush instanceof DiskBrush) {
                 settings.setAxis(switch (settings.getAxis()) {
                     case X -> Axis.Y;
                     case Y -> Axis.Z;
