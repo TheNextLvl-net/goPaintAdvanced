@@ -99,7 +99,7 @@ public final class InteractListener implements Listener {
 
                     editSession.setMask(mask);
 
-                    settings.getBrush().build(editSession, position, pattern, settings.getBrushSize() / 2d);
+                    settings.getBrush().build(editSession, position, pattern, settings.getBrushSize());
 
                 } finally {
 
