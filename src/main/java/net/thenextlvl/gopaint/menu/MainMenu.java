@@ -175,7 +175,7 @@ public class MainMenu extends AbstractGUI {
     }
 
     public void updateAxis() {
-        if (!(settings.getBrush() instanceof DiscBrush)) return;
+        if (!(settings.getBrush() instanceof DiskBrush)) return;
 
         inventory.setItem(12, new ItemBuilder(Material.COMPASS)
                 .itemName(plugin.bundle().component(owner, "brush.axis",

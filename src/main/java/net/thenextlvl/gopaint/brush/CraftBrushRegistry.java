@@ -19,7 +19,7 @@ public class CraftBrushRegistry implements BrushRegistry {
         registerBrush(new SphereBrush(plugin));
         registerBrush(new SprayBrush(plugin));
         registerBrush(new SplatterBrush(plugin));
-        registerBrush(new DiscBrush(plugin));
+        registerBrush(new DiskBrush(plugin));
         registerBrush(new BucketBrush(plugin));
         registerBrush(new AngleBrush(plugin));
         registerBrush(new OverlayBrush(plugin));

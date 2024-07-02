@@ -245,7 +245,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
             lore.add(plugin.bundle().component(player, "brush.exported.thickness",
                     Placeholder.parsed("thickness", String.valueOf(getThickness()))));
-        } else if (getBrush() instanceof DiscBrush) {
+        } else if (getBrush() instanceof DiskBrush) {
             lore.add(plugin.bundle().component(player, "brush.exported.axis",
                     Placeholder.parsed("axis", getAxis().name())));
         } else if (getBrush() instanceof AngleBrush) {

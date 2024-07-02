@@ -112,7 +112,7 @@ public final class InventoryListener implements Listener {
                 } else if (event.getClick().isRightClick()) {
                     settings.setFalloffStrength(settings.getFalloffStrength() - 10);
                 }
-            } else if (brush instanceof DiscBrush) {
+            } else if (brush instanceof DiskBrush) {
                 settings.setAxis(switch (settings.getAxis()) {
                     case X -> Axis.Y;
                     case Y -> Axis.Z;

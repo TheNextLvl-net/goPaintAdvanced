@@ -32,25 +32,25 @@ import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
 import org.bukkit.NamespacedKey;
 
-public class DiscBrush extends PatternBrush {
+public class DiskBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
-    public DiscBrush(GoPaintProvider provider) {
+    public DiskBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==",
-                new NamespacedKey("gopaint", "disc_brush")
+                new NamespacedKey("gopaint", "disk_brush")
         );
         this.provider = provider;
     }
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.disc");
+        return provider.bundle().component(audience, "brush.name.disk");
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.disc");
+        return provider.bundle().components(audience, "brush.description.disk");
     }
 
     @Override
