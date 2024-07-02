@@ -48,6 +48,9 @@ public class GoPaintCommand {
                 .then(Commands.literal("wand")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::wand))
+                .then(Commands.literal("export")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::export))
                 .then(Commands.literal("toggle")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::toggle))
@@ -57,6 +60,18 @@ public class GoPaintCommand {
                 .build();
         plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
                 event.registrar().register(command, List.of("gp"))));
+    }
+
+    private int export(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+
+        var mainHand = player.getInventory().getItemInMainHand();
+        var settings = plugin.brushController().getBrushSettings(player);
+
+        plugin.bundle().sendMessage(player, settings.exportSettings(mainHand) ?
+                "command.gopaint.export.success" : "command.gopaint.export.failed");
+
+        return Command.SINGLE_SUCCESS;
     }
 
     private int brush(CommandContext<CommandSourceStack> context) {
