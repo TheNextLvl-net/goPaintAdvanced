@@ -22,8 +22,8 @@ public record SplatterPattern(
     }
 
     private double getRate(BlockVector3 position) {
+        var size = settings().getBrushSize() / 2;
         var falloff = (100 - settings().getFalloffStrength()) / 100d;
-        return (position.distance(position()) - settings().getBrushSize() * falloff)
-               / (settings().getBrushSize() - settings().getBrushSize() * falloff);
+        return (position.distance(position()) - size * falloff) / (size - size * falloff);
     }
 }
