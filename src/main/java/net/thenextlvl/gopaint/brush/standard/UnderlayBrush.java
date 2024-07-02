@@ -17,7 +17,7 @@ public class UnderlayBrush extends SpherePatternBrush {
 
     public UnderlayBrush(GoPaintProvider provider) {
         super(
-                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzIzNDQ2OTkwZjU4YjY1M2FiNWYwZTdhZjNmZGM3NTYwOTEyNzVmNGMzYzJkZDQxYzdkODYyZGQzZjkyZTg0YSJ9fX0=",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzFlNTY1YzFlMDVhODIzZDgxNjMwMjY4N2E5OGQ1ZmUyZDA2NmFhMTkxNDMzNjg4NDRhMGM0MzAyNzYyNDljMyJ9fX0=",
                 new NamespacedKey("gopaint", "underlay_brush")
         );
         this.provider = provider;
