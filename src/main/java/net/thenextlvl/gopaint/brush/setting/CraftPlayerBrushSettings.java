@@ -235,7 +235,8 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
     @Override
     public boolean exportSettings(ItemStack itemStack) {
-        return itemStack.editMeta(itemMeta -> {
+        if (itemStack.getType().equals(plugin.config().brushConfig().defaultBrushType())) return false;
+        return !itemStack.getType().isBlock() && itemStack.editMeta(itemMeta -> {
             var lore = new ArrayList<Component>();
             lore.add(Component.empty());
             lore.add(plugin.bundle().component(player, "brush.exported.size",
