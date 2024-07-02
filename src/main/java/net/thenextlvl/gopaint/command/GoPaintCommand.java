@@ -51,6 +51,9 @@ public class GoPaintCommand {
                 .then(Commands.literal("export")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::export))
+                .then(Commands.literal("import")
+                        .requires(stack -> stack.getSender() instanceof Player)
+                        .executes(this::importSettings))
                 .then(Commands.literal("toggle")
                         .requires(stack -> stack.getSender() instanceof Player)
                         .executes(this::toggle))
@@ -70,6 +73,21 @@ public class GoPaintCommand {
 
         plugin.bundle().sendMessage(player, settings.exportSettings(mainHand) ?
                 "command.gopaint.export.success" : "command.gopaint.export.failed");
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int importSettings(CommandContext<CommandSourceStack> context) {
+        var player = (Player) context.getSource().getSender();
+
+        var mainHand = player.getInventory().getItemInMainHand();
+        var settings = plugin.brushController().getBrushSettings(player);
+        var parsed = plugin.brushController().parseBrushSettings(mainHand);
+
+        parsed.ifPresent(settings::importSettings);
+
+        plugin.bundle().sendMessage(player, parsed.isPresent() ?
+                "command.gopaint.import.success" : "command.gopaint.import.failed");
 
         return Command.SINGLE_SUCCESS;
     }
