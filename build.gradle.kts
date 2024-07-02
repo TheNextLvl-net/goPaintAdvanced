@@ -10,6 +10,7 @@ plugins {
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
     id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 group = "net.thenextlvl.gopaint"
@@ -84,6 +85,10 @@ tasks.runServer {
 val versionString: String = project.version as String
 val isRelease: Boolean = !versionString.contains("-pre")
 
+val versions: List<String> = (property("gameVersions") as String)
+    .split(",")
+    .map { it.trim() }
+
 hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
     publications.register("plugin") {
         id.set("goPaintAdvanced")
@@ -92,7 +97,7 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         platforms.register(Platforms.PAPER) {
             jar.set(tasks.shadowJar.flatMap { it.archiveFile })
-            platformVersions.set(listOf("1.20.6"))
+            platformVersions.set(versions)
             dependencies {
                 url("FastAsyncWorldEdit", "https://hangar.papermc.io/IntellectualSites/FastAsyncWorldEdit") {
                     required.set(true)
@@ -100,4 +105,13 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
             }
         }
     }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("gBIw3Gvy")
+    versionType = if (isRelease) "release" else "beta"
+    uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    gameVersions.set(versions)
+    loaders.add("paper")
 }
