@@ -40,6 +40,7 @@ paper {
     main = "net.thenextlvl.gopaint.GoPaintPlugin"
     authors = listOf("Arcaniax", "TheMeinerLP", "NonSwag")
     apiVersion = "1.20"
+    foliaSupported = true
 
     serverDependencies {
         register("FastAsyncWorldEdit") {
