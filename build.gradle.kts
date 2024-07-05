@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "net.thenextlvl.gopaint"
-version = "1.3.1"
+version = "1.3.2"
 
 repositories {
     mavenCentral()
@@ -78,7 +78,7 @@ tasks.shadowJar {
 }
 
 tasks.runServer {
-    minecraftVersion("1.20.6")
+    minecraftVersion("1.21")
     jvmArgs("-Dcom.mojang.eula.agree=true")
 }
 
