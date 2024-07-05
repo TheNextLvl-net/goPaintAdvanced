@@ -109,9 +109,9 @@ hangarPublish { // docs - https://docs.papermc.io/misc/hangar-publishing
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set("gBIw3Gvy")
+    projectId.set("a2wQ6jIv")
     versionType = if (isRelease) "release" else "beta"
-    uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    uploadFile.set(tasks.shadowJar)
     gameVersions.set(versions)
     loaders.add("paper")
     dependencies {
