@@ -7,28 +7,23 @@ This plugin is a fork of the [original](https://github.com/Arcaniax-Development/
 but with many improvements and fixes.
 We aim to be always up-to-date and use new technology instead of hanging on to old and dead code.
 
-> [!IMPORTANT]
-> goPaintAdvanced only supports the latest version of Paper (1.21)<br>
-> Therefor at least Java version 21 is required
-
 ## Major Changes
 
-### Done
-
+- **Fully asynchrone** - No lags whatsoever
 - **100%** customizable messages
 - Better WorldEdit integration
+- New brushes
 - Brigadier commands
 - Improved configuration file
-- Improved algorithms
-- Dropped XMaterial Support
-- Hangar auto deployment
+- Improved and faster algorithms
+- No legacy code or dependencies
+- Hangar and Modrinth auto deployment
 - New CI Development builds
-- Better build gradle
-- **Dropped legacy support. _Update or use the original plugin!_**
 
 ## Links
 
-* [Download](https://hangar.papermc.io/TheNextLvl/goPaintAdvanced)
+* [Download - Modrinth](https://modrinth.com/plugin/gopaintadvanced)
+* [Download - Hangar](https://hangar.papermc.io/TheNextLvl/goPaintAdvanced)
 * [Discord](https://thenextlvl.net/discord)
 * [Issues](https://github.com/TheNextLvl-net/goPaintAdvanced/issues)
 
