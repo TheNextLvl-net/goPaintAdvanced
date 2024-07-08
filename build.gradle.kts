@@ -116,6 +116,6 @@ modrinth {
     loaders.add("paper")
     loaders.add("folia")
     dependencies {
-        optional.project("fastasyncworldedit")
+        required.project("fastasyncworldedit")
     }
 }
