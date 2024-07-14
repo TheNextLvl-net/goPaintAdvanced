@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.34")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 
@@ -31,7 +31,7 @@ dependencies {
     api("net.thenextlvl.core:i18n:1.0.18")
     api("net.thenextlvl.core:paper:1.3.5")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
 
 publishing {
