@@ -13,8 +13,8 @@ import net.thenextlvl.gopaint.api.brush.mask.VisibleMask;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
