@@ -68,11 +68,12 @@ public class PaintBrush extends PatternBrush {
     @Override
     public void build(EditSession session, BlockVector3 position, Pattern original, double size) throws MaxChangedBlocksException {
         if (!(original instanceof SplinePattern pattern)) return;
+        if (!(pattern.player() instanceof BukkitPlayer bukkit)) return;
 
         var id = pattern.player().getUniqueId();
         selectedPoints.computeIfAbsent(id, ignored -> new ArrayList<>()).add(position);
 
-        if (pattern.player() instanceof BukkitPlayer bukkit && !bukkit.getPlayer().isSneaking()) {
+        if (!bukkit.getPlayer().isSneaking()) {
             provider.bundle().sendMessage(bukkit.getPlayer(), "brush.paint.point.set",
                     Placeholder.parsed("x", String.valueOf(position.getX())),
                     Placeholder.parsed("y", String.valueOf(position.getY())),
