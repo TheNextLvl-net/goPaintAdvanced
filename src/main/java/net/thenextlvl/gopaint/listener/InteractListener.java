@@ -94,7 +94,7 @@ public final class InteractListener implements Listener {
 
                     var position = blockTrace.toBlockPoint();
                     var mask = MaskIntersection.of(new InverseMask(new AirMask(player.getWorld())),
-                            settings.getMask(session), settings.getSurfaceMask(player));
+                            settings.getMask(editSession), settings.getSurfaceMask(player));
                     var pattern = settings.getBrush().buildPattern(editSession, position, player, settings);
 
                     editSession.setMask(mask);

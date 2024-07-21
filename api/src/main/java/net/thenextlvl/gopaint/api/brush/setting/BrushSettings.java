@@ -2,7 +2,7 @@ package net.thenextlvl.gopaint.api.brush.setting;
 
 import com.fastasyncworldedit.core.function.mask.SingleBlockTypeMask;
 import com.fastasyncworldedit.core.function.mask.SurfaceMask;
-import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.mask.ExistingBlockMask;
@@ -66,12 +66,12 @@ public interface BrushSettings {
      * @param session The session used for retrieving the mask.
      * @return The WorldEdit mask
      */
-    default Mask getMask(LocalSession session) {
+    default Mask getMask(EditSession session) {
         var mask = Optional.ofNullable(session.getMask())
-                .orElseGet(() -> new ExistingBlockMask(session.getSelectionWorld()));
+                .orElseGet(() -> new ExistingBlockMask(session.getWorld()));
         return isMaskEnabled() ? Optional.of(getMask())
                 .map(BukkitAdapter::asBlockType)
-                .map(blockType -> new SingleBlockTypeMask(session.getSelectionWorld(), blockType))
+                .map(blockType -> new SingleBlockTypeMask(session.getWorld(), blockType))
                 .map(single -> MaskIntersection.of(single, mask))
                 .orElse(mask) : mask;
     }
