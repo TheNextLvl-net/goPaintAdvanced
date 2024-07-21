@@ -12,6 +12,7 @@ We aim to be always up-to-date and use new technology instead of hanging on to o
 - **Fully asynchrone** - No lags whatsoever
 - **100%** customizable messages
 - Better WorldEdit integration
+- Survival Support
 - New brushes
 - Brigadier commands
 - Improved configuration file
