@@ -18,6 +18,7 @@ version = "1.3.3"
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
     maven("https://repo.thenextlvl.net/releases")
     maven("https://papermc.io/repo/repository/maven-public/")
 }
@@ -28,6 +29,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("com.github.xmrafonso:hangar4j:1.2.2")
 
     api("net.thenextlvl.core:adapters:1.0.9")
 
