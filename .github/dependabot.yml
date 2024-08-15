@@ -10,4 +10,4 @@ updates:
       - "/"
       - "/api"
     schedule:
-      interval: "weekly"
+      interval: "daily"
