@@ -25,7 +25,7 @@ dependencies {
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
-    compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.49"))
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
     api("net.thenextlvl.core:i18n:1.0.19")
