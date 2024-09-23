@@ -28,7 +28,7 @@ dependencies {
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
-    implementation("org.bstats:bstats-bukkit:3.0.3")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.github.xmrafonso:hangar4j:1.2.2")
 
     api("net.thenextlvl.core:adapters:1.0.9")
