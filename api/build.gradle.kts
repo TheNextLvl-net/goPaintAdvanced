@@ -29,7 +29,7 @@ dependencies {
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
     api("net.thenextlvl.core:i18n:1.0.20")
-    api("net.thenextlvl.core:paper:1.5.2")
+    api("net.thenextlvl.core:paper:1.5.3")
 
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
