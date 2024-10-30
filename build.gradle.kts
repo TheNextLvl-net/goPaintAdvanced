@@ -31,7 +31,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.github.xmrafonso:hangar4j:1.2.2")
 
-    api("net.thenextlvl.core:adapters:1.0.9")
+    api("net.thenextlvl.core:adapters:2.0.0")
 
     api(project(":api"))
 
