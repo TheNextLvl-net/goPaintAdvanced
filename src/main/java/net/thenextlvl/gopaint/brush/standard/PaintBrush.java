@@ -75,9 +75,9 @@ public class PaintBrush extends PatternBrush {
 
         if (!bukkit.getPlayer().isSneaking()) {
             provider.bundle().sendMessage(bukkit.getPlayer(), "brush.paint.point.set",
-                    Placeholder.parsed("x", String.valueOf(position.getX())),
-                    Placeholder.parsed("y", String.valueOf(position.getY())),
-                    Placeholder.parsed("z", String.valueOf(position.getZ())),
+                    Placeholder.parsed("x", String.valueOf(position.x())),
+                    Placeholder.parsed("y", String.valueOf(position.y())),
+                    Placeholder.parsed("z", String.valueOf(position.z())),
                     Placeholder.parsed("point", String.valueOf(selectedPoints.get(id).size()))
             );
             return;
@@ -98,11 +98,11 @@ public class PaintBrush extends PatternBrush {
                     pattern.random(settings.getRandom().nextInt(settings.getBlocks().size()));
 
                     var curve = new LinkedList<MutableBlockVector3>();
-                    curve.add(MutableBlockVector3.at(vector3.getX(), vector3.getY(), vector3.getZ()));
+                    curve.add(MutableBlockVector3.at(vector3.x(), vector3.y(), vector3.z()));
                     vectors.stream().skip(1).map(location -> MutableBlockVector3.at(
-                            vector3.getX() + location.getX() - first.getX(),
-                            vector3.getY() + location.getY() - first.getY(),
-                            vector3.getZ() + location.getZ() - first.getZ()
+                            vector3.x() + location.x() - first.x(),
+                            vector3.y() + location.y() - first.y(),
+                            vector3.z() + location.z() - first.z()
                     )).forEach(curve::add);
 
                     var spline = new BezierSpline(curve);

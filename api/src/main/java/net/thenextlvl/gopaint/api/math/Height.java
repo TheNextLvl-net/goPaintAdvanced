@@ -30,14 +30,14 @@ public class Height {
      */
     public static int getNearestNonEmptyBlock(Block block) {
         if (block.material().isAir()) {
-            for (var y = block.vector().getY(); y >= block.world().getMinY(); y--) {
-                if (block.world().getBlock(block.vector().getX(), y, block.vector().getZ()).isAir()) continue;
+            for (var y = block.vector().y(); y >= block.world().getMinY(); y--) {
+                if (block.world().getBlock(block.vector().x(), y, block.vector().z()).isAir()) continue;
                 return y + 1;
             }
             return block.world().getMinY();
         } else {
-            for (var y = block.vector().getY(); y <= block.world().getMaxY(); y++) {
-                if (!block.world().getBlock(block.vector().getX(), y, block.vector().getZ()).isAir()) continue;
+            for (var y = block.vector().y(); y <= block.world().getMaxY(); y++) {
+                if (!block.world().getBlock(block.vector().x(), y, block.vector().z()).isAir()) continue;
                 return y;
             }
             return block.world().getMaxY();

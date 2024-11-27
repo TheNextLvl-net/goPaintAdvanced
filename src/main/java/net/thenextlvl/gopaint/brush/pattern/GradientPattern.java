@@ -22,7 +22,7 @@ public record GradientPattern(
     @Override
     public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
         if (settings().getRandom().nextDouble() <= getRate(set)) return false;
-        return set.setBlock(extent, getRandomBlockState(set.getY()));
+        return set.setBlock(extent, getRandomBlockState(set.y()));
     }
 
     public BlockState getRandomBlockState(int altitude) {
@@ -33,7 +33,7 @@ public record GradientPattern(
 
     private int getRandom(int altitude) {
         if (settings().getBlocks().size() == 1) return 1;
-        var y = position().getY() - (settings().getBrushSize() / 2d);
+        var y = position().y() - (settings().getBrushSize() / 2d);
         var _y = (altitude - y) / settings().getBrushSize() * settings().getBlocks().size();
         return (int) (_y + (settings().getRandom().nextDouble() * 2 - 1) * (settings().getMixingStrength() / 100d));
     }

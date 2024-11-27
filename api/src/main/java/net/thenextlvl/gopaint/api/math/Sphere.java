@@ -30,9 +30,9 @@ public class Sphere {
         var loc1 = position.subtract((int) radius, (int) radius, (int) radius);
         var loc2 = position.add((int) radius, (int) radius, (int) radius);
 
-        for (var x = loc1.getX(); x <= loc2.getX(); x++) {
-            for (var y = loc1.getY(); y <= loc2.getY(); y++) {
-                for (var z = loc1.getZ(); z <= loc2.getZ(); z++) {
+        for (var x = loc1.x(); x <= loc2.x(); x++) {
+            for (var y = loc1.y(); y <= loc2.y(); y++) {
+                for (var z = loc1.z(); z <= loc2.z(); z++) {
                     var vector3 = BlockVector3.at(x, y, z);
                     if (vector3.distance(position) >= radius) continue;
                     vectors.add(vector3);
