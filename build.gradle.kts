@@ -26,10 +26,9 @@ repositories {
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("net.thenextlvl.core:annotations:2.0.1")
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("com.github.xmrafonso:hangar4j:1.2.2")
 
     api("net.thenextlvl.core:adapters:1.0.9")
 
@@ -69,8 +68,11 @@ paper {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+tasks.compileJava {
+    options.release.set(21)
 }
 
 tasks.shadowJar {
