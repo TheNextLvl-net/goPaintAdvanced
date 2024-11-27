@@ -5,10 +5,13 @@ plugins {
 }
 
 java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
     withSourcesJar()
     withJavadocJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.compileJava {
+    options.release.set(21)
 }
 
 group = rootProject.group
@@ -16,8 +19,9 @@ version = rootProject.version
 
 repositories {
     mavenCentral()
-    maven("https://repo.thenextlvl.net/releases")
+    maven("https://maven.enginehub.org/repo/")
     maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.thenextlvl.net/releases")
 }
 
 dependencies {
@@ -26,7 +30,10 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
 
     compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.45"))
-    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
+    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core") { isTransitive = false }
+    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") {
+        exclude("org.jetbrains", "annotations")
+    }
 
     api("net.thenextlvl.core:i18n:1.0.20")
     api("net.thenextlvl.core:paper:1.5.3")

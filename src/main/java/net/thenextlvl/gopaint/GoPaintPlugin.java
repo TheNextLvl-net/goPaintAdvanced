@@ -37,7 +37,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 
 @Accessors(fluent = true)
@@ -70,7 +69,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
             .create()
     ).validate().save();
 
-    private final VersionChecker versionChecker = new VersionChecker();
+    private final VersionChecker versionChecker = new VersionChecker(this);
     private final Metrics metrics = new Metrics(this, 22279);
 
     public GoPaintPlugin() {
@@ -78,20 +77,8 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     public void onLoad() {
-        versionChecker.retrieveLatestSupportedVersion(latest -> latest.ifPresent(version -> {
-            var running = VersionChecker.Version.parse(getPluginMeta().getVersion());
-            if (version.equals(running)) {
-                getComponentLogger().info("You are running the latest version of goPaintAdvanced");
-            } else if (version.compareTo(Objects.requireNonNull(running)) > 0) {
-                getComponentLogger().warn("An update for goPaintAdvanced is available");
-                getComponentLogger().warn("You are running version {}, the latest supported version is {}", running, version);
-                getComponentLogger().warn("Update at https://modrinth.com/plugin/gopaintadvanced or https://hangar.papermc.io/TheNextLvl/goPaintAdvanced");
-            } else {
-                getComponentLogger().warn("You are running a snapshot version of goPaintAdvanced");
-            }
-        }));
+        versionChecker.checkVersion();
     }
 
     @Override
