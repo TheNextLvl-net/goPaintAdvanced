@@ -4,10 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Axis;
 import org.bukkit.Material;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Set;
 
+@NullMarked
 public record PluginConfig(
         @SerializedName("brush") BrushConfig brushConfig,
         @SerializedName("thickness") ThicknessConfig thicknessConfig,

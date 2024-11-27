@@ -9,9 +9,11 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
+@NullMarked
 public record GradientPattern(
         EditSession session,
         BlockVector3 position,

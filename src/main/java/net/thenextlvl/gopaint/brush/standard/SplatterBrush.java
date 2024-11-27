@@ -29,7 +29,9 @@ import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.SplatterPattern;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class SplatterBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 

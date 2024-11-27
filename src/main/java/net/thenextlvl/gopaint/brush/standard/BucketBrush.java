@@ -32,7 +32,9 @@ import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class BucketBrush extends PatternBrush {
     private final GoPaintProvider provider;
 

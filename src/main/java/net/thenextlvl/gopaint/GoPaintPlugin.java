@@ -33,12 +33,14 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+@NullMarked
 @Accessors(fluent = true)
 public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 

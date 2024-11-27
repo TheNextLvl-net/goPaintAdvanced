@@ -11,10 +11,12 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collection;
 import java.util.stream.IntStream;
 
+@NullMarked
 public class BrushesMenu extends PagedGUI<GoPaintProvider, PatternBrush> {
     private final @Getter Options options = new Options(
             IntStream.range(0, getSize() - 9).toArray(),

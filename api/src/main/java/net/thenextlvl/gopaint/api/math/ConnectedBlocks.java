@@ -21,6 +21,7 @@ package net.thenextlvl.gopaint.api.math;
 import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@NullMarked
 public class ConnectedBlocks {
 
     private static final BlockFace[] faces = new BlockFace[]{

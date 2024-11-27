@@ -35,9 +35,11 @@ import net.thenextlvl.gopaint.api.math.curve.BezierSpline;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.SplinePattern;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 
+@NullMarked
 public class PaintBrush extends PatternBrush {
     private final Map<UUID, List<BlockVector3>> selectedPoints = new HashMap<>();
     private final GoPaintProvider provider;

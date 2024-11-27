@@ -19,10 +19,12 @@
 package net.thenextlvl.gopaint.api.math;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@NullMarked
 public class Sphere {
 
     public static Set<BlockVector3> getBlocksInRadius(BlockVector3 position, double radius) {

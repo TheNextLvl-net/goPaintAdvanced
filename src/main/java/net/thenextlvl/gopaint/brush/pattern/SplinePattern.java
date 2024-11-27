@@ -13,11 +13,13 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
 @Getter
 @Setter
+@NullMarked
 @RequiredArgsConstructor
 @Accessors(fluent = true, chain = false)
 public class SplinePattern implements BuildPattern {

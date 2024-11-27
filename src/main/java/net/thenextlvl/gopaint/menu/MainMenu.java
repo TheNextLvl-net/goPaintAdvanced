@@ -15,12 +15,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
+import org.jspecify.annotations.NullMarked;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+@NullMarked
 public class MainMenu extends AbstractGUI {
     private final PlayerBrushSettings settings;
     private final GoPaintPlugin plugin;

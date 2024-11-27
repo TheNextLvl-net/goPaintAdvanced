@@ -34,9 +34,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 
+@NullMarked
 @RequiredArgsConstructor
 public class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();

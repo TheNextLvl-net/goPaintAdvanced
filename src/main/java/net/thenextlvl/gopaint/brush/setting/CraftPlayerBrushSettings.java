@@ -38,8 +38,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Getter
+@NullMarked
 public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private static final Random random = new Random();
 

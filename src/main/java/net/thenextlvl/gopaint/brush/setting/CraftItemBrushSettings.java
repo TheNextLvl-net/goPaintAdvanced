@@ -25,11 +25,13 @@ import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Random;
 
 @Getter
+@NullMarked
 @Builder(builderClassName = "Builder")
 public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final PatternBrush brush;
