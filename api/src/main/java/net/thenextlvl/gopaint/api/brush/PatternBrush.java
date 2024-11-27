@@ -16,13 +16,15 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * This interface represents a brush used for painting blocks in a world.
  */
 @Getter
 @ToString
+@NullMarked
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, Brush {
@@ -75,7 +77,7 @@ public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, B
     public abstract void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException;
 
     @Override
-    public int compareTo(@NotNull PatternBrush brush) {
+    public int compareTo(@NonNull PatternBrush brush) {
         return key().compareTo(brush.key());
     }
 }

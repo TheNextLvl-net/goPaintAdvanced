@@ -5,12 +5,14 @@ import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 
 /**
  * This interface controls the brush settings for each player.
  */
+@NullMarked
 public interface BrushController {
     /**
      * Retrieves the brush settings for a specific player.

@@ -6,12 +6,14 @@ import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.brush.standard.*;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@NullMarked
 public class CraftBrushRegistry implements BrushRegistry {
     private final List<PatternBrush> brushes = new LinkedList<>();
 

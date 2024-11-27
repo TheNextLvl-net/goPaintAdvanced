@@ -11,7 +11,9 @@ import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.UnderlayPattern;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class UnderlayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 

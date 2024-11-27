@@ -1,6 +1,7 @@
 package net.thenextlvl.gopaint.api.brush;
 
 import net.kyori.adventure.key.Key;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -9,6 +10,7 @@ import java.util.stream.Stream;
  * The BrushRegistry interface represents a registry for brushes.
  * It provides methods to access, register, and unregister brushes.
  */
+@NullMarked
 public interface BrushRegistry {
     /**
      * Returns a stream of registered brushes.

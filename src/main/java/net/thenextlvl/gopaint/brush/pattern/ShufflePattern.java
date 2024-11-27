@@ -7,7 +7,9 @@ import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record ShufflePattern(
         EditSession session,
         BlockVector3 position,

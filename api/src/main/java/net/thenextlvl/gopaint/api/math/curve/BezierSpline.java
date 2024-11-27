@@ -22,12 +22,14 @@ import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 
 @Getter
+@NullMarked
 public class BezierSpline {
 
     private final MutableBlockVector3[] knots;

@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.translation.Translatable;
 import net.thenextlvl.gopaint.api.brush.mask.VisibleMask;
+import org.jspecify.annotations.NullMarked;
 
 @Getter
+@NullMarked
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 public enum SurfaceMode implements Translatable {

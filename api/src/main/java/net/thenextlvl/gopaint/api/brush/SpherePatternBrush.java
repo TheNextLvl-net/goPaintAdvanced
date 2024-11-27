@@ -5,7 +5,9 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.key.Key;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class SpherePatternBrush extends PatternBrush {
     public SpherePatternBrush(String headValue, Key key) {
         super(headValue, key);

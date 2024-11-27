@@ -15,9 +15,11 @@ import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
+@NullMarked
 @RequiredArgsConstructor
 @SuppressWarnings("UnstableApiUsage")
 public class GoPaintCommand {

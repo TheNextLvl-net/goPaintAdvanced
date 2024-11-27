@@ -8,7 +8,9 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record UnderlayPattern(
         EditSession session,
         BlockVector3 position,

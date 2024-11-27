@@ -9,7 +9,9 @@ import net.thenextlvl.gopaint.api.brush.pattern.BuildPattern;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Height;
 import net.thenextlvl.gopaint.api.model.Block;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public record FracturePattern(
         EditSession session,
         BlockVector3 position,

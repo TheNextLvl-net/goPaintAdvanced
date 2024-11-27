@@ -19,7 +19,9 @@
 package net.thenextlvl.gopaint.api.math;
 
 import net.thenextlvl.gopaint.api.model.Block;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class Height {
 
     /**
