@@ -86,13 +86,13 @@ public class BezierSplineSegment {
     @Contract(pure = true)
     public BlockVector3 getPoint(double factor) {
         var x = Objects.requireNonNullElseGet(xFlat, () -> calculatePoint(
-                factor, startPoint.getX(), intermediatePoint1.getX(), intermediatePoint2.getX(), endPoint.getX()
+                factor, startPoint.x(), intermediatePoint1.x(), intermediatePoint2.x(), endPoint.x()
         ));
         var y = Objects.requireNonNullElseGet(yFlat, () -> calculatePoint(
-                factor, startPoint.getY(), intermediatePoint1.getY(), intermediatePoint2.getY(), endPoint.getY()
+                factor, startPoint.y(), intermediatePoint1.y(), intermediatePoint2.y(), endPoint.y()
         ));
         var z = Objects.requireNonNullElseGet(zFlat, () -> calculatePoint(
-                factor, startPoint.getZ(), intermediatePoint1.getZ(), intermediatePoint2.getZ(), endPoint.getZ()
+                factor, startPoint.z(), intermediatePoint1.z(), intermediatePoint2.z(), endPoint.z()
         ));
         return BlockVector3.at(x, y, z);
     }
