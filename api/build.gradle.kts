@@ -35,7 +35,7 @@ dependencies {
     }
 
     api("net.thenextlvl.core:i18n:1.0.20")
-    api("net.thenextlvl.core:paper:1.5.3")
+    api("net.thenextlvl.core:paper:2.0.2")
 
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
