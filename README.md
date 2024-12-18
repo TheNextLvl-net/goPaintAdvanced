@@ -2,9 +2,9 @@
 
 ---
 
-**goPaint** is a plugin designed to simplify painting inside Minecraft.
-goPaintAdvanced is a fork of the [original goPaint plugin](https://github.com/Arcaniax-Development/goPaint_1.14), featuring numerous improvements and bug fixes.
-Our goal is to stay up-to-date, leveraging modern technologies rather than relying on outdated or obsolete code.
+goPaintAdvanced is a modern and maintained drop-in replacement for goPaint.
+It offers huge performance improvements and bug fixes.
+We aim to be always up-to-date and use new technology instead of hanging on to old and dead code.
 
 The primary focus of goPaintAdvanced is to drastically improve performance by leveraging a multithreaded architecture,
 ensuring smoother and faster brush operations, even in demanding environments.
