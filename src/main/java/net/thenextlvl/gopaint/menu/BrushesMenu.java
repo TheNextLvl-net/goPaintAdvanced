@@ -1,6 +1,6 @@
 package net.thenextlvl.gopaint.menu;
 
-import core.paper.gui.PagedGUI;
+import core.paper.gui.PaginatedGUI;
 import core.paper.item.ActionItem;
 import core.paper.item.ItemBuilder;
 import lombok.Getter;
@@ -17,8 +17,8 @@ import java.util.Collection;
 import java.util.stream.IntStream;
 
 @NullMarked
-public class BrushesMenu extends PagedGUI<GoPaintProvider, PatternBrush> {
-    private final @Getter Options options = new Options(
+public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
+    private final @Getter Pagination pagination = new Pagination(
             IntStream.range(0, getSize() - 9).toArray(),
             getSize() - 6,
             getSize() - 4
@@ -33,14 +33,14 @@ public class BrushesMenu extends PagedGUI<GoPaintProvider, PatternBrush> {
 
     @Override
     public void formatDefault() {
-        var placeholder = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).hideTooltip(true);
+        var placeholder = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip();
         IntStream.range(0, getSize()).forEach(value -> setSlotIfAbsent(value, placeholder));
     }
 
     @Override
     public ActionItem constructItem(PatternBrush brush) {
-        return new ItemBuilder(Material.PLAYER_HEAD)
-                .headValue(brush.getHeadValue())
+        return ItemBuilder.of(Material.PLAYER_HEAD)
+                .profileValue(brush.getHeadValue())
                 .itemName(brush.getName(owner).color(NamedTextColor.GOLD))
                 .lore(brush.getDescription(owner))
                 .withAction(() -> {

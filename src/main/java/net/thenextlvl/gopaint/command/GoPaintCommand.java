@@ -3,7 +3,6 @@ package net.thenextlvl.gopaint.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import core.paper.item.ItemBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -15,6 +14,7 @@ import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
@@ -170,7 +170,7 @@ public class GoPaintCommand {
         }
 
         if (inventory.getItemInMainHand().isEmpty()) {
-            inventory.setItemInMainHand(new ItemBuilder(type));
+            inventory.setItemInMainHand(new ItemStack(type));
             return true;
         }
 
@@ -178,7 +178,7 @@ public class GoPaintCommand {
         if (empty == -1) return false;
 
         inventory.setItem(empty, inventory.getItemInMainHand());
-        inventory.setItemInMainHand(new ItemBuilder(type));
+        inventory.setItemInMainHand(new ItemStack(type));
         return true;
     }
 }
