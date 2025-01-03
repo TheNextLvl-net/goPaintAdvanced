@@ -32,11 +32,15 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @NullMarked
 @RequiredArgsConstructor
@@ -52,14 +56,7 @@ public class CraftBrushController implements BrushController {
 
     @Override
     public Optional<ItemBrushSettings> parseBrushSettings(ItemStack itemStack) {
-        if (!itemStack.hasItemMeta()) return Optional.empty();
-        return Optional.ofNullable(itemStack.getItemMeta())
-                .flatMap(this::parseBrushSettings);
-    }
-
-    @Override
-    public Optional<ItemBrushSettings> parseBrushSettings(ItemMeta itemMeta) {
-        var container = itemMeta.getPersistentDataContainer();
+        var container = itemStack.getPersistentDataContainer();
 
         var brushSize = container.get(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER);
         var maskEnabled = container.get(new NamespacedKey("gopaint", "mask_enabled"), PersistentDataType.BOOLEAN);

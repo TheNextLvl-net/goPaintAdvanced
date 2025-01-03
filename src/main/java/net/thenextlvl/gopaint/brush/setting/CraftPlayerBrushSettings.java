@@ -19,6 +19,8 @@
 package net.thenextlvl.gopaint.brush.setting;
 
 import core.paper.gui.AbstractGUI;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.ItemLore;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -29,7 +31,15 @@ import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
-import net.thenextlvl.gopaint.brush.standard.*;
+import net.thenextlvl.gopaint.brush.standard.AngleBrush;
+import net.thenextlvl.gopaint.brush.standard.DiskBrush;
+import net.thenextlvl.gopaint.brush.standard.FractureBrush;
+import net.thenextlvl.gopaint.brush.standard.GradientBrush;
+import net.thenextlvl.gopaint.brush.standard.OverlayBrush;
+import net.thenextlvl.gopaint.brush.standard.PaintBrush;
+import net.thenextlvl.gopaint.brush.standard.SplatterBrush;
+import net.thenextlvl.gopaint.brush.standard.SprayBrush;
+import net.thenextlvl.gopaint.brush.standard.UnderlayBrush;
 import net.thenextlvl.gopaint.menu.BrushesMenu;
 import net.thenextlvl.gopaint.menu.MainMenu;
 import org.bukkit.Axis;
@@ -238,62 +248,63 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     @Override
     public boolean exportSettings(ItemStack itemStack) {
         if (itemStack.getType().equals(plugin.config().brushConfig().defaultBrushType())) return false;
+
+        var lines = new ArrayList<Component>();
+        lines.add(Component.empty());
+        lines.add(plugin.bundle().component(player, "brush.exported.size",
+                Placeholder.parsed("size", String.valueOf(getBrushSize()))));
+        if (getBrush() instanceof SprayBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.chance",
+                    Placeholder.parsed("chance", String.valueOf(getChance()))));
+        } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.thickness",
+                    Placeholder.parsed("thickness", String.valueOf(getThickness()))));
+        } else if (getBrush() instanceof DiskBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.axis",
+                    Placeholder.parsed("axis", getAxis().name())));
+        } else if (getBrush() instanceof AngleBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.angle.distance",
+                    Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
+            lines.add(plugin.bundle().component(player, "brush.exported.angle.height",
+                    Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
+        } else if (getBrush() instanceof SplatterBrush || getBrush() instanceof PaintBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.falloff",
+                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
+        } else if (getBrush() instanceof GradientBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.mixing",
+                    Placeholder.parsed("mixing", String.valueOf(getMixingStrength()))));
+            lines.add(plugin.bundle().component(player, "brush.exported.falloff",
+                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
+        } else if (getBrush() instanceof FractureBrush) {
+            lines.add(plugin.bundle().component(player, "brush.exported.fracture",
+                    Placeholder.parsed("fracture", String.valueOf(getFractureStrength()))));
+        }
+        if (!blocks.isEmpty()) {
+            var blocks = getBlocks().stream()
+                    .map(Material::translationKey)
+                    .map(Component::translatable)
+                    .toList();
+            lines.add(plugin.bundle().component(player, "brush.exported.blocks",
+                    Placeholder.component("blocks", Component.join(JoinConfiguration.commas(true), blocks))));
+        }
+
+        if (isMaskEnabled()) {
+            lines.add(plugin.bundle().component(player, "brush.exported.mask",
+                    Placeholder.component("mask", Component.translatable(getMask().translationKey()))));
+        }
+
+        if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
+            var mode = plugin.bundle().component(player, getSurfaceMode().translationKey());
+            lines.add(plugin.bundle().component(player, "brush.exported.surface-mode",
+                    Placeholder.component("mode", mode)));
+        }
+
+        itemStack.setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
+        itemStack.setData(DataComponentTypes.ITEM_NAME, plugin.bundle().component(player, "brush.exported.name",
+                Placeholder.component("brush", getBrush().getName(player))));
+        itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lines));
+
         return !itemStack.getType().isBlock() && itemStack.editMeta(itemMeta -> {
-            var lore = new ArrayList<Component>();
-            lore.add(Component.empty());
-            lore.add(plugin.bundle().component(player, "brush.exported.size",
-                    Placeholder.parsed("size", String.valueOf(getBrushSize()))));
-            if (getBrush() instanceof SprayBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.chance",
-                        Placeholder.parsed("chance", String.valueOf(getChance()))));
-            } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.thickness",
-                        Placeholder.parsed("thickness", String.valueOf(getThickness()))));
-            } else if (getBrush() instanceof DiskBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.axis",
-                        Placeholder.parsed("axis", getAxis().name())));
-            } else if (getBrush() instanceof AngleBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.angle.distance",
-                        Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
-                lore.add(plugin.bundle().component(player, "brush.exported.angle.height",
-                        Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
-            } else if (getBrush() instanceof SplatterBrush || getBrush() instanceof PaintBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.falloff",
-                        Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
-            } else if (getBrush() instanceof GradientBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.mixing",
-                        Placeholder.parsed("mixing", String.valueOf(getMixingStrength()))));
-                lore.add(plugin.bundle().component(player, "brush.exported.falloff",
-                        Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
-            } else if (getBrush() instanceof FractureBrush) {
-                lore.add(plugin.bundle().component(player, "brush.exported.fracture",
-                        Placeholder.parsed("fracture", String.valueOf(getFractureStrength()))));
-            }
-            if (!blocks.isEmpty()) {
-                var blocks = getBlocks().stream()
-                        .map(Material::translationKey)
-                        .map(Component::translatable)
-                        .toList();
-                lore.add(plugin.bundle().component(player, "brush.exported.blocks",
-                        Placeholder.component("blocks", Component.join(JoinConfiguration.commas(true), blocks))));
-            }
-
-            if (isMaskEnabled()) {
-                lore.add(plugin.bundle().component(player, "brush.exported.mask",
-                        Placeholder.component("mask", Component.translatable(getMask().translationKey()))));
-            }
-
-            if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-                var mode = plugin.bundle().component(player, getSurfaceMode().translationKey());
-                lore.add(plugin.bundle().component(player, "brush.exported.surface-mode",
-                        Placeholder.component("mode", mode)));
-            }
-
-            itemMeta.itemName(plugin.bundle().component(player, "brush.exported.name",
-                    Placeholder.component("brush", getBrush().getName(player))));
-            itemMeta.lore(lore);
-            itemMeta.setEnchantmentGlintOverride(true);
-
             var container = itemMeta.getPersistentDataContainer();
 
             container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
