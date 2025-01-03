@@ -21,7 +21,6 @@ import java.util.List;
 
 @NullMarked
 @RequiredArgsConstructor
-@SuppressWarnings("UnstableApiUsage")
 public class GoPaintCommand {
     private final GoPaintPlugin plugin;
 
