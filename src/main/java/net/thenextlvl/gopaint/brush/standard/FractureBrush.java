@@ -23,12 +23,12 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.SpherePatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.FracturePattern;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -38,7 +38,7 @@ public class FractureBrush extends SpherePatternBrush {
     public FractureBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNkZjczZWVlNjIyNGM1YzVkOTQ4ZDJhMzQ1ZGUyNWYyMDhjYmQ5YWY3MTA4Y2UxZTFiNjFhNTg2ZGU5OGIyIn19fQ==",
-                new NamespacedKey("gopaint", "fracture_brush")
+                Key.key("gopaint", "fracture_brush")
         );
         this.provider = provider;
     }

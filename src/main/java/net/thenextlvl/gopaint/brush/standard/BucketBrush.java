@@ -24,6 +24,7 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
@@ -31,7 +32,6 @@ import net.thenextlvl.gopaint.api.math.ConnectedBlocks;
 import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -41,7 +41,7 @@ public class BucketBrush extends PatternBrush {
     public BucketBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTAxOGI0NTc0OTM5Nzg4YTJhZDU1NTJiOTEyZDY3ODEwNjk4ODhjNTEyMzRhNGExM2VhZGI3ZDRjOTc5YzkzIn19fQ==",
-                new NamespacedKey("gopaint", "bucket_brush")
+                Key.key("gopaint", "bucket_brush")
         );
         this.provider = provider;
     }

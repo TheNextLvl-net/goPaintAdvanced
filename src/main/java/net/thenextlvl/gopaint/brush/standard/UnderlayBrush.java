@@ -5,12 +5,12 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.SpherePatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.UnderlayPattern;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -20,7 +20,7 @@ public class UnderlayBrush extends SpherePatternBrush {
     public UnderlayBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzFlNTY1YzFlMDVhODIzZDgxNjMwMjY4N2E5OGQ1ZmUyZDA2NmFhMTkxNDMzNjg4NDRhMGM0MzAyNzYyNDljMyJ9fX0=",
-                new NamespacedKey("gopaint", "underlay_brush")
+                Key.key("gopaint", "underlay_brush")
         );
         this.provider = provider;
     }

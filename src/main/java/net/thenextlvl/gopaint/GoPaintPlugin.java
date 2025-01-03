@@ -29,7 +29,6 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -58,7 +57,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
-            new PluginConfig.BrushConfig(Material.FEATHER, new NamespacedKey("gopaint", "sphere_brush"), 100, 10, 50,
+            new PluginConfig.BrushConfig(Material.FEATHER, Key.key("gopaint", "sphere_brush"), 100, 10, 50,
                     Axis.Y, 50, 50, Set.of("disabled"), true, Material.SPONGE, true, SurfaceMode.EXPOSED,
                     List.of(Material.STONE)),
             new PluginConfig.ThicknessConfig(1, 5),
