@@ -17,7 +17,6 @@ version = "1.4.0"
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
     maven("https://repo.thenextlvl.net/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
