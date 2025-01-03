@@ -20,7 +20,6 @@ package net.thenextlvl.gopaint.api.math.curve;
 
 import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
-import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 
@@ -28,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 
-@Getter
 @NullMarked
 public class BezierSpline {
 
@@ -146,6 +144,18 @@ public class BezierSpline {
         xFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setX(value)));
         yFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setY(value)));
         zFlat.ifPresent(value -> Arrays.stream(segments).forEach(segment -> segment.setZ(value)));
+    }
+
+    public BezierSplineSegment[] getSegments() {
+        return segments;
+    }
+
+    public MutableBlockVector3[] getKnots() {
+        return knots;
+    }
+
+    public double getCurveLength() {
+        return curveLength;
     }
 
     @Override

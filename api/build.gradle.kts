@@ -25,7 +25,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.51"))
@@ -36,8 +35,6 @@ dependencies {
 
     api("net.thenextlvl.core:i18n:1.0.20")
     api("net.thenextlvl.core:paper:2.0.3")
-
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 publishing {
