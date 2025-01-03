@@ -20,7 +20,7 @@ version = rootProject.version
 repositories {
     mavenCentral()
     maven("https://maven.enginehub.org/repo/")
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
 }
 
