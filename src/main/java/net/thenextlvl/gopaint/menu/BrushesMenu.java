@@ -3,7 +3,6 @@ package net.thenextlvl.gopaint.menu;
 import core.paper.gui.PaginatedGUI;
 import core.paper.item.ActionItem;
 import core.paper.item.ItemBuilder;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
@@ -18,7 +17,7 @@ import java.util.stream.IntStream;
 
 @NullMarked
 public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
-    private final @Getter Pagination pagination = new Pagination(
+    private final Pagination pagination = new Pagination(
             IntStream.range(0, getSize() - 9).toArray(),
             getSize() - 6,
             getSize() - 4
@@ -58,5 +57,10 @@ public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     @Override
     public Collection<PatternBrush> getElements() {
         return plugin.brushRegistry().getBrushes().toList();
+    }
+
+    @Override
+    public Pagination getPagination() {
+        return pagination;
     }
 }
