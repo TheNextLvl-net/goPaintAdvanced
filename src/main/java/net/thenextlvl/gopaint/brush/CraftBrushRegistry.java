@@ -3,8 +3,8 @@ package net.thenextlvl.gopaint.brush;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
+import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.brush.standard.*;
 import org.jspecify.annotations.NullMarked;
 

@@ -18,7 +18,6 @@
  */
 package net.thenextlvl.gopaint.brush;
 
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.BrushController;
@@ -43,10 +42,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @NullMarked
-@RequiredArgsConstructor
 public class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();
     private final GoPaintPlugin plugin;
+
+    public CraftBrushController(GoPaintPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public PlayerBrushSettings getBrushSettings(Player player) {
