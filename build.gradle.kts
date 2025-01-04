@@ -22,14 +22,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     implementation("net.thenextlvl.core:adapters:2.0.1")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation(project(":api"))
-
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 paper {
