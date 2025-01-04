@@ -24,7 +24,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.function.mask.MaskIntersection;
 import com.sk89q.worldedit.session.request.Request;
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
@@ -36,9 +35,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-@RequiredArgsConstructor
 public final class InteractListener implements Listener {
     private final GoPaintPlugin plugin;
+
+    public InteractListener(GoPaintPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClick(PlayerInteractEvent event) {
