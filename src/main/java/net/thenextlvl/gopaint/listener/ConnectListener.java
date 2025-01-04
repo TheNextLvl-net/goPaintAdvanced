@@ -18,7 +18,6 @@
  */
 package net.thenextlvl.gopaint.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,9 +26,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-@RequiredArgsConstructor
 public class ConnectListener implements Listener {
     private final GoPaintPlugin plugin;
+
+    public ConnectListener(GoPaintPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {

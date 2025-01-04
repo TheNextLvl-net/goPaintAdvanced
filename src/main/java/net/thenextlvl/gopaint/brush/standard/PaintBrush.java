@@ -26,6 +26,7 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
@@ -34,10 +35,14 @@ import net.thenextlvl.gopaint.api.math.Sphere;
 import net.thenextlvl.gopaint.api.math.curve.BezierSpline;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.SplinePattern;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @NullMarked
 public class PaintBrush extends PatternBrush {
@@ -47,7 +52,7 @@ public class PaintBrush extends PatternBrush {
     public PaintBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=",
-                new NamespacedKey("gopaint", "paint_brush")
+                Key.key("gopaint", "paint_brush")
         );
         this.provider = provider;
     }

@@ -2,7 +2,6 @@ package net.thenextlvl.gopaint.menu;
 
 import core.paper.gui.AbstractGUI;
 import core.paper.item.ItemBuilder;
-import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -34,7 +33,7 @@ public class MainMenu extends AbstractGUI {
     private final PlayerBrushSettings settings;
     private final GoPaintPlugin plugin;
 
-    private final @Getter Inventory inventory;
+    private final Inventory inventory;
 
     public MainMenu(GoPaintPlugin plugin, PlayerBrushSettings settings, Player owner) {
         super(owner, plugin.bundle().component(owner, "menu.main.title"));
@@ -324,5 +323,9 @@ public class MainMenu extends AbstractGUI {
 
         inventory.setItem(2, orangeGlassPane);
         inventory.setItem(20, orangeGlassPane);
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
     }
 }

@@ -18,10 +18,17 @@
  */
 package net.thenextlvl.gopaint.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
-import net.thenextlvl.gopaint.brush.standard.*;
+import net.thenextlvl.gopaint.brush.standard.AngleBrush;
+import net.thenextlvl.gopaint.brush.standard.DiskBrush;
+import net.thenextlvl.gopaint.brush.standard.FractureBrush;
+import net.thenextlvl.gopaint.brush.standard.GradientBrush;
+import net.thenextlvl.gopaint.brush.standard.OverlayBrush;
+import net.thenextlvl.gopaint.brush.standard.PaintBrush;
+import net.thenextlvl.gopaint.brush.standard.SplatterBrush;
+import net.thenextlvl.gopaint.brush.standard.SprayBrush;
+import net.thenextlvl.gopaint.brush.standard.UnderlayBrush;
 import net.thenextlvl.gopaint.menu.MainMenu;
 import org.bukkit.Axis;
 import org.bukkit.entity.Player;
@@ -34,9 +41,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-@RequiredArgsConstructor
 public final class InventoryListener implements Listener {
     private final GoPaintPlugin plugin;
+
+    public InventoryListener(GoPaintPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void menuClick(InventoryClickEvent event) {

@@ -20,19 +20,13 @@ package net.thenextlvl.gopaint.api.math.curve;
 
 import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@Getter
-@Setter
 @NullMarked
-@RequiredArgsConstructor
 public class BezierSplineSegment {
 
     private final MutableBlockVector3 startPoint;
@@ -48,6 +42,11 @@ public class BezierSplineSegment {
     private @Nullable Double xFlat, yFlat, zFlat;
 
     private MutableBlockVector3 result = MutableBlockVector3.at(0, 0, 0);
+
+    public BezierSplineSegment(MutableBlockVector3 startPoint, MutableBlockVector3 endPoint) {
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+    }
 
     public void setX(double xFlat) {
         startPoint.mutX(xFlat);
@@ -103,5 +102,85 @@ public class BezierSplineSegment {
     private double calculatePoint(double factor, double startPoint, double intermediatePoint1, double intermediatePoint2, double endPoint) {
         return (Math.pow(1 - factor, 3) * startPoint) + (3 * Math.pow(1 - factor, 2) * factor * intermediatePoint1)
                + (3 * (1 - factor) * factor * factor * intermediatePoint2) + (Math.pow(factor, 3) * endPoint);
+    }
+
+    public MutableBlockVector3 getStartPoint() {
+        return startPoint;
+    }
+
+    public MutableBlockVector3 getEndPoint() {
+        return endPoint;
+    }
+
+    public MutableBlockVector3 getResult() {
+        return result;
+    }
+
+    public MutableBlockVector3 getIntermediatePoint1() {
+        return intermediatePoint1;
+    }
+
+    public MutableBlockVector3 getIntermediatePoint2() {
+        return intermediatePoint2;
+    }
+
+    public float getCoefficient1() {
+        return coefficient1;
+    }
+
+    public float getCoefficient2() {
+        return coefficient2;
+    }
+
+    public float getCoefficient3() {
+        return coefficient3;
+    }
+
+    public @Nullable Double getXFlat() {
+        return xFlat;
+    }
+
+    public @Nullable Double getYFlat() {
+        return yFlat;
+    }
+
+    public @Nullable Double getZFlat() {
+        return zFlat;
+    }
+
+    public void setResult(MutableBlockVector3 result) {
+        this.result = result;
+    }
+
+    public void setIntermediatePoint1(MutableBlockVector3 intermediatePoint1) {
+        this.intermediatePoint1 = intermediatePoint1;
+    }
+
+    public void setIntermediatePoint2(MutableBlockVector3 intermediatePoint2) {
+        this.intermediatePoint2 = intermediatePoint2;
+    }
+
+    public void setCoefficient1(float coefficient1) {
+        this.coefficient1 = coefficient1;
+    }
+
+    public void setCoefficient2(float coefficient2) {
+        this.coefficient2 = coefficient2;
+    }
+
+    public void setCoefficient3(float coefficient3) {
+        this.coefficient3 = coefficient3;
+    }
+
+    public void setXFlat(@Nullable Double xFlat) {
+        this.xFlat = xFlat;
+    }
+
+    public void setYFlat(@Nullable Double yFlat) {
+        this.yFlat = yFlat;
+    }
+
+    public void setZFlat(@Nullable Double zFlat) {
+        this.zFlat = zFlat;
     }
 }

@@ -7,7 +7,6 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
@@ -20,9 +19,12 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-@RequiredArgsConstructor
 public class GoPaintCommand {
     private final GoPaintPlugin plugin;
+
+    public GoPaintCommand(GoPaintPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public void register() {
         var command = Commands.literal("gopaint")

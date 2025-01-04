@@ -23,12 +23,12 @@ import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.SpherePatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
 import net.thenextlvl.gopaint.brush.pattern.SplatterPattern;
-import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -38,7 +38,7 @@ public class SplatterBrush extends SpherePatternBrush {
     public SplatterBrush(GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19",
-                new NamespacedKey("gopaint", "splatter_brush")
+                Key.key("gopaint", "splatter_brush")
         );
         this.provider = provider;
     }

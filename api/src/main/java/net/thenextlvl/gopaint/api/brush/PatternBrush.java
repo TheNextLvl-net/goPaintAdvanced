@@ -6,11 +6,6 @@ import com.sk89q.worldedit.command.tool.brush.Brush;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
@@ -19,14 +14,12 @@ import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.Objects;
+
 /**
  * This interface represents a brush used for painting blocks in a world.
  */
-@Getter
-@ToString
 @NullMarked
-@EqualsAndHashCode
-@RequiredArgsConstructor
 public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, Brush {
     /**
      * Retrieves the base64 head value.
@@ -35,7 +28,12 @@ public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, B
     /**
      * The key that identifies this brush
      */
-    private final @Accessors(fluent = true) Key key;
+    private final Key key;
+
+    public PatternBrush(String headValue, Key key) {
+        this.headValue = headValue;
+        this.key = key;
+    }
 
     /**
      * Retrieves the localized name of this brush.
@@ -76,8 +74,36 @@ public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, B
     @Override
     public abstract void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException;
 
+    public String getHeadValue() {
+        return headValue;
+    }
+
+    @Override
+    public Key key() {
+        return key;
+    }
+
     @Override
     public int compareTo(@NonNull PatternBrush brush) {
         return key().compareTo(brush.key());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PatternBrush that = (PatternBrush) o;
+        return Objects.equals(key, that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(key);
+    }
+
+    @Override
+    public String toString() {
+        return "PatternBrush{" +
+               "key=" + key +
+               '}';
     }
 }
