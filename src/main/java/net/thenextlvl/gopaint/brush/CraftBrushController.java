@@ -98,21 +98,8 @@ public class CraftBrushController implements BrushController {
                 .filter(Objects::nonNull)
                 .toList();
 
-        return Optional.of(CraftItemBrushSettings.builder()
-                .brushSize(brushSize)
-                .maskEnabled(maskEnabled)
-                .surfaceMode(surfaceMode)
-                .brush(brush)
-                .chance(chance)
-                .thickness(thickness)
-                .fractureStrength(fractureStrength)
-                .angleDistance(angleDistance)
-                .falloffStrength(falloffStrength)
-                .mixingStrength(mixingStrength)
-                .angleHeightDifference(angleHeightDifference)
-                .axis(axis)
-                .mask(mask)
-                .blocks(blocks).build());
+        return Optional.of(new CraftItemBrushSettings(brush, mask, blocks, axis, surfaceMode, maskEnabled, brushSize,
+                chance, thickness, angleDistance, fractureStrength, falloffStrength, mixingStrength, angleHeightDifference));
     }
 
     @Override

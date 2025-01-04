@@ -18,8 +18,6 @@
  */
 package net.thenextlvl.gopaint.brush.setting;
 
-import lombok.Builder;
-import lombok.Getter;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
@@ -30,9 +28,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 import java.util.Random;
 
-@Getter
 @NullMarked
-@Builder(builderClassName = "Builder")
 public final class CraftItemBrushSettings implements ItemBrushSettings {
     private final PatternBrush brush;
     private final Material mask;
@@ -51,8 +47,96 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
 
     private static final Random random = new Random();
 
+    public CraftItemBrushSettings(PatternBrush brush, Material mask, List<Material> blocks, Axis axis, SurfaceMode surfaceMode,
+                           boolean maskEnabled, int brushSize, int chance, int thickness, int angleDistance,
+                           int fractureStrength, int falloffStrength, int mixingStrength, double angleHeightDifference) {
+        this.brush = brush;
+        this.mask = mask;
+        this.blocks = blocks;
+        this.axis = axis;
+        this.surfaceMode = surfaceMode;
+        this.maskEnabled = maskEnabled;
+        this.brushSize = brushSize;
+        this.chance = chance;
+        this.thickness = thickness;
+        this.angleDistance = angleDistance;
+        this.fractureStrength = fractureStrength;
+        this.falloffStrength = falloffStrength;
+        this.mixingStrength = mixingStrength;
+        this.angleHeightDifference = angleHeightDifference;
+    }
+
     @Override
     public Random getRandom() {
         return random;
+    }
+
+    public PatternBrush getBrush() {
+        return this.brush;
+    }
+
+    @Override
+    public Material getMask() {
+        return this.mask;
+    }
+
+    @Override
+    public List<Material> getBlocks() {
+        return this.blocks;
+    }
+
+    @Override
+    public Axis getAxis() {
+        return this.axis;
+    }
+
+    @Override
+    public SurfaceMode getSurfaceMode() {
+        return this.surfaceMode;
+    }
+
+    @Override
+    public boolean isMaskEnabled() {
+        return this.maskEnabled;
+    }
+
+    @Override
+    public int getBrushSize() {
+        return this.brushSize;
+    }
+
+    @Override
+    public int getChance() {
+        return this.chance;
+    }
+
+    @Override
+    public int getThickness() {
+        return this.thickness;
+    }
+
+    @Override
+    public int getAngleDistance() {
+        return this.angleDistance;
+    }
+
+    @Override
+    public int getFractureStrength() {
+        return this.fractureStrength;
+    }
+
+    @Override
+    public int getFalloffStrength() {
+        return this.falloffStrength;
+    }
+
+    @Override
+    public int getMixingStrength() {
+        return this.mixingStrength;
+    }
+
+    @Override
+    public double getAngleHeightDifference() {
+        return this.angleHeightDifference;
     }
 }

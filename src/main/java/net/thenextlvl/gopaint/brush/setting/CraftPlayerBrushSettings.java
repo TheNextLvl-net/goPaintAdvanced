@@ -21,7 +21,6 @@ package net.thenextlvl.gopaint.brush.setting;
 import core.paper.gui.AbstractGUI;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemLore;
-import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -57,7 +56,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Getter
 @NullMarked
 public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     private static final Random random = new Random();
@@ -343,5 +341,77 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         setBrush(settings.getBrush());
         setMask(settings.getMask());
         setBlocks(settings.getBlocks());
+    }
+
+    public GoPaintPlugin getPlugin() {
+        return this.plugin;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public int getBrushSize() {
+        return this.brushSize;
+    }
+
+    public int getChance() {
+        return this.chance;
+    }
+
+    public int getThickness() {
+        return this.thickness;
+    }
+
+    public int getFractureStrength() {
+        return this.fractureStrength;
+    }
+
+    public int getAngleDistance() {
+        return this.angleDistance;
+    }
+
+    public int getFalloffStrength() {
+        return this.falloffStrength;
+    }
+
+    public int getMixingStrength() {
+        return this.mixingStrength;
+    }
+
+    public double getAngleHeightDifference() {
+        return this.angleHeightDifference;
+    }
+
+    public Axis getAxis() {
+        return this.axis;
+    }
+
+    public boolean isMaskEnabled() {
+        return this.maskEnabled;
+    }
+
+    public SurfaceMode getSurfaceMode() {
+        return this.surfaceMode;
+    }
+
+    public PatternBrush getBrush() {
+        return this.brush;
+    }
+
+    public Material getMask() {
+        return this.mask;
+    }
+
+    public List<Material> getBlocks() {
+        return this.blocks;
+    }
+
+    public MainMenu getMainMenu() {
+        return this.mainMenu;
     }
 }
