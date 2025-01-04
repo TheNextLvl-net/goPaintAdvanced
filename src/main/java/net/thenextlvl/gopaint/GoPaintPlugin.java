@@ -7,8 +7,6 @@ import core.i18n.file.ComponentBundle;
 import core.io.IO;
 import core.paper.adapters.inventory.MaterialAdapter;
 import core.paper.adapters.key.KeyAdapter;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -40,11 +38,9 @@ import java.util.Locale;
 import java.util.Set;
 
 @NullMarked
-@Accessors(fluent = true)
 public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
-
     private final File translations = new File(getDataFolder(), "translations");
-    private final @Getter ComponentBundle bundle = new ComponentBundle(translations, audience ->
+    private final ComponentBundle bundle = new ComponentBundle(translations, audience ->
             audience instanceof Player player ? player.locale() : Locale.US)
             .register("messages", Locale.US)
             .register("messages_german", Locale.GERMANY)
@@ -53,8 +49,8 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
                     Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
             )).build());
 
-    private final @Getter BrushController brushController = new CraftBrushController(this);
-    private final @Getter BrushRegistry brushRegistry = new CraftBrushRegistry(this);
+    private final BrushController brushController = new CraftBrushController(this);
+    private final BrushRegistry brushRegistry = new CraftBrushRegistry(this);
 
     private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
             new PluginConfig.BrushConfig(Material.FEATHER, Key.key("gopaint", "sphere_brush"), 100, 10, 50,
@@ -115,5 +111,17 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     public PluginConfig config() {
         return configFile.getRoot();
+    }
+
+    public ComponentBundle bundle() {
+        return this.bundle;
+    }
+
+    public BrushController brushController() {
+        return this.brushController;
+    }
+
+    public BrushRegistry brushRegistry() {
+        return this.brushRegistry;
     }
 }
