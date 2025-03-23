@@ -246,6 +246,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     @Override
     public boolean exportSettings(ItemStack itemStack) {
         if (itemStack.getType().equals(plugin.config().brushConfig().defaultBrushType())) return false;
+        if (itemStack.getType().isBlock()) return false;
 
         var lines = new ArrayList<Component>();
         lines.add(Component.empty());
@@ -302,7 +303,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 Placeholder.component("brush", getBrush().getName(player))));
         itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lines));
 
-        return !itemStack.getType().isBlock() && itemStack.editMeta(itemMeta -> {
+        return itemStack.editMeta(itemMeta -> {
             var container = itemMeta.getPersistentDataContainer();
 
             container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
