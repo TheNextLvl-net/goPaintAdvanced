@@ -7,6 +7,7 @@ import core.i18n.file.ComponentBundle;
 import core.io.IO;
 import core.paper.adapters.inventory.MaterialAdapter;
 import core.paper.adapters.key.KeyAdapter;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -105,7 +106,8 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     }
 
     private void registerCommands() {
-        new GoPaintCommand(this).register();
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS.newHandler(event ->
+                event.registrar().register(GoPaintCommand.create(this), List.of("gp"))));
     }
 
     public PluginConfig config() {
