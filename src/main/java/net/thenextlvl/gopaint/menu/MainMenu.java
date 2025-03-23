@@ -17,7 +17,6 @@ import net.thenextlvl.gopaint.brush.standard.PaintBrush;
 import net.thenextlvl.gopaint.brush.standard.SplatterBrush;
 import net.thenextlvl.gopaint.brush.standard.SprayBrush;
 import net.thenextlvl.gopaint.brush.standard.UnderlayBrush;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -37,7 +36,7 @@ public class MainMenu extends AbstractGUI {
 
     public MainMenu(GoPaintPlugin plugin, PlayerBrushSettings settings, Player owner) {
         super(owner, plugin.bundle().component(owner, "menu.main.title"));
-        this.inventory = Bukkit.createInventory(this, 6 * 9, title());
+        this.inventory = plugin.getServer().createInventory(this, 6 * 9, title());
         this.settings = settings;
         this.plugin = plugin;
 

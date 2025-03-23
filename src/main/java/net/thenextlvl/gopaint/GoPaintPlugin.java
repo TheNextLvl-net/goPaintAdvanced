@@ -25,7 +25,6 @@ import net.thenextlvl.gopaint.listener.InventoryListener;
 import net.thenextlvl.gopaint.version.VersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -95,14 +94,14 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     }
 
     private void registerServices() {
-        Bukkit.getServicesManager().register(BrushController.class, brushController(), this, ServicePriority.Highest);
-        Bukkit.getServicesManager().register(BrushRegistry.class, brushRegistry(), this, ServicePriority.Highest);
+        getServer().getServicesManager().register(BrushController.class, brushController(), this, ServicePriority.Highest);
+        getServer().getServicesManager().register(BrushRegistry.class, brushRegistry(), this, ServicePriority.Highest);
     }
 
     private void registerListeners() {
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+        getServer().getPluginManager().registerEvents(new InteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new ConnectListener(this), this);
     }
 
     private void registerCommands() {
