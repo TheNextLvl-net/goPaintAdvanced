@@ -307,7 +307,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
             container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
             container.set(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, getChance());
             container.set(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, getThickness());
-            container.set(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, this.getFractureStrength());
+            container.set(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, getFractureStrength());
             container.set(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, getAngleDistance());
             container.set(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, getFalloffStrength());
             container.set(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, getMixingStrength());
