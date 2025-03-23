@@ -246,6 +246,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     @Override
     public boolean exportSettings(ItemStack itemStack) {
         if (itemStack.getType().equals(plugin.config().brushConfig().defaultBrushType())) return false;
+        if (itemStack.getType().isBlock()) return false;
 
         var lines = new ArrayList<Component>();
         lines.add(Component.empty());
@@ -302,13 +303,11 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 Placeholder.component("brush", getBrush().getName(player))));
         itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lines));
 
-        return !itemStack.getType().isBlock() && itemStack.editMeta(itemMeta -> {
-            var container = itemMeta.getPersistentDataContainer();
-
+        return itemStack.editPersistentDataContainer(container -> {
             container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
             container.set(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, getChance());
             container.set(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, getThickness());
-            container.set(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, this.getFractureStrength());
+            container.set(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, getFractureStrength());
             container.set(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, getAngleDistance());
             container.set(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, getFalloffStrength());
             container.set(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, getMixingStrength());
