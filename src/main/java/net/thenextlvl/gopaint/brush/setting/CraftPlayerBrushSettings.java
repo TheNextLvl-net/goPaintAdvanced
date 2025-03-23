@@ -303,9 +303,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                 Placeholder.component("brush", getBrush().getName(player))));
         itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lines));
 
-        return itemStack.editMeta(itemMeta -> {
-            var container = itemMeta.getPersistentDataContainer();
-
+        return itemStack.editPersistentDataContainer(container -> {
             container.set(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER, getBrushSize());
             container.set(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, getChance());
             container.set(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, getThickness());
