@@ -34,7 +34,7 @@ dependencies {
     }
 
     api("net.thenextlvl.core:i18n:1.0.21")
-    api("net.thenextlvl.core:paper:2.0.3")
+    api("net.thenextlvl.core:paper:2.0.4")
 }
 
 publishing {
