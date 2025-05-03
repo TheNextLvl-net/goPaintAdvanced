@@ -55,8 +55,8 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
             new PluginConfig.AngleConfig(2, 5, 10, 40, 85),
             new PluginConfig.FractureConfig(2, 5)
     ), new GsonBuilder()
-            .registerTypeAdapter(Material.class, MaterialAdapter.instance())
-            .registerTypeAdapter(Key.class, KeyAdapter.kyori())
+            .registerTypeAdapter(Material.class, new MaterialAdapter())
+            .registerTypeAdapter(Key.class, new KeyAdapter.Kyori())
             .setPrettyPrinting()
             .create()
     ).validate().save();
