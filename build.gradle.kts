@@ -32,7 +32,7 @@ paper {
     name = "goPaintAdvanced"
     main = "net.thenextlvl.gopaint.GoPaintPlugin"
     authors = listOf("Arcaniax", "TheMeinerLP", "NonSwag")
-    apiVersion = "1.21"
+    apiVersion = "1.21.5"
     foliaSupported = true
 
     serverDependencies {
@@ -73,7 +73,7 @@ tasks.shadowJar {
 }
 
 tasks.runServer {
-    minecraftVersion("1.21")
+    minecraftVersion("1.21.5")
     jvmArgs("-Dcom.mojang.eula.agree=true")
 }
 
