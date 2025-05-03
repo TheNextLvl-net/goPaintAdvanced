@@ -27,12 +27,15 @@ public class UnderlayBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.underlay");
+        return provider.bundle().component("brush.name.underlay", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.underlay");
+        return new Component[]{
+                provider.bundle().component("brush.description.underlay.1", audience),
+                provider.bundle().component("brush.description.underlay.2", audience)
+        };
     }
 
     @Override

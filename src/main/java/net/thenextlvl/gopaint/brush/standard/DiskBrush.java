@@ -47,12 +47,16 @@ public class DiskBrush extends PatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.disk");
+        return provider.bundle().component("brush.name.disk", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.disk");
+        return new Component[]{
+                provider.bundle().component("brush.description.disk.1", audience),
+                provider.bundle().component("brush.description.disk.2", audience),
+                provider.bundle().component("brush.description.disk.3", audience)
+        };
     }
 
     @Override

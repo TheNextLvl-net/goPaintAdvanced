@@ -45,12 +45,12 @@ public class AngleBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.angle");
+        return provider.bundle().component("brush.name.angle", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.angle");
+        return new Component[]{provider.bundle().component("brush.description.angle", audience)};
     }
 
     @Override

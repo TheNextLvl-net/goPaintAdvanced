@@ -28,7 +28,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import net.thenextlvl.gopaint.api.math.Sphere;
@@ -59,12 +59,15 @@ public class PaintBrush extends PatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.paint");
+        return provider.bundle().component("brush.name.paint", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.paint");
+        return new Component[]{
+                provider.bundle().component("brush.description.paint.1", audience),
+                provider.bundle().component("brush.description.paint.2", audience)
+        };
     }
 
     @Override
@@ -82,10 +85,10 @@ public class PaintBrush extends PatternBrush {
 
         if (!bukkit.getPlayer().isSneaking()) {
             provider.bundle().sendMessage(bukkit.getPlayer(), "brush.paint.point.set",
-                    Placeholder.parsed("x", String.valueOf(position.x())),
-                    Placeholder.parsed("y", String.valueOf(position.y())),
-                    Placeholder.parsed("z", String.valueOf(position.z())),
-                    Placeholder.parsed("point", String.valueOf(selectedPoints.get(id).size()))
+                    Formatter.number("x", position.x()),
+                    Formatter.number("y", position.y()),
+                    Formatter.number("z", position.z()),
+                    Formatter.number("point", selectedPoints.get(id).size())
             );
             return;
         }

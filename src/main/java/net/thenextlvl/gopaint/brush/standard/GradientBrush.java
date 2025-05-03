@@ -45,12 +45,12 @@ public class GradientBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.gradient");
+        return provider.bundle().component("brush.name.gradient", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.gradient");
+        return new Component[]{provider.bundle().component("brush.description.gradient", audience)};
     }
 
     @Override

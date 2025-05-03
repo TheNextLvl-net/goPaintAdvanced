@@ -48,12 +48,15 @@ public class BucketBrush extends PatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.bucket");
+        return provider.bundle().component("brush.name.bucket", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.bucket");
+        return new Component[]{
+                provider.bundle().component("brush.description.bucket.1", audience),
+                provider.bundle().component("brush.description.bucket.2", audience)
+        };
     }
 
     @Override
