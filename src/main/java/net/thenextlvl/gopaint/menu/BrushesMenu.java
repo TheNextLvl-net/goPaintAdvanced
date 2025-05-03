@@ -31,6 +31,11 @@ public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     }
 
     @Override
+    protected void onClose() {
+        owner.getScheduler().run(plugin, task -> settings.getMainMenu().open(), null);
+    }
+
+    @Override
     public void formatDefault() {
         var placeholder = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip();
         IntStream.range(0, getSize()).forEach(value -> setSlotIfAbsent(value, placeholder));
