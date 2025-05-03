@@ -9,9 +9,6 @@ import core.paper.adapters.inventory.MaterialAdapter;
 import core.paper.adapters.key.KeyAdapter;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
@@ -27,27 +24,24 @@ import net.thenextlvl.gopaint.version.VersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 @NullMarked
 public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
-    private final File translations = new File(getDataFolder(), "translations");
-    private final ComponentBundle bundle = new ComponentBundle(translations, audience ->
-            audience instanceof Player player ? player.locale() : Locale.US)
-            .register("messages", Locale.US)
-            .register("messages_german", Locale.GERMANY)
-            .miniMessage(bundle -> MiniMessage.builder().tags(TagResolver.resolver(
-                    TagResolver.standard(),
-                    Placeholder.component("prefix", bundle.component(Locale.US, "prefix"))
-            )).build());
+    private final Key key = Key.key("gopaint_advanced", "translations");
+    private final Path translations = getDataPath().resolve("translations");
+    private final ComponentBundle bundle = ComponentBundle.builder(key, translations)
+            .placeholder("prefix", "prefix")
+            .resource("gopaint.properties", Locale.US)
+            .resource("gopaint_german.properties", Locale.GERMANY)
+            .build();
 
     private final BrushController brushController = new CraftBrushController(this);
     private final BrushRegistry brushRegistry = new CraftBrushRegistry(this);

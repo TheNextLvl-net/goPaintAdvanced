@@ -45,12 +45,12 @@ public class FractureBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.fracture");
+        return provider.bundle().component("brush.name.fracture", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.fracture");
+        return new Component[]{provider.bundle().component("brush.description.fracture", audience)};
     }
 
     @Override

@@ -24,6 +24,8 @@ import io.papermc.paper.datacomponent.item.ItemLore;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
@@ -250,56 +252,56 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
         var lines = new ArrayList<Component>();
         lines.add(Component.empty());
-        lines.add(plugin.bundle().component(player, "brush.exported.size",
-                Placeholder.parsed("size", String.valueOf(getBrushSize()))));
+        lines.add(plugin.bundle().component("brush.exported.size", player,
+                Formatter.number("size", getBrushSize())));
         if (getBrush() instanceof SprayBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.chance",
-                    Placeholder.parsed("chance", String.valueOf(getChance()))));
+            lines.add(plugin.bundle().component("brush.exported.chance", player,
+                    Formatter.number("chance", getChance())));
         } else if (getBrush() instanceof OverlayBrush || getBrush() instanceof UnderlayBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.thickness",
-                    Placeholder.parsed("thickness", String.valueOf(getThickness()))));
+            lines.add(plugin.bundle().component("brush.exported.thickness", player,
+                    Formatter.number("thickness", getThickness())));
         } else if (getBrush() instanceof DiskBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.axis",
+            lines.add(plugin.bundle().component("brush.exported.axis", player,
                     Placeholder.parsed("axis", getAxis().name())));
         } else if (getBrush() instanceof AngleBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.angle.distance",
-                    Placeholder.parsed("distance", String.valueOf(getAngleDistance()))));
-            lines.add(plugin.bundle().component(player, "brush.exported.angle.height",
-                    Placeholder.parsed("height", String.valueOf(getAngleHeightDifference()))));
+            lines.add(plugin.bundle().component("brush.exported.angle.distance", player,
+                    Formatter.number("distance", getAngleDistance())));
+            lines.add(plugin.bundle().component("brush.exported.angle.height", player,
+                    Formatter.number("height", getAngleHeightDifference())));
         } else if (getBrush() instanceof SplatterBrush || getBrush() instanceof PaintBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.falloff",
-                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
+            lines.add(plugin.bundle().component("brush.exported.falloff", player,
+                    Formatter.number("falloff", getFalloffStrength())));
         } else if (getBrush() instanceof GradientBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.mixing",
-                    Placeholder.parsed("mixing", String.valueOf(getMixingStrength()))));
-            lines.add(plugin.bundle().component(player, "brush.exported.falloff",
-                    Placeholder.parsed("falloff", String.valueOf(getFalloffStrength()))));
+            lines.add(plugin.bundle().component("brush.exported.mixing", player,
+                    Formatter.number("mixing", getMixingStrength())));
+            lines.add(plugin.bundle().component("brush.exported.falloff", player,
+                    Formatter.number("falloff", getFalloffStrength())));
         } else if (getBrush() instanceof FractureBrush) {
-            lines.add(plugin.bundle().component(player, "brush.exported.fracture",
-                    Placeholder.parsed("fracture", String.valueOf(getFractureStrength()))));
+            lines.add(plugin.bundle().component("brush.exported.fracture", player,
+                    Formatter.number("fracture", getFractureStrength())));
         }
         if (!blocks.isEmpty()) {
             var blocks = getBlocks().stream()
                     .map(Material::translationKey)
                     .map(Component::translatable)
                     .toList();
-            lines.add(plugin.bundle().component(player, "brush.exported.blocks",
+            lines.add(plugin.bundle().component("brush.exported.blocks", player,
                     Placeholder.component("blocks", Component.join(JoinConfiguration.commas(true), blocks))));
         }
 
         if (isMaskEnabled()) {
-            lines.add(plugin.bundle().component(player, "brush.exported.mask",
+            lines.add(plugin.bundle().component("brush.exported.mask", player,
                     Placeholder.component("mask", Component.translatable(getMask().translationKey()))));
         }
 
         if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-            var mode = plugin.bundle().component(player, getSurfaceMode().translationKey());
-            lines.add(plugin.bundle().component(player, "brush.exported.surface-mode",
-                    Placeholder.component("mode", mode)));
+            var mode = plugin.bundle().component(getSurfaceMode().translationKey(), player);
+            lines.add(plugin.bundle().component("brush.exported.surface-mode", player,
+                    Placeholder.component("mode", mode.style(Style.empty()))));
         }
 
         itemStack.setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
-        itemStack.setData(DataComponentTypes.ITEM_NAME, plugin.bundle().component(player, "brush.exported.name",
+        itemStack.setData(DataComponentTypes.ITEM_NAME, plugin.bundle().component("brush.exported.name", player,
                 Placeholder.component("brush", getBrush().getName(player))));
         itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lines));
 

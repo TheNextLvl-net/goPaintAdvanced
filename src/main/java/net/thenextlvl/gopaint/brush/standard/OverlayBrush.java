@@ -45,12 +45,15 @@ public class OverlayBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.overlay");
+        return provider.bundle().component("brush.name.overlay", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.overlay");
+        return new Component[]{
+                provider.bundle().component("brush.description.overlay.1", audience),
+                provider.bundle().component("brush.description.overlay.2", audience)
+        };
     }
 
     @Override

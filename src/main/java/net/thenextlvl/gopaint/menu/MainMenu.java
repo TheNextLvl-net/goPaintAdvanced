@@ -5,6 +5,7 @@ import core.paper.item.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import net.thenextlvl.gopaint.api.brush.setting.PlayerBrushSettings;
@@ -22,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jspecify.annotations.NullMarked;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -35,7 +35,7 @@ public class MainMenu extends AbstractGUI {
     private final Inventory inventory;
 
     public MainMenu(GoPaintPlugin plugin, PlayerBrushSettings settings, Player owner) {
-        super(owner, plugin.bundle().component(owner, "menu.main.title"));
+        super(owner, plugin.bundle().component("menu.main.title", owner));
         this.inventory = plugin.getServer().createInventory(this, 6 * 9, title());
         this.settings = settings;
         this.plugin = plugin;
@@ -69,16 +69,16 @@ public class MainMenu extends AbstractGUI {
 
     public void updateMask() {
         inventory.setItem(52, ItemBuilder.of(settings.getMask())
-                .itemName(plugin.bundle().component(owner, "mask.block"))
-                .lore(plugin.bundle().components(owner, "mask.block.description"))
+                .itemName(plugin.bundle().component("mask.block", owner))
+                .lore(Component.empty(), plugin.bundle().component("mask.block.description", owner))
                 .item());
     }
 
     public void updateBlockPalette() {
 
         var placeholder = ItemBuilder.of(Material.BARRIER)
-                .itemName(plugin.bundle().component(owner, "slot.empty"))
-                .lore(plugin.bundle().components(owner, "slot.empty.description"))
+                .itemName(plugin.bundle().component("slot.empty", owner))
+                .lore(Component.empty(), plugin.bundle().component("slot.empty.description", owner))
                 .item();
         IntStream.rangeClosed(46, 50)
                 .filter(value -> settings.getBlocks().size() <= value - 46)
@@ -87,25 +87,28 @@ public class MainMenu extends AbstractGUI {
         if (settings.getBlocks().isEmpty()) return;
 
         var chance = 100d / settings.getBlocks().size();
-        var formatter = DecimalFormat.getInstance(owner.locale());
-        formatter.setMaximumFractionDigits(2);
 
         for (var i = 0; i < settings.getBlocks().size(); i++) {
             inventory.setItem(i + 46, ItemBuilder.of(settings.getBlocks().get(i))
                     .amount(chance > 64 ? 1 : (int) chance)
-                    .itemName(plugin.bundle().component(owner, "slot.set",
-                            Placeholder.parsed("slot", String.valueOf(i + 1)),
-                            Placeholder.parsed("chance", formatter.format(chance))))
-                    .lore(plugin.bundle().components(owner, "slot.set.description"))
+                    .itemName(plugin.bundle().component("slot.set", owner,
+                            Formatter.number("slot", i + 1),
+                            Formatter.number("chance", chance)))
+                    .lore(Component.empty(),
+                            plugin.bundle().component("slot.set.description.left", owner),
+                            plugin.bundle().component("slot.set.description.right", owner))
                     .item());
         }
     }
 
     public void updateSize() {
         inventory.setItem(14, ItemBuilder.of(Material.BROWN_MUSHROOM)
-                .itemName(plugin.bundle().component(owner, "brush.size",
-                        Placeholder.parsed("size", String.valueOf(settings.getBrushSize()))))
-                .lore(plugin.bundle().components(owner, "brush.size.description"))
+                .itemName(plugin.bundle().component("brush.size", owner,
+                        Formatter.number("size", settings.getBrushSize())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.size.description.left", owner),
+                        plugin.bundle().component("brush.size.description.right", owner),
+                        plugin.bundle().component("brush.size.description.shift", owner))
                 .item());
     }
 
@@ -116,9 +119,11 @@ public class MainMenu extends AbstractGUI {
             return;
 
         inventory.setItem(12, ItemBuilder.of(Material.BLAZE_POWDER)
-                .itemName(plugin.bundle().component(owner, "brush.falloff",
-                        Placeholder.parsed("strength", String.valueOf(settings.getFalloffStrength()))))
-                .lore(plugin.bundle().components(owner, "brush.falloff.description"))
+                .itemName(plugin.bundle().component("brush.falloff", owner,
+                        Formatter.number("strength", settings.getFalloffStrength())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.falloff.description.left", owner),
+                        plugin.bundle().component("brush.falloff.description.right", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -130,9 +135,11 @@ public class MainMenu extends AbstractGUI {
         if (!(settings.getBrush() instanceof GradientBrush)) return;
 
         inventory.setItem(13, ItemBuilder.of(Material.MAGMA_CREAM)
-                .itemName(plugin.bundle().component(owner, "brush.mixing",
-                        Placeholder.parsed("strength", String.valueOf(settings.getMixingStrength()))))
-                .lore(plugin.bundle().components(owner, "brush.mixing.description"))
+                .itemName(plugin.bundle().component("brush.mixing", owner,
+                        Formatter.number("strength", settings.getMixingStrength())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.mixing.description.left", owner),
+                        plugin.bundle().component("brush.mixing.description.right", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -144,9 +151,11 @@ public class MainMenu extends AbstractGUI {
         if (!(settings.getBrush() instanceof FractureBrush)) return;
 
         inventory.setItem(12, ItemBuilder.of(Material.DAYLIGHT_DETECTOR)
-                .itemName(plugin.bundle().component(owner, "brush.fracture",
-                        Placeholder.parsed("distance", String.valueOf(settings.getFractureStrength()))))
-                .lore(plugin.bundle().components(owner, "brush.fracture.description"))
+                .itemName(plugin.bundle().component("brush.fracture", owner,
+                        Formatter.number("distance", settings.getFractureStrength())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.fracture.description.left", owner),
+                        plugin.bundle().component("brush.fracture.description.right", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -158,14 +167,19 @@ public class MainMenu extends AbstractGUI {
         if (!(settings.getBrush() instanceof AngleBrush)) return;
 
         inventory.setItem(12, ItemBuilder.of(Material.DAYLIGHT_DETECTOR)
-                .itemName(plugin.bundle().component(owner, "brush.angle.distance",
-                        Placeholder.parsed("distance", String.valueOf(settings.getAngleDistance()))))
-                .lore(plugin.bundle().components(owner, "brush.angle.distance.description"))
+                .itemName(plugin.bundle().component("brush.angle.distance", owner,
+                        Formatter.number("distance", settings.getAngleDistance())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.angle.distance.description.left", owner),
+                        plugin.bundle().component("brush.angle.distance.description.right", owner))
                 .item());
         inventory.setItem(13, ItemBuilder.of(Material.BLAZE_ROD)
-                .itemName(plugin.bundle().component(owner, "brush.angle.maximum",
-                        Placeholder.parsed("angle", String.valueOf(settings.getAngleHeightDifference()))))
-                .lore(plugin.bundle().components(owner, "brush.angle.maximum.description"))
+                .itemName(plugin.bundle().component("brush.angle.maximum", owner,
+                        Formatter.number("angle", settings.getAngleHeightDifference())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.angle.maximum.description.left", owner),
+                        plugin.bundle().component("brush.angle.maximum.description.right", owner),
+                        plugin.bundle().component("brush.angle.maximum.description.shift", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -181,9 +195,11 @@ public class MainMenu extends AbstractGUI {
             return;
 
         inventory.setItem(12, ItemBuilder.of(Material.BOOK)
-                .itemName(plugin.bundle().component(owner, "brush.thickness",
-                        Placeholder.parsed("thickness", String.valueOf(settings.getThickness()))))
-                .lore(plugin.bundle().components(owner, "brush.thickness.description"))
+                .itemName(plugin.bundle().component("brush.thickness", owner,
+                        Formatter.number("thickness", settings.getThickness())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.thickness.description.left", owner),
+                        plugin.bundle().component("brush.thickness.description.right", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -195,9 +211,9 @@ public class MainMenu extends AbstractGUI {
         if (!(settings.getBrush() instanceof DiskBrush)) return;
 
         inventory.setItem(12, ItemBuilder.of(Material.COMPASS)
-                .itemName(plugin.bundle().component(owner, "brush.axis",
+                .itemName(plugin.bundle().component("brush.axis", owner,
                         Placeholder.parsed("axis", settings.getAxis().name())))
-                .lore(plugin.bundle().components(owner, "brush.axis.description"))
+                .lore(Component.empty(), plugin.bundle().component("brush.axis.description", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -209,9 +225,11 @@ public class MainMenu extends AbstractGUI {
         if (!(settings.getBrush() instanceof SprayBrush)) return;
 
         inventory.setItem(12, ItemBuilder.of(Material.GOLD_NUGGET)
-                .itemName(plugin.bundle().component(owner, "brush.chance",
-                        Placeholder.parsed("chance", String.valueOf(settings.getChance()))))
-                .lore(plugin.bundle().components(owner, "brush.chance.description"))
+                .itemName(plugin.bundle().component("brush.chance", owner,
+                        Formatter.number("chance", settings.getChance())))
+                .lore(Component.empty(),
+                        plugin.bundle().component("brush.chance.description.left", owner),
+                        plugin.bundle().component("brush.chance.description.right", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
@@ -222,7 +240,12 @@ public class MainMenu extends AbstractGUI {
     public void updateBrushSelection() {
         var brush = settings.getBrush();
 
-        var lore = new ArrayList<>(Arrays.asList(plugin.bundle().components(owner, "brush.selection.lore")));
+        var lore = new ArrayList<>(Arrays.asList(
+                Component.empty(),
+                plugin.bundle().component("brush.selection.description.1", owner),
+                plugin.bundle().component("brush.selection.description.2", owner),
+                Component.empty()
+        ));
 
         plugin.brushRegistry().getBrushes().map(current -> {
             var color = current.equals(brush) ? NamedTextColor.YELLOW : NamedTextColor.DARK_GRAY;
@@ -231,20 +254,19 @@ public class MainMenu extends AbstractGUI {
 
         inventory.setItem(11, ItemBuilder.of(Material.PLAYER_HEAD)
                 .profileValue(brush.getHeadValue())
-                .itemName(plugin.bundle().component(owner, "brush.selection"))
-                .lore(lore.toArray(new Component[]{}))
+                .itemName(plugin.bundle().component("brush.selection", owner))
+                .lore(lore)
                 .item());
     }
 
     public void updateToggle() {
-        var state = settings.isEnabled()
-                ? plugin.bundle().component(owner, "brush.state.enabled")
-                : plugin.bundle().component(owner, "brush.state.disabled");
-
         inventory.setItem(10, ItemBuilder.of(plugin.config().brushConfig().defaultBrushType())
-                .itemName(plugin.bundle().component(owner, "brush.toggle"))
-                .lore(plugin.bundle().components(owner, "brush.toggle.description",
-                        Placeholder.component("state", state)))
+                .itemName(plugin.bundle().component("brush.toggle", owner))
+                .lore(plugin.bundle().component(settings.isEnabled() ? "brush.state.enabled" : "brush.state.disabled", owner),
+                        Component.empty(),
+                        plugin.bundle().component("brush.toggle.description.1", owner),
+                        plugin.bundle().component("brush.toggle.description.2", owner),
+                        plugin.bundle().component("brush.toggle.description.3", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(settings.isEnabled()
@@ -259,13 +281,10 @@ public class MainMenu extends AbstractGUI {
     public void updateMaskToggle() {
         var icon = settings.isMaskEnabled() ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN;
 
-        var state = plugin.bundle().component(owner, settings.isMaskEnabled() ? "mask.enabled" : "mask.disabled")
-                .color(settings.isMaskEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED);
-
         inventory.setItem(15, ItemBuilder.of(icon)
-                .itemName(plugin.bundle().component(owner, "mask.state"))
-                .lore(plugin.bundle().components(owner, "mask.state.description",
-                        Placeholder.component("state", state)))
+                .itemName(plugin.bundle().component("mask.state", owner))
+                .lore(plugin.bundle().component(settings.isMaskEnabled() ? "mask.enabled" : "mask.disabled", owner),
+                        Component.empty(), plugin.bundle().component("click.cycle", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(settings.isMaskEnabled()
@@ -284,17 +303,10 @@ public class MainMenu extends AbstractGUI {
             case VISIBLE -> Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
         };
 
-        var mode = plugin.bundle().component(owner, settings.getSurfaceMode().translationKey())
-                .color(switch (settings.getSurfaceMode()) {
-                    case EXPOSED -> NamedTextColor.GREEN;
-                    case DISABLED -> NamedTextColor.RED;
-                    case VISIBLE -> NamedTextColor.GOLD;
-                });
-
         inventory.setItem(16, ItemBuilder.of(icon)
-                .itemName(plugin.bundle().component(owner, "surface.mode"))
-                .lore(plugin.bundle().components(owner, "surface.mode.description",
-                        Placeholder.component("mode", mode)))
+                .itemName(plugin.bundle().component("surface.mode", owner))
+                .lore(plugin.bundle().component(settings.getSurfaceMode().translationKey(), owner),
+                        Component.empty(), plugin.bundle().component("surface.mode.description", owner))
                 .item());
 
         var placeholder = ItemBuilder.of(switch (settings.getSurfaceMode()) {

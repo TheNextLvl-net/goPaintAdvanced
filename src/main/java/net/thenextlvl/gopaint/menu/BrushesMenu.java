@@ -25,7 +25,7 @@ public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     private final PlayerBrushSettings settings;
 
     public BrushesMenu(GoPaintProvider plugin, PlayerBrushSettings settings, Player owner) {
-        super(plugin, owner, plugin.bundle().component(owner, "menu.brushes.title"), 3);
+        super(plugin, owner, plugin.bundle().component("menu.brushes.title",owner), 3);
         this.settings = settings;
         loadPage(0);
     }
@@ -40,8 +40,11 @@ public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     public ActionItem constructItem(PatternBrush brush) {
         return ItemBuilder.of(Material.PLAYER_HEAD)
                 .profileValue(brush.getHeadValue())
-                .itemName(brush.getName(owner).color(NamedTextColor.GOLD))
-                .lore(brush.getDescription(owner))
+                .itemName(brush.getName(owner).colorIfAbsent(NamedTextColor.GOLD))
+                .lore(Component.empty())
+                .appendLore(plugin.bundle().component("brush.click.select", owner))
+                .appendLore(Component.empty())
+                .appendLore(brush.getDescription(owner))
                 .withAction(() -> {
                     settings.setBrush(brush);
                     settings.getMainMenu().open();
@@ -51,7 +54,7 @@ public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     @Override
     public Component getPageFormat(int page) {
         var key = page > getCurrentPage() ? "gui.page.next" : "gui.page.previous";
-        return plugin.bundle().component(owner, key);
+        return plugin.bundle().component(key, owner);
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
@@ -25,7 +25,7 @@ class SizeCommand {
         var settings = plugin.brushController().getBrushSettings(player);
         settings.setBrushSize(context.getArgument("size", int.class));
         plugin.bundle().sendMessage(player, "command.gopaint.brush.size",
-                Placeholder.parsed("size", String.valueOf(settings.getBrushSize())));
+                Formatter.number("size", settings.getBrushSize()));
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -45,12 +45,16 @@ public class SplatterBrush extends SpherePatternBrush {
 
     @Override
     public Component getName(Audience audience) {
-        return provider.bundle().component(audience, "brush.name.splatter");
+        return provider.bundle().component("brush.name.splatter", audience);
     }
 
     @Override
     public Component[] getDescription(Audience audience) {
-        return provider.bundle().components(audience, "brush.description.splatter");
+        return new Component[]{
+                provider.bundle().component("brush.description.splatter.1", audience),
+                provider.bundle().component("brush.description.splatter.2", audience),
+                provider.bundle().component("brush.description.splatter.3", audience)
+        };
     }
 
     @Override
