@@ -28,6 +28,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
@@ -70,6 +71,16 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     @Override
     public void onLoad() {
         versionChecker.checkVersion();
+        warnTranslationChanges();
+    }
+
+    private void warnTranslationChanges() {
+        if (!Files.isRegularFile(translations.resolve("messages.properties"))
+            && !Files.isRegularFile(translations.resolve("messages_german.properties"))) return;
+        getComponentLogger().warn("The translations for goPaintAdvanced had major backwards incompatible changes");
+        getComponentLogger().warn("For this reason the 'messages' files got renamed to 'gopaint'");
+        getComponentLogger().warn("If you made changes to your translations before, you have to do them again in the new 'gopaint' files");
+        getComponentLogger().warn("This message will go away once you have deleted the old 'messages' files from '{}'", translations);
     }
 
     @Override
