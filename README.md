@@ -4,14 +4,14 @@
 
 goPaintAdvanced is a modern and maintained drop-in replacement for goPaint.
 It offers huge performance improvements and bug fixes.
-We aim to be always up-to-date and use new technology instead of hanging on to old and dead code.
+We aim to be always up to date and use new technology instead of hanging on to old and dead code.
 
 The primary focus of goPaintAdvanced is to drastically improve performance by leveraging a multithreaded architecture,
 ensuring smoother and faster brush operations, even in demanding environments.
 
 ## Major Changes
 
-- **Fully asynchrone** - No lags whatsoever
+- **Fully asynchrone** — No lags whatsoever
 - **100%** customizable messages
 - Better WorldEdit integration
 - Survival Support
@@ -61,8 +61,7 @@ For more advanced users, goPaintAdvanced offers command access to control nearly
 
 ## Links
 
-* [Download - Modrinth](https://modrinth.com/plugin/gopaintadvanced)
-* [Download - Hangar](https://hangar.papermc.io/TheNextLvl/goPaintAdvanced)
+* [Download](https://modrinth.com/project/a2wQ6jIv#download)
 * [Discord](https://thenextlvl.net/discord)
 * [Issues](https://github.com/TheNextLvl-net/goPaintAdvanced/issues)
 
@@ -74,4 +73,4 @@ project.
 ## Suggestions
 
 Suggestions are welcome! We have a separate issue form for suggestions, that can be
-found [here](https://github.com/TheNextLvl-net/goPaintAdvanced/issues).
+found [here](https://github.com/TheNextLvl-net/goPaintAdvanced/issues/new?template=feature_request.yml).
