@@ -21,7 +21,6 @@ ensuring smoother and faster brush operations, even in demanding environments.
 - Improved and faster algorithms
 - No legacy code or dependencies
 - Hangar and Modrinth auto deployment
-- New CI Development builds
 
 ## Overview
 
