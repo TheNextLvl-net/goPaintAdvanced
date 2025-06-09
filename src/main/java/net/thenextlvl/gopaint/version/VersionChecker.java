@@ -1,14 +1,14 @@
 package net.thenextlvl.gopaint.version;
 
-import core.paper.version.PaperHangarVersionChecker;
+import core.paper.version.PaperModrinthVersionChecker;
 import core.version.SemanticVersion;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class VersionChecker extends PaperHangarVersionChecker<SemanticVersion> {
+public class VersionChecker extends PaperModrinthVersionChecker<SemanticVersion> {
     public VersionChecker(Plugin plugin) {
-        super(plugin, "TheNextLvl", "goPaintAdvanced");
+        super(plugin, "a2wQ6jIv");
     }
 
     @Override
