@@ -7,7 +7,7 @@ plugins {
     id("com.gradleup.shadow") version "9.0.0-rc3"
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("de.eldoria.plugin-yml.paper") version "0.7.1"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.0-beta.1"
     id("com.modrinth.minotaur") version "2.+"
 }
 
