@@ -73,7 +73,7 @@ tasks.shadowJar {
 }
 
 tasks.runServer {
-    minecraftVersion("1.21.6")
+    minecraftVersion("1.21.8")
     jvmArgs("-Dcom.mojang.eula.agree=true")
 }
 
