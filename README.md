@@ -13,10 +13,11 @@ ensuring smoother and faster brush operations, even in demanding environments.
 
 - **Fully asynchrone** — No lags whatsoever
 - **100%** customizable messages
+- Keep data of existing blocks (e.g., rotation)
 - Better WorldEdit integration
 - Survival Support
 - New brushes
-- Brigadier commands
+- More commands
 - Improved configuration file
 - Improved and faster algorithms
 - No legacy code or dependencies
