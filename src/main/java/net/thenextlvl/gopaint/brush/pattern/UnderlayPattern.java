@@ -20,8 +20,9 @@ public record UnderlayPattern(
 
     @Override
     public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
-        if (!isUnderlay(get, applyBlock(get))) return false;
-        return set.setBlock(extent, getRandomBlockState());
+        var block = applyBlock(get);
+        if (!isUnderlay(get, block)) return false;
+        return set.setBlock(extent, getRandomBlockState().withProperties(block.toBlockState()));
     }
 
     private boolean isUnderlay(BlockVector3 position, BaseBlock block) {

@@ -28,6 +28,6 @@ public record AnglePattern(
             >= Math.tan(Math.toRadians(settings().getAngleHeightDifference()))
         ) return false;
 
-        return set.setBlock(extent, getRandomBlockState());
+        return set.setBlock(extent, getRandomBlockState().withProperties(block.base().toBlockState()));
     }
 }

@@ -30,6 +30,6 @@ public record FracturePattern(
                 Height.getNearestNonEmptyBlock(block), settings.getFractureStrength()
         ) < 0.1) return false;
 
-        return set.setBlock(extent, getRandomBlockState());
+        return set.setBlock(extent, getRandomBlockState().withProperties(block.base().toBlockState()));
     }
 }
