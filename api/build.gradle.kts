@@ -33,8 +33,8 @@ dependencies {
         exclude("org.jetbrains", "annotations")
     }
 
-    api("net.thenextlvl.core:i18n:3.2.2")
     api("net.thenextlvl.core:paper:2.3.1")
+    api("net.thenextlvl:i18n:1.0.0")
 }
 
 publishing {

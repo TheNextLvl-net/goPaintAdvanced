@@ -1,8 +1,8 @@
 package net.thenextlvl.gopaint.api.model;
 
-import core.i18n.file.ComponentBundle;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
+import net.thenextlvl.i18n.ComponentBundle;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
