@@ -16,15 +16,16 @@ version = "1.6.1"
 
 repositories {
     mavenCentral()
-    maven("https://repo.thenextlvl.net/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.thenextlvl.net/releases")
+    maven("https://repo.thenextlvl.net/snapshots")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
-    implementation("net.thenextlvl.core:adapters:2.0.3")
-    implementation("net.thenextlvl.core:files:3.0.2")
+    implementation("net.thenextlvl.core:files:4.0.0-pre1")
+    implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.0")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation(project(":api"))
 }

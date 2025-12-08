@@ -22,6 +22,7 @@ repositories {
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.thenextlvl.net/releases")
+    maven("https://repo.thenextlvl.net/snapshots")
 }
 
 dependencies {
@@ -33,7 +34,7 @@ dependencies {
         exclude("org.jetbrains", "annotations")
     }
 
-    api("net.thenextlvl.core:paper:2.3.1")
+    api("net.thenextlvl.core:paper:3.0.0-pre1")
     api("net.thenextlvl:i18n:1.1.0")
 }
 

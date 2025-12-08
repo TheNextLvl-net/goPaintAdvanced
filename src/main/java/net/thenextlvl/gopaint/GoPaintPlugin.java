@@ -2,12 +2,11 @@ package net.thenextlvl.gopaint;
 
 import com.google.gson.GsonBuilder;
 import core.file.FileIO;
-import core.file.format.GsonFile;
-import core.io.IO;
-import core.paper.adapters.inventory.MaterialAdapter;
-import core.paper.adapters.key.KeyAdapter;
+import core.file.formats.GsonFile;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.key.Key;
+import net.thenextlvl.gopaint.adapters.KeyAdapter;
+import net.thenextlvl.gopaint.adapters.MaterialAdapter;
 import net.thenextlvl.gopaint.api.brush.BrushController;
 import net.thenextlvl.gopaint.api.brush.BrushRegistry;
 import net.thenextlvl.gopaint.api.model.GoPaintProvider;
@@ -47,7 +46,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     private final BrushController brushController = new CraftBrushController(this);
     private final BrushRegistry brushRegistry = new CraftBrushRegistry(this);
 
-    private final FileIO<PluginConfig> configFile = new GsonFile<>(IO.of(getDataFolder(), "config.json"), new PluginConfig(
+    private final FileIO<PluginConfig> configFile = new GsonFile<>(getDataPath().resolve("config.json"), new PluginConfig(
             new PluginConfig.BrushConfig(Material.FEATHER, Key.key("gopaint", "sphere_brush"), 100, 10, 50,
                     Axis.Y, 50, 50, Set.of("disabled"), true, Material.SPONGE, true, SurfaceMode.EXPOSED,
                     List.of(Material.STONE)),
@@ -56,7 +55,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
             new PluginConfig.FractureConfig(2, 5)
     ), new GsonBuilder()
             .registerTypeAdapter(Material.class, new MaterialAdapter())
-            .registerTypeAdapter(Key.class, new KeyAdapter.Kyori())
+            .registerTypeAdapter(Key.class, new KeyAdapter())
             .setPrettyPrinting()
             .create()
     ).validate().save();
