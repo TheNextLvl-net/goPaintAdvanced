@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.command;
+package net.thenextlvl.gopaint.commands;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;

@@ -29,7 +29,7 @@ import net.thenextlvl.gopaint.brush.standard.PaintBrush;
 import net.thenextlvl.gopaint.brush.standard.SplatterBrush;
 import net.thenextlvl.gopaint.brush.standard.SprayBrush;
 import net.thenextlvl.gopaint.brush.standard.UnderlayBrush;
-import net.thenextlvl.gopaint.menu.MainMenu;
+import net.thenextlvl.gopaint.menus.MainMenu;
 import org.bukkit.Axis;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

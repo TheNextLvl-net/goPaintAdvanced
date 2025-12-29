@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.command;
+package net.thenextlvl.gopaint.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

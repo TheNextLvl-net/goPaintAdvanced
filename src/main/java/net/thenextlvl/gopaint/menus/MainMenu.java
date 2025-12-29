@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.menu;
+package net.thenextlvl.gopaint.menus;
 
 import core.paper.gui.AbstractGUI;
 import core.paper.item.ItemBuilder;

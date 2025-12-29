@@ -15,7 +15,7 @@ import net.thenextlvl.gopaint.api.model.PluginConfig;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
-import net.thenextlvl.gopaint.command.GoPaintCommand;
+import net.thenextlvl.gopaint.commands.GoPaintCommand;
 import net.thenextlvl.gopaint.listener.ConnectListener;
 import net.thenextlvl.gopaint.listener.InteractListener;
 import net.thenextlvl.gopaint.listener.InventoryListener;

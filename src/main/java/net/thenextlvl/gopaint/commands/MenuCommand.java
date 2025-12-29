@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.command;
+package net.thenextlvl.gopaint.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -10,22 +10,17 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-class ExportCommand {
+class MenuCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        return Commands.literal("export")
+        return Commands.literal("menu")
                 .requires(stack -> stack.getSender() instanceof Player)
-                .executes(context -> exportSettings(context, plugin));
+                .executes(context -> menu(context, plugin));
     }
 
-    private static int exportSettings(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
+    private static int menu(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
         var player = (Player) context.getSource().getSender();
-
-        var mainHand = player.getInventory().getItemInMainHand();
         var settings = plugin.brushController().getBrushSettings(player);
-
-        plugin.bundle().sendMessage(player, settings.exportSettings(mainHand) ?
-                "command.gopaint.export.success" : "command.gopaint.export.failed");
-
+        settings.getMainMenu().open();
         return Command.SINGLE_SUCCESS;
     }
 }

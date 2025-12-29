@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush.setting;
+package net.thenextlvl.gopaint.brush.settings;
 
 import net.thenextlvl.gopaint.api.brush.PatternBrush;
 import net.thenextlvl.gopaint.api.brush.setting.ItemBrushSettings;

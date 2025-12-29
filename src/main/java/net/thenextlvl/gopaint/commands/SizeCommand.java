@@ -1,29 +1,31 @@
-package net.thenextlvl.gopaint.command;
+package net.thenextlvl.gopaint.commands;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-class ToggleCommand {
+class SizeCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        return Commands.literal("toggle")
+        return Commands.literal("size")
                 .requires(stack -> stack.getSender() instanceof Player)
-                .executes(context -> toggle(context, plugin));
+                .then(Commands.argument("size", IntegerArgumentType.integer(1, 100))
+                        .executes(context -> size(context, plugin)));
     }
 
-    private static int toggle(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
+    private static int size(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
         var player = (Player) context.getSource().getSender();
         var settings = plugin.brushController().getBrushSettings(player);
-        settings.setEnabled(!settings.isEnabled());
-        var message = settings.isEnabled() ? "command.gopaint.brush.enabled"
-                : "command.gopaint.brush.disabled";
-        plugin.bundle().sendMessage(player, message);
+        settings.setBrushSize(context.getArgument("size", int.class));
+        plugin.bundle().sendMessage(player, "command.gopaint.brush.size",
+                Formatter.number("size", settings.getBrushSize()));
         return Command.SINGLE_SUCCESS;
     }
 }

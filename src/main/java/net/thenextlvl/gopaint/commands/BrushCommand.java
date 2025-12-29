@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.command;
+package net.thenextlvl.gopaint.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -9,7 +9,7 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.thenextlvl.gopaint.GoPaintPlugin;
-import net.thenextlvl.gopaint.command.suggestion.BrushSuggestionProvider;
+import net.thenextlvl.gopaint.commands.suggestion.BrushSuggestionProvider;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 

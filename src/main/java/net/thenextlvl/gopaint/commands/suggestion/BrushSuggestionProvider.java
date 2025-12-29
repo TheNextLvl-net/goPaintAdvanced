@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.command.suggestion;
+package net.thenextlvl.gopaint.commands.suggestion;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;

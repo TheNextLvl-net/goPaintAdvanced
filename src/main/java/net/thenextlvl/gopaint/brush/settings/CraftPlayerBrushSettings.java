@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.brush.setting;
+package net.thenextlvl.gopaint.brush.settings;
 
 import core.paper.gui.AbstractGUI;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -41,8 +41,8 @@ import net.thenextlvl.gopaint.brush.standard.PaintBrush;
 import net.thenextlvl.gopaint.brush.standard.SplatterBrush;
 import net.thenextlvl.gopaint.brush.standard.SprayBrush;
 import net.thenextlvl.gopaint.brush.standard.UnderlayBrush;
-import net.thenextlvl.gopaint.menu.BrushesMenu;
-import net.thenextlvl.gopaint.menu.MainMenu;
+import net.thenextlvl.gopaint.menus.BrushesMenu;
+import net.thenextlvl.gopaint.menus.MainMenu;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

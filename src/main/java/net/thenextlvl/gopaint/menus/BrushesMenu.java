@@ -1,4 +1,4 @@
-package net.thenextlvl.gopaint.menu;
+package net.thenextlvl.gopaint.menus;
 
 import core.paper.gui.PaginatedGUI;
 import core.paper.item.ActionItem;
