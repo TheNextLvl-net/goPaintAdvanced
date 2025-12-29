@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @NullMarked
-public class CraftBrushRegistry implements BrushRegistry {
+public final class CraftBrushRegistry implements BrushRegistry {
     private final List<PatternBrush> brushes = new LinkedList<>();
 
     public CraftBrushRegistry(GoPaintPlugin plugin) {

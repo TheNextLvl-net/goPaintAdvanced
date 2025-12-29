@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @NullMarked
-public class MainMenu extends AbstractGUI {
+public final class MainMenu extends AbstractGUI {
     private final PlayerBrushSettings settings;
     private final GoPaintPlugin plugin;
 

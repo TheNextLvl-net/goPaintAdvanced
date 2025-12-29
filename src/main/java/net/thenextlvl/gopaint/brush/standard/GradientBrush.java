@@ -32,7 +32,7 @@ import net.thenextlvl.gopaint.brush.pattern.GradientPattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class GradientBrush extends SpherePatternBrush {
+public final class GradientBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public GradientBrush(GoPaintProvider provider) {

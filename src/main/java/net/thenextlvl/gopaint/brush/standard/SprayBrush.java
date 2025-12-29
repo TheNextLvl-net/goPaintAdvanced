@@ -32,7 +32,7 @@ import net.thenextlvl.gopaint.brush.pattern.SprayPattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class SprayBrush extends SpherePatternBrush {
+public final class SprayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public SprayBrush(GoPaintProvider provider) {

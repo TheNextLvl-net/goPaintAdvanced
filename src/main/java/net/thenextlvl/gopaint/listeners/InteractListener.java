@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.listener;
+package net.thenextlvl.gopaint.listeners;
 
 import com.fastasyncworldedit.core.function.mask.AirMask;
 import com.fastasyncworldedit.core.function.mask.InverseMask;

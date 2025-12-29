@@ -32,7 +32,7 @@ import net.thenextlvl.gopaint.brush.pattern.FracturePattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class FractureBrush extends SpherePatternBrush {
+public final class FractureBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public FractureBrush(GoPaintProvider provider) {

@@ -32,7 +32,7 @@ import net.thenextlvl.gopaint.brush.pattern.AnglePattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class AngleBrush extends SpherePatternBrush {
+public final class AngleBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public AngleBrush(GoPaintProvider provider) {

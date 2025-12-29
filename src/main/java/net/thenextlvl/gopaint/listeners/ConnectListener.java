@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package net.thenextlvl.gopaint.listener;
+package net.thenextlvl.gopaint.listeners;
 
 import net.thenextlvl.gopaint.GoPaintPlugin;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class ConnectListener implements Listener {
+public final class ConnectListener implements Listener {
     private final GoPaintPlugin plugin;
 
     public ConnectListener(GoPaintPlugin plugin) {

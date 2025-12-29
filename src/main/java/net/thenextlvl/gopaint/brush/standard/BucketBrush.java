@@ -35,7 +35,7 @@ import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class BucketBrush extends PatternBrush {
+public final class BucketBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
     public BucketBrush(GoPaintProvider provider) {

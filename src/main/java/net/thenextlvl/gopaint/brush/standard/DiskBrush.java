@@ -34,7 +34,7 @@ import net.thenextlvl.gopaint.brush.pattern.ShufflePattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class DiskBrush extends PatternBrush {
+public final class DiskBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
     public DiskBrush(GoPaintProvider provider) {

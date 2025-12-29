@@ -6,7 +6,7 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class VersionChecker extends PaperModrinthVersionChecker<SemanticVersion> {
+public final class VersionChecker extends PaperModrinthVersionChecker<SemanticVersion> {
     public VersionChecker(Plugin plugin) {
         super(plugin, "a2wQ6jIv");
     }

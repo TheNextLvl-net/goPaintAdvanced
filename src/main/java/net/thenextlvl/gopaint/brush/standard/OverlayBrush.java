@@ -32,7 +32,7 @@ import net.thenextlvl.gopaint.brush.pattern.OverlayPattern;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class OverlayBrush extends SpherePatternBrush {
+public final class OverlayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
     public OverlayBrush(GoPaintProvider provider) {

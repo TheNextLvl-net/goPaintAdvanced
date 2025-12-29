@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @NullMarked
-public class PaintBrush extends PatternBrush {
+public final class PaintBrush extends PatternBrush {
     private final Map<UUID, List<BlockVector3>> selectedPoints = new HashMap<>();
     private final GoPaintProvider provider;
 

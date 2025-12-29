@@ -16,9 +16,9 @@ import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import net.thenextlvl.gopaint.brush.CraftBrushController;
 import net.thenextlvl.gopaint.brush.CraftBrushRegistry;
 import net.thenextlvl.gopaint.commands.GoPaintCommand;
-import net.thenextlvl.gopaint.listener.ConnectListener;
-import net.thenextlvl.gopaint.listener.InteractListener;
-import net.thenextlvl.gopaint.listener.InventoryListener;
+import net.thenextlvl.gopaint.listeners.ConnectListener;
+import net.thenextlvl.gopaint.listeners.InteractListener;
+import net.thenextlvl.gopaint.listeners.InventoryListener;
 import net.thenextlvl.gopaint.version.VersionChecker;
 import net.thenextlvl.i18n.ComponentBundle;
 import org.bstats.bukkit.Metrics;
@@ -35,7 +35,7 @@ import java.util.Locale;
 import java.util.Set;
 
 @NullMarked
-public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
+public final class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
     private final Key key = Key.key("gopaint_advanced", "translations");
     private final Path translations = getDataPath().resolve("translations");
     private final ComponentBundle bundle = ComponentBundle.builder(key, translations)
@@ -79,7 +79,7 @@ public class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     private void warnTranslationChanges() {
         if (!Files.isRegularFile(translations.resolve("messages.properties"))
-            && !Files.isRegularFile(translations.resolve("messages_german.properties"))) return;
+                && !Files.isRegularFile(translations.resolve("messages_german.properties"))) return;
         getComponentLogger().warn("The translations for goPaintAdvanced had major backwards incompatible changes");
         getComponentLogger().warn("For this reason the 'messages' files got renamed to 'gopaint'");
         getComponentLogger().warn("If you made changes to your translations before, you have to do them again in the new 'gopaint' files");

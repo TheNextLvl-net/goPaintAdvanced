@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.stream.IntStream;
 
 @NullMarked
-public class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
+public final class BrushesMenu extends PaginatedGUI<GoPaintProvider, PatternBrush> {
     private final Pagination pagination = new Pagination(
             IntStream.range(0, getSize() - 9).toArray(),
             getSize() - 6,

@@ -42,7 +42,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @NullMarked
-public class CraftBrushController implements BrushController {
+public final class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();
     private final GoPaintPlugin plugin;
 

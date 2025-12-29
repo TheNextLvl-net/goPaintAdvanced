@@ -14,7 +14,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.Objects;
 
 @NullMarked
-public class SplinePattern implements BuildPattern {
+public final class SplinePattern implements BuildPattern {
     private final EditSession session;
     private final BlockVector3 position;
     private final Player player;
