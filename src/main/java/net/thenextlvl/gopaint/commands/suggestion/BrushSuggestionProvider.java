@@ -10,7 +10,7 @@ import net.thenextlvl.gopaint.api.brush.PatternBrush;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BrushSuggestionProvider<T> implements SuggestionProvider<T> {
+public final class BrushSuggestionProvider<T> implements SuggestionProvider<T> {
     private final GoPaintPlugin plugin;
 
     public BrushSuggestionProvider(GoPaintPlugin plugin) {

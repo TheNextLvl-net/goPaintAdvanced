@@ -1,32 +1,37 @@
 package net.thenextlvl.gopaint.commands;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
 import net.thenextlvl.gopaint.GoPaintPlugin;
+import net.thenextlvl.gopaint.commands.brigadier.SimpleCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-class WandCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        return Commands.literal("wand")
-                .requires(stack -> stack.getSender() instanceof Player)
-                .executes(context -> wand(context, plugin));
+final class WandCommand extends SimpleCommand {
+    private WandCommand(GoPaintPlugin plugin) {
+        super(plugin, "wand", null);
     }
 
-    private static int wand(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
+        var command = new WandCommand(plugin);
+        return command.create()
+                .requires(stack -> stack.getSender() instanceof Player)
+                .executes(command);
+    }
+
+    @Override
+    public int run(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
-        plugin.bundle().sendMessage(player, giveWand(player, plugin)
+        plugin.bundle().sendMessage(player, giveWand(player)
                 ? "command.gopaint.wand.success"
                 : "command.gopaint.wand.failed");
-        return Command.SINGLE_SUCCESS;
+        return SINGLE_SUCCESS;
     }
 
-    private static boolean giveWand(Player player, GoPaintPlugin plugin) {
+    private boolean giveWand(Player player) {
         var type = plugin.config().brushConfig().defaultBrushType();
 
         var inventory = player.getInventory();

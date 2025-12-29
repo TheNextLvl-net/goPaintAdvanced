@@ -1,23 +1,28 @@
 package net.thenextlvl.gopaint.commands;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
 import net.thenextlvl.gopaint.GoPaintPlugin;
+import net.thenextlvl.gopaint.commands.brigadier.SimpleCommand;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-class ImportCommand {
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        return Commands.literal("import")
-                .requires(stack -> stack.getSender() instanceof Player)
-                .executes(context -> importSettings(context, plugin));
+final class ImportCommand extends SimpleCommand {
+    private ImportCommand(GoPaintPlugin plugin) {
+        super(plugin, "import", null);
     }
 
-    private static int importSettings(CommandContext<CommandSourceStack> context, GoPaintPlugin plugin) {
+    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
+        var command = new ImportCommand(plugin);
+        return command.create()
+                .requires(stack -> stack.getSender() instanceof Player)
+                .executes(command);
+    }
+
+    @Override
+    public int run(CommandContext<CommandSourceStack> context) {
         var player = (Player) context.getSource().getSender();
 
         var mainHand = player.getInventory().getItemInMainHand();
@@ -29,6 +34,6 @@ class ImportCommand {
         plugin.bundle().sendMessage(player, parsed.isPresent() ?
                 "command.gopaint.import.success" : "command.gopaint.import.failed");
 
-        return Command.SINGLE_SUCCESS;
+        return SINGLE_SUCCESS;
     }
 }
