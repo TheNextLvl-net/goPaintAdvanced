@@ -9,11 +9,9 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import org.bukkit.Material;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
-@NullMarked
 public interface BuildPattern extends Pattern {
     BlockVector3 position();
 

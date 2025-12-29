@@ -12,14 +12,12 @@ import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.Component;
 import net.thenextlvl.gopaint.api.brush.setting.BrushSettings;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
 /**
  * This interface represents a brush used for painting blocks in a world.
  */
-@NullMarked
 public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, Brush {
     /**
      * Retrieves the base64 head value.

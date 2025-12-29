@@ -21,12 +21,10 @@ package net.thenextlvl.gopaint.api.math.curve;
 import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@NullMarked
 public class BezierSplineSegment {
 
     private final MutableBlockVector3 startPoint;

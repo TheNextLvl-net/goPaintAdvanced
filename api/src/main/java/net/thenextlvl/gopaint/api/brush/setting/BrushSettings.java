@@ -13,7 +13,6 @@ import net.thenextlvl.gopaint.api.brush.mask.VisibleMask;
 import net.thenextlvl.gopaint.api.model.SurfaceMode;
 import org.bukkit.Axis;
 import org.bukkit.Material;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.Random;
  * about the brush's axis, brush type, list of blocks, mask material, enabled status, surface mode, angle-height
  * difference, angle distance, chance, falloff strength, fracture distance, mixing strength, size and thickness.
  */
-@NullMarked
 public interface BrushSettings {
     /**
      * Returns the axis used by the brush settings.

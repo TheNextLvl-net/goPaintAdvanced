@@ -5,9 +5,7 @@ import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public record VisibleMask(Extent extent, Vector3 viewPoint) implements Mask {
 
     @Override

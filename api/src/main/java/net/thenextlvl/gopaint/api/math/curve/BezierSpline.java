@@ -21,13 +21,11 @@ package net.thenextlvl.gopaint.api.math.curve;
 import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 
-@NullMarked
 public class BezierSpline {
 
     private final MutableBlockVector3[] knots;

@@ -8,7 +8,6 @@ import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Range;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.List;
  * The PlayerBrushSettings interface extends the BrushSettings interface and the InventoryHolder interface.
  * It represents the configuration settings for a brush specifically used by a player.
  */
-@NullMarked
 public interface PlayerBrushSettings extends BrushSettings {
     /**
      * Checks whether the brush is enabled.

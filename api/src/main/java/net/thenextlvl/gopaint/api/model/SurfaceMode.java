@@ -3,9 +3,7 @@ package net.thenextlvl.gopaint.api.model;
 import com.fastasyncworldedit.core.function.mask.SurfaceMask;
 import net.kyori.adventure.translation.Translatable;
 import net.thenextlvl.gopaint.api.brush.mask.VisibleMask;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public enum SurfaceMode implements Translatable {
     /**
      * This enumeration represents that surface mode is disabled.
