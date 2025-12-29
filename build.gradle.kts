@@ -12,7 +12,6 @@ plugins {
 }
 
 group = "net.thenextlvl.gopaint"
-version = "1.6.1"
 
 repositories {
     mavenCentral()
