@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     implementation("dev.faststats.metrics:bukkit:0.7.2")
     implementation("net.thenextlvl.core:files:4.0.0-pre1")
@@ -76,7 +76,7 @@ tasks.shadowJar {
 }
 
 tasks.runServer {
-    minecraftVersion("1.21.10")
+    minecraftVersion("1.21.11")
     jvmArgs("-Dcom.mojang.eula.agree=true")
 }
 
