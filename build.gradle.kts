@@ -23,7 +23,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    implementation("dev.faststats.metrics:bukkit:0.8.1")
+    implementation("dev.faststats.metrics:bukkit:0.9.0")
     implementation("net.thenextlvl.core:files:4.0.0-pre1")
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.1")
     implementation("org.bstats:bstats-bukkit:3.1.0")
