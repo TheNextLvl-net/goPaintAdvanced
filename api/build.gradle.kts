@@ -35,7 +35,7 @@ dependencies {
     }
 
     api("net.thenextlvl.core:paper:3.0.0-pre1")
-    api("net.thenextlvl:i18n:1.1.0")
+    api("net.thenextlvl:i18n:1.2.0")
 }
 
 tasks.withType<JavaCompile>().configureEach {
