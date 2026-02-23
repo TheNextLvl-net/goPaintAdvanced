@@ -74,3 +74,7 @@ project.
 
 Suggestions are welcome! We have a separate issue form for suggestions, that can be
 found [here](https://github.com/TheNextLvl-net/goPaintAdvanced/issues/new?template=feature_request.yml).
+
+---
+
+[![Usage](https://faststats.dev/embed/a4782934-b0a7-4228-939b-104bd21dd880?w=1012)](https://faststats.dev/project/gopaintadvanced)
