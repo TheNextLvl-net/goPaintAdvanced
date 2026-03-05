@@ -20,6 +20,7 @@ import net.thenextlvl.gopaint.commands.GoPaintCommand;
 import net.thenextlvl.gopaint.listeners.ConnectListener;
 import net.thenextlvl.gopaint.listeners.InteractListener;
 import net.thenextlvl.gopaint.listeners.InventoryListener;
+import net.thenextlvl.gopaint.utils.MessageMigrator;
 import net.thenextlvl.gopaint.version.VersionChecker;
 import net.thenextlvl.i18n.ComponentBundle;
 import org.bstats.bukkit.Metrics;
@@ -43,6 +44,7 @@ public final class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
             .placeholder("prefix", "prefix")
             .resource("gopaint.properties", Locale.US)
             .resource("gopaint_german.properties", Locale.GERMANY)
+            .migrator(new MessageMigrator())
             .build();
 
     private final BrushController brushController = new CraftBrushController(this);
