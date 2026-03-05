@@ -77,4 +77,4 @@ found [here](https://github.com/TheNextLvl-net/goPaintAdvanced/issues/new?templa
 
 ---
 
-[![Usage](https://faststats.dev/embed/a4782934-b0a7-4228-939b-104bd21dd880?w=1012)](https://faststats.dev/project/gopaintadvanced)
+[![Usage](https://faststats.dev/embed/default:2f0cd83b-5ac7-45fe-88bc-64ab0124b5e6:servers-and-players?w=1012)](https://faststats.dev/project/gopaintadvanced)
