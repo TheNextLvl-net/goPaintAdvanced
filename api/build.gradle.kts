@@ -28,7 +28,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.56-SNAPSHOT"))
+    compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.57-SNAPSHOT"))
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core") { isTransitive = false }
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") {
         exclude("org.jetbrains", "annotations")
