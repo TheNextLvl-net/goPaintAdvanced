@@ -36,7 +36,7 @@ paper {
     name = "goPaintAdvanced"
     main = "net.thenextlvl.gopaint.GoPaintPlugin"
     authors = listOf("Arcaniax", "TheMeinerLP", "NonSwag")
-    apiVersion = "1.21.5"
+    apiVersion = "26.1"
     foliaSupported = true
 
     serverDependencies {
