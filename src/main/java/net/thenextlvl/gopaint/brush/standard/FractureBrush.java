@@ -35,7 +35,7 @@ import org.jspecify.annotations.NullMarked;
 public final class FractureBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
-    public FractureBrush(GoPaintProvider provider) {
+    public FractureBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNkZjczZWVlNjIyNGM1YzVkOTQ4ZDJhMzQ1ZGUyNWYyMDhjYmQ5YWY3MTA4Y2UxZTFiNjFhNTg2ZGU5OGIyIn19fQ==",
                 Key.key("gopaint", "fracture_brush")
@@ -44,17 +44,17 @@ public final class FractureBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.fracture", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{provider.bundle().component("brush.description.fracture", audience)};
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new FracturePattern(session, position, player, settings);
     }
 }

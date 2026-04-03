@@ -11,18 +11,18 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class ReloadCommand extends SimpleCommand {
-    private ReloadCommand(GoPaintPlugin plugin) {
+    private ReloadCommand(final GoPaintPlugin plugin) {
         super(plugin, "reload", GoPaintProvider.ADMIN_PERMISSION);
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        var command = new ReloadCommand(plugin);
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final GoPaintPlugin plugin) {
+        final var command = new ReloadCommand(plugin);
         return command.create().executes(command);
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        var sender = context.getSource().getSender();
+    public int run(final CommandContext<CommandSourceStack> context) {
+        final var sender = context.getSource().getSender();
         plugin.reloadConfig();
         plugin.bundle().sendMessage(sender, "command.gopaint.reloaded");
         return SINGLE_SUCCESS;

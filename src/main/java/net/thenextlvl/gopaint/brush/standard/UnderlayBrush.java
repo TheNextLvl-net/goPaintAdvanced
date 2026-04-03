@@ -17,7 +17,7 @@ import org.jspecify.annotations.NullMarked;
 public final class UnderlayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
-    public UnderlayBrush(GoPaintProvider provider) {
+    public UnderlayBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzFlNTY1YzFlMDVhODIzZDgxNjMwMjY4N2E5OGQ1ZmUyZDA2NmFhMTkxNDMzNjg4NDRhMGM0MzAyNzYyNDljMyJ9fX0=",
                 Key.key("gopaint", "underlay_brush")
@@ -26,12 +26,12 @@ public final class UnderlayBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.underlay", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{
                 provider.bundle().component("brush.description.underlay.1", audience),
                 provider.bundle().component("brush.description.underlay.2", audience)
@@ -39,7 +39,7 @@ public final class UnderlayBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new UnderlayPattern(session, position, player, settings);
     }
 }

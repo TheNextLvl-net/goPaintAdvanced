@@ -28,7 +28,7 @@ public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, B
      */
     private final Key key;
 
-    public PatternBrush(String headValue, Key key) {
+    public PatternBrush(final String headValue, final Key key) {
         this.headValue = headValue;
         this.key = key;
     }
@@ -82,14 +82,14 @@ public abstract class PatternBrush implements Comparable<PatternBrush>, Keyed, B
     }
 
     @Override
-    public int compareTo(@NonNull PatternBrush brush) {
+    public int compareTo(@NonNull final PatternBrush brush) {
         return key().compareTo(brush.key());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        PatternBrush that = (PatternBrush) o;
+        final PatternBrush that = (PatternBrush) o;
         return Objects.equals(key, that.key);
     }
 

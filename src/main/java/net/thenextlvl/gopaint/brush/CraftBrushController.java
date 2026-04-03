@@ -46,28 +46,28 @@ public final class CraftBrushController implements BrushController {
     private final Map<UUID, PlayerBrushSettings> playerBrushes = new HashMap<>();
     private final GoPaintPlugin plugin;
 
-    public CraftBrushController(GoPaintPlugin plugin) {
+    public CraftBrushController(final GoPaintPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public PlayerBrushSettings getBrushSettings(Player player) {
+    public PlayerBrushSettings getBrushSettings(final Player player) {
         return playerBrushes.computeIfAbsent(player.getUniqueId(), ignored ->
                 new CraftPlayerBrushSettings(plugin, player));
     }
 
     @Override
-    public Optional<ItemBrushSettings> parseBrushSettings(ItemStack itemStack) {
-        var container = itemStack.getPersistentDataContainer();
+    public Optional<ItemBrushSettings> parseBrushSettings(final ItemStack itemStack) {
+        final var container = itemStack.getPersistentDataContainer();
 
-        var brushSize = container.get(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER);
-        var maskEnabled = container.get(new NamespacedKey("gopaint", "mask_enabled"), PersistentDataType.BOOLEAN);
+        final var brushSize = container.get(new NamespacedKey("gopaint", "size"), PersistentDataType.INTEGER);
+        final var maskEnabled = container.get(new NamespacedKey("gopaint", "mask_enabled"), PersistentDataType.BOOLEAN);
 
-        var surfaceMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING))
+        final var surfaceMode = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "surface_mode"), PersistentDataType.STRING))
                 .map(SurfaceMode::valueOf)
                 .orElse(null);
 
-        var brush = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "brush"), PersistentDataType.STRING))
+        final var brush = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "brush"), PersistentDataType.STRING))
                 .map(Key::key)
                 .flatMap(plugin.brushRegistry()::getBrush)
                 .orElse(null);
@@ -75,22 +75,22 @@ public final class CraftBrushController implements BrushController {
         if (brushSize == null || maskEnabled == null || surfaceMode == null || brush == null)
             return Optional.empty();
 
-        var chance = container.getOrDefault(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, 0);
-        var thickness = container.getOrDefault(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, 0);
-        var fractureStrength = container.getOrDefault(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, 0);
-        var angleDistance = container.getOrDefault(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, 0);
-        var falloffStrength = container.getOrDefault(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, 0);
-        var mixingStrength = container.getOrDefault(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, 0);
+        final var chance = container.getOrDefault(new NamespacedKey("gopaint", "chance"), PersistentDataType.INTEGER, 0);
+        final var thickness = container.getOrDefault(new NamespacedKey("gopaint", "thickness"), PersistentDataType.INTEGER, 0);
+        final var fractureStrength = container.getOrDefault(new NamespacedKey("gopaint", "fracture_strength"), PersistentDataType.INTEGER, 0);
+        final var angleDistance = container.getOrDefault(new NamespacedKey("gopaint", "angle_distance"), PersistentDataType.INTEGER, 0);
+        final var falloffStrength = container.getOrDefault(new NamespacedKey("gopaint", "falloff_strength"), PersistentDataType.INTEGER, 0);
+        final var mixingStrength = container.getOrDefault(new NamespacedKey("gopaint", "mixing_strength"), PersistentDataType.INTEGER, 0);
 
-        var angleHeightDifference = container.getOrDefault(new NamespacedKey("gopaint", "angle_height_difference"), PersistentDataType.DOUBLE, 0d);
+        final var angleHeightDifference = container.getOrDefault(new NamespacedKey("gopaint", "angle_height_difference"), PersistentDataType.DOUBLE, 0d);
 
-        var axis = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "axis"), PersistentDataType.STRING))
+        final var axis = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "axis"), PersistentDataType.STRING))
                 .map(Axis::valueOf)
                 .orElse(Axis.Y);
-        var mask = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING))
+        final var mask = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "mask"), PersistentDataType.STRING))
                 .map(Material::matchMaterial)
                 .orElseThrow();
-        var blocks = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "blocks"), PersistentDataType.STRING))
+        final var blocks = Optional.ofNullable(container.get(new NamespacedKey("gopaint", "blocks"), PersistentDataType.STRING))
                 .map(string -> string.split(","))
                 .stream()
                 .flatMap(Arrays::stream)
@@ -103,7 +103,7 @@ public final class CraftBrushController implements BrushController {
     }
 
     @Override
-    public void removeBrushSettings(Player player) {
+    public void removeBrushSettings(final Player player) {
         playerBrushes.remove(player.getUniqueId());
     }
 }

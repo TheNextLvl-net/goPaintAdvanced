@@ -10,23 +10,23 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class ExportCommand extends SimpleCommand {
-    private ExportCommand(GoPaintPlugin plugin) {
+    private ExportCommand(final GoPaintPlugin plugin) {
         super(plugin, "export", null);
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        var command = new ExportCommand(plugin);
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final GoPaintPlugin plugin) {
+        final var command = new ExportCommand(plugin);
         return command.create()
                 .requires(stack -> stack.getSender() instanceof Player)
                 .executes(command);
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        var player = (Player) context.getSource().getSender();
+    public int run(final CommandContext<CommandSourceStack> context) {
+        final var player = (Player) context.getSource().getSender();
 
-        var mainHand = player.getInventory().getItemInMainHand();
-        var settings = plugin.brushController().getBrushSettings(player);
+        final var mainHand = player.getInventory().getItemInMainHand();
+        final var settings = plugin.brushController().getBrushSettings(player);
 
         plugin.bundle().sendMessage(player, settings.exportSettings(mainHand) ?
                 "command.gopaint.export.success" : "command.gopaint.export.failed");

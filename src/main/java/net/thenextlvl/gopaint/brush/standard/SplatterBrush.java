@@ -35,7 +35,7 @@ import org.jspecify.annotations.NullMarked;
 public final class SplatterBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
-    public SplatterBrush(GoPaintProvider provider) {
+    public SplatterBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzMzODI5MmUyZTY5ZjA5MDY5NGNlZjY3MmJiNzZmMWQ4Mzc1OGQxMjc0NGJiNmZmYzY4MzRmZGJjMWE5ODMifX19",
                 Key.key("gopaint", "splatter_brush")
@@ -44,12 +44,12 @@ public final class SplatterBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.splatter", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{
                 provider.bundle().component("brush.description.splatter.1", audience),
                 provider.bundle().component("brush.description.splatter.2", audience),
@@ -58,7 +58,7 @@ public final class SplatterBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new SplatterPattern(session, position, player, settings);
     }
 }

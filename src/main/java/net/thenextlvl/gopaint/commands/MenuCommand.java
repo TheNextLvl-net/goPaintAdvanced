@@ -10,21 +10,21 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class MenuCommand extends SimpleCommand {
-    private MenuCommand(GoPaintPlugin plugin) {
+    private MenuCommand(final GoPaintPlugin plugin) {
         super(plugin, "menu", null);
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        var command = new MenuCommand(plugin);
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final GoPaintPlugin plugin) {
+        final var command = new MenuCommand(plugin);
         return command.create()
                 .requires(stack -> stack.getSender() instanceof Player)
                 .executes(command);
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        var player = (Player) context.getSource().getSender();
-        var settings = plugin.brushController().getBrushSettings(player);
+    public int run(final CommandContext<CommandSourceStack> context) {
+        final var player = (Player) context.getSource().getSender();
+        final var settings = plugin.brushController().getBrushSettings(player);
         settings.getMainMenu().open();
         return SINGLE_SUCCESS;
     }

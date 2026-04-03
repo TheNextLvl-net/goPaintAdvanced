@@ -41,12 +41,12 @@ public class BezierSplineSegment {
 
     private MutableBlockVector3 result = MutableBlockVector3.at(0, 0, 0);
 
-    public BezierSplineSegment(MutableBlockVector3 startPoint, MutableBlockVector3 endPoint) {
+    public BezierSplineSegment(final MutableBlockVector3 startPoint, final MutableBlockVector3 endPoint) {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
     }
 
-    public void setX(double xFlat) {
+    public void setX(final double xFlat) {
         startPoint.mutX(xFlat);
         intermediatePoint1.mutX(xFlat);
         intermediatePoint2.mutX(xFlat);
@@ -54,7 +54,7 @@ public class BezierSplineSegment {
         this.xFlat = xFlat;
     }
 
-    public void setY(double yFlat) {
+    public void setY(final double yFlat) {
         startPoint.mutY(yFlat);
         intermediatePoint1.mutY(yFlat);
         intermediatePoint2.mutY(yFlat);
@@ -62,7 +62,7 @@ public class BezierSplineSegment {
         this.yFlat = yFlat;
     }
 
-    public void setZ(double zFlat) {
+    public void setZ(final double zFlat) {
         startPoint.mutZ(zFlat);
         intermediatePoint1.mutZ(zFlat);
         intermediatePoint2.mutZ(zFlat);
@@ -73,9 +73,9 @@ public class BezierSplineSegment {
     @Contract(pure = true)
     public double getCurveLength() {
         BlockVector3 current = startPoint;
-        var lengths = new double[20];
+        final var lengths = new double[20];
         for (int i = 1; i < lengths.length; i++) {
-            var point = getPoint(i * 0.05);
+            final var point = getPoint(i * 0.05);
             lengths[i] = lengths[i - 1] + point.distance(current);
             current = point;
         }
@@ -83,21 +83,21 @@ public class BezierSplineSegment {
     }
 
     @Contract(pure = true)
-    public BlockVector3 getPoint(double factor) {
-        var x = Objects.requireNonNullElseGet(xFlat, () -> calculatePoint(
+    public BlockVector3 getPoint(final double factor) {
+        final var x = Objects.requireNonNullElseGet(xFlat, () -> calculatePoint(
                 factor, startPoint.x(), intermediatePoint1.x(), intermediatePoint2.x(), endPoint.x()
         ));
-        var y = Objects.requireNonNullElseGet(yFlat, () -> calculatePoint(
+        final var y = Objects.requireNonNullElseGet(yFlat, () -> calculatePoint(
                 factor, startPoint.y(), intermediatePoint1.y(), intermediatePoint2.y(), endPoint.y()
         ));
-        var z = Objects.requireNonNullElseGet(zFlat, () -> calculatePoint(
+        final var z = Objects.requireNonNullElseGet(zFlat, () -> calculatePoint(
                 factor, startPoint.z(), intermediatePoint1.z(), intermediatePoint2.z(), endPoint.z()
         ));
         return BlockVector3.at(x, y, z);
     }
 
     @Contract(pure = true)
-    private double calculatePoint(double factor, double startPoint, double intermediatePoint1, double intermediatePoint2, double endPoint) {
+    private double calculatePoint(final double factor, final double startPoint, final double intermediatePoint1, final double intermediatePoint2, final double endPoint) {
         return (Math.pow(1 - factor, 3) * startPoint) + (3 * Math.pow(1 - factor, 2) * factor * intermediatePoint1)
                + (3 * (1 - factor) * factor * factor * intermediatePoint2) + (Math.pow(factor, 3) * endPoint);
     }
@@ -146,39 +146,39 @@ public class BezierSplineSegment {
         return zFlat;
     }
 
-    public void setResult(MutableBlockVector3 result) {
+    public void setResult(final MutableBlockVector3 result) {
         this.result = result;
     }
 
-    public void setIntermediatePoint1(MutableBlockVector3 intermediatePoint1) {
+    public void setIntermediatePoint1(final MutableBlockVector3 intermediatePoint1) {
         this.intermediatePoint1 = intermediatePoint1;
     }
 
-    public void setIntermediatePoint2(MutableBlockVector3 intermediatePoint2) {
+    public void setIntermediatePoint2(final MutableBlockVector3 intermediatePoint2) {
         this.intermediatePoint2 = intermediatePoint2;
     }
 
-    public void setCoefficient1(float coefficient1) {
+    public void setCoefficient1(final float coefficient1) {
         this.coefficient1 = coefficient1;
     }
 
-    public void setCoefficient2(float coefficient2) {
+    public void setCoefficient2(final float coefficient2) {
         this.coefficient2 = coefficient2;
     }
 
-    public void setCoefficient3(float coefficient3) {
+    public void setCoefficient3(final float coefficient3) {
         this.coefficient3 = coefficient3;
     }
 
-    public void setXFlat(@Nullable Double xFlat) {
+    public void setXFlat(@Nullable final Double xFlat) {
         this.xFlat = xFlat;
     }
 
-    public void setYFlat(@Nullable Double yFlat) {
+    public void setYFlat(@Nullable final Double yFlat) {
         this.yFlat = yFlat;
     }
 
-    public void setZFlat(@Nullable Double zFlat) {
+    public void setZFlat(@Nullable final Double zFlat) {
         this.zFlat = zFlat;
     }
 }

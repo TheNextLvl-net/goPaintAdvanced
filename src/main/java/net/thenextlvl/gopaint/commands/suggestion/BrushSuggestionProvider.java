@@ -13,12 +13,12 @@ import java.util.concurrent.CompletableFuture;
 public final class BrushSuggestionProvider<T> implements SuggestionProvider<T> {
     private final GoPaintPlugin plugin;
 
-    public BrushSuggestionProvider(GoPaintPlugin plugin) {
+    public BrushSuggestionProvider(final GoPaintPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext context, SuggestionsBuilder builder) {
+    public CompletableFuture<Suggestions> getSuggestions(final CommandContext context, final SuggestionsBuilder builder) {
         plugin.brushRegistry().getBrushes()
                 .map(PatternBrush::key)
                 .map(Key::asString)

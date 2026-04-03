@@ -38,13 +38,13 @@ import org.jspecify.annotations.NullMarked;
 public final class InteractListener implements Listener {
     private final GoPaintPlugin plugin;
 
-    public InteractListener(GoPaintPlugin plugin) {
+    public InteractListener(final GoPaintPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onClick(PlayerInteractEvent event) {
-        var player = event.getPlayer();
+    public void onClick(final PlayerInteractEvent event) {
+        final var player = event.getPlayer();
 
         if (!player.hasPermission(GoPaintProvider.USE_PERMISSION)) return;
 
@@ -53,11 +53,11 @@ public final class InteractListener implements Listener {
             return;
         }
 
-        var item = event.getItem();
+        final var item = event.getItem();
         if (item == null) return;
 
         if (event.getAction().isLeftClick() && item.getType().equals(plugin.config().brushConfig().defaultBrushType())) {
-            var brush = plugin.brushController().getBrushSettings(player);
+            final var brush = plugin.brushController().getBrushSettings(player);
             brush.getMainMenu().open();
             event.setCancelled(true);
             return;
@@ -65,41 +65,41 @@ public final class InteractListener implements Listener {
 
         if (!event.getAction().isRightClick()) return;
 
-        var settings = !item.getType().equals(plugin.config().brushConfig().defaultBrushType())
+        final var settings = !item.getType().equals(plugin.config().brushConfig().defaultBrushType())
                 ? plugin.brushController().parseBrushSettings(item).orElse(null)
                 : plugin.brushController().getBrushSettings(player);
 
         if (settings == null || settings.getBlocks().isEmpty()) return;
 
-        if (!(settings instanceof PlayerBrushSettings playerSettings) || playerSettings.isEnabled())
+        if (!(settings instanceof final PlayerBrushSettings playerSettings) || playerSettings.isEnabled())
             handleInteract(BukkitAdapter.adapt(player), settings);
         else plugin.bundle().sendMessage(player, "brush.disabled");
 
         event.setCancelled(true);
     }
 
-    private void handleInteract(BukkitPlayer player, BrushSettings settings) {
+    private void handleInteract(final BukkitPlayer player, final BrushSettings settings) {
         player.runAsyncIfFree(() -> {
-            var session = player.getSession();
+            final var session = player.getSession();
 
-            try (var editSession = session.createEditSession(player)) {
+            try (final var editSession = session.createEditSession(player)) {
 
-                var blockTrace = player.getSolidBlockTrace(250);
+                final var blockTrace = player.getSolidBlockTrace(250);
 
                 if (blockTrace == null) {
                     plugin.bundle().sendMessage(player.getPlayer(), "brush.block.sight");
                     editSession.cancel();
                     return;
                 }
-                var bag = session.getBlockBag(player);
+                final var bag = session.getBlockBag(player);
 
                 try {
                     Request.request().setEditSession(editSession);
 
-                    var position = blockTrace.toBlockPoint();
-                    var mask = MaskIntersection.of(new InverseMask(new AirMask(player.getWorld())),
+                    final var position = blockTrace.toBlockPoint();
+                    final var mask = MaskIntersection.of(new InverseMask(new AirMask(player.getWorld())),
                             settings.getMask(editSession), settings.getSurfaceMask(player));
-                    var pattern = settings.getBrush().buildPattern(editSession, position, player, settings);
+                    final var pattern = settings.getBrush().buildPattern(editSession, position, player, settings);
 
                     editSession.setMask(mask);
 

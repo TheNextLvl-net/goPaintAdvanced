@@ -34,7 +34,7 @@ public final class MainMenu extends AbstractGUI {
 
     private final Inventory inventory;
 
-    public MainMenu(GoPaintPlugin plugin, PlayerBrushSettings settings, Player owner) {
+    public MainMenu(final GoPaintPlugin plugin, final PlayerBrushSettings settings, final Player owner) {
         super(owner, plugin.bundle().component("menu.main.title", owner));
         this.inventory = plugin.getServer().createInventory(this, 6 * 9, title());
         this.settings = settings;
@@ -63,7 +63,7 @@ public final class MainMenu extends AbstractGUI {
     }
 
     private void resetSettingSlots() {
-        var placeholder = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip().item();
         IntStream.of(3, 4, 12, 13, 21, 22).forEach(value -> inventory.setItem(value, placeholder));
     }
 
@@ -76,7 +76,7 @@ public final class MainMenu extends AbstractGUI {
 
     public void updateBlockPalette() {
 
-        var placeholder = ItemBuilder.of(Material.BARRIER)
+        final var placeholder = ItemBuilder.of(Material.BARRIER)
                 .itemName(plugin.bundle().component("slot.empty", owner))
                 .lore(Component.empty(), plugin.bundle().component("slot.empty.description", owner))
                 .item();
@@ -86,7 +86,7 @@ public final class MainMenu extends AbstractGUI {
 
         if (settings.getBlocks().isEmpty()) return;
 
-        var chance = 100d / settings.getBlocks().size();
+        final var chance = 100d / settings.getBlocks().size();
 
         for (var i = 0; i < settings.getBlocks().size(); i++) {
             inventory.setItem(i + 46, ItemBuilder.of(settings.getBlocks().get(i))
@@ -126,7 +126,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.falloff.description.right", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(21, placeholder);
     }
@@ -142,7 +142,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.mixing.description.right", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(4, placeholder);
         inventory.setItem(22, placeholder);
     }
@@ -158,7 +158,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.fracture.description.right", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(21, placeholder);
     }
@@ -182,7 +182,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.angle.maximum.description.shift", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(4, placeholder);
         inventory.setItem(22, placeholder);
@@ -202,7 +202,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.thickness.description.right", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(21, placeholder);
     }
@@ -216,7 +216,7 @@ public final class MainMenu extends AbstractGUI {
                 .lore(Component.empty(), plugin.bundle().component("brush.axis.description", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(21, placeholder);
     }
@@ -232,15 +232,15 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.chance.description.right", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var placeholder = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
         inventory.setItem(3, placeholder);
         inventory.setItem(21, placeholder);
     }
 
     public void updateBrushSelection() {
-        var brush = settings.getBrush();
+        final var brush = settings.getBrush();
 
-        var lore = new ArrayList<>(Arrays.asList(
+        final var lore = new ArrayList<>(Arrays.asList(
                 Component.empty(),
                 plugin.bundle().component("brush.selection.description.1", owner),
                 plugin.bundle().component("brush.selection.description.2", owner),
@@ -248,7 +248,7 @@ public final class MainMenu extends AbstractGUI {
         ));
 
         plugin.brushRegistry().getBrushes().map(current -> {
-            var color = current.equals(brush) ? NamedTextColor.YELLOW : NamedTextColor.DARK_GRAY;
+            final var color = current.equals(brush) ? NamedTextColor.YELLOW : NamedTextColor.DARK_GRAY;
             return current.getName(owner).decoration(TextDecoration.ITALIC, false).color(color);
         }).forEach(lore::addLast);
 
@@ -269,7 +269,7 @@ public final class MainMenu extends AbstractGUI {
                         plugin.bundle().component("brush.toggle.description.3", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(settings.isEnabled()
+        final var placeholder = ItemBuilder.of(settings.isEnabled()
                 ? Material.LIME_STAINED_GLASS_PANE
                 : Material.RED_STAINED_GLASS_PANE
         ).hideTooltip().item();
@@ -279,7 +279,7 @@ public final class MainMenu extends AbstractGUI {
     }
 
     public void updateMaskToggle() {
-        var icon = settings.isMaskEnabled() ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN;
+        final var icon = settings.isMaskEnabled() ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN;
 
         inventory.setItem(15, ItemBuilder.of(icon)
                 .itemName(plugin.bundle().component("mask.state", owner))
@@ -287,7 +287,7 @@ public final class MainMenu extends AbstractGUI {
                         Component.empty(), plugin.bundle().component("click.cycle", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(settings.isMaskEnabled()
+        final var placeholder = ItemBuilder.of(settings.isMaskEnabled()
                 ? Material.LIME_STAINED_GLASS_PANE
                 : Material.RED_STAINED_GLASS_PANE
         ).hideTooltip().item();
@@ -297,7 +297,7 @@ public final class MainMenu extends AbstractGUI {
     }
 
     public void updateSurfaceMode() {
-        var icon = switch (settings.getSurfaceMode()) {
+        final var icon = switch (settings.getSurfaceMode()) {
             case EXPOSED -> Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
             case DISABLED -> Material.POLISHED_BLACKSTONE_PRESSURE_PLATE;
             case VISIBLE -> Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
@@ -309,7 +309,7 @@ public final class MainMenu extends AbstractGUI {
                         Component.empty(), plugin.bundle().component("surface.mode.description", owner))
                 .item());
 
-        var placeholder = ItemBuilder.of(switch (settings.getSurfaceMode()) {
+        final var placeholder = ItemBuilder.of(switch (settings.getSurfaceMode()) {
             case EXPOSED -> Material.LIME_STAINED_GLASS_PANE;
             case DISABLED -> Material.RED_STAINED_GLASS_PANE;
             case VISIBLE -> Material.ORANGE_STAINED_GLASS_PANE;
@@ -320,10 +320,10 @@ public final class MainMenu extends AbstractGUI {
     }
 
     private void formatDefault() {
-        var grayGlassPane = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip().item();
-        var yellowGlassPane = ItemBuilder.of(Material.YELLOW_STAINED_GLASS_PANE).hideTooltip().item();
-        var whiteGlassPane = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
-        var orangeGlassPane = ItemBuilder.of(Material.ORANGE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var grayGlassPane = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).hideTooltip().item();
+        final var yellowGlassPane = ItemBuilder.of(Material.YELLOW_STAINED_GLASS_PANE).hideTooltip().item();
+        final var whiteGlassPane = ItemBuilder.of(Material.WHITE_STAINED_GLASS_PANE).hideTooltip().item();
+        final var orangeGlassPane = ItemBuilder.of(Material.ORANGE_STAINED_GLASS_PANE).hideTooltip().item();
 
         IntStream.range(0, inventory.getSize()).forEach(value -> inventory.setItem(value, grayGlassPane));
 

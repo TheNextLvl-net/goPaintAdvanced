@@ -66,8 +66,8 @@ public interface BrushSettings {
      * @param session The session used for retrieving the mask.
      * @return The WorldEdit mask
      */
-    default Mask getMask(EditSession session) {
-        var mask = Optional.ofNullable(session.getMask())
+    default Mask getMask(final EditSession session) {
+        final var mask = Optional.ofNullable(session.getMask())
                 .orElseGet(() -> new ExistingBlockMask(session.getWorld()));
         return isMaskEnabled() ? Optional.of(getMask())
                 .map(BukkitAdapter::asBlockType)
@@ -76,7 +76,7 @@ public interface BrushSettings {
                 .orElse(mask) : mask;
     }
 
-    default @Nullable Mask getSurfaceMask(Player player) {
+    default @Nullable Mask getSurfaceMask(final Player player) {
         return switch (getSurfaceMode()) {
             case VISIBLE -> new VisibleMask(player.getWorld(), player.getLocation().add(0, 1.5, 0));
             case EXPOSED -> new SurfaceMask(player.getWorld());

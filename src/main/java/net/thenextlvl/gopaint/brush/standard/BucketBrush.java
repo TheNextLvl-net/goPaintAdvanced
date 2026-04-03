@@ -38,7 +38,7 @@ import org.jspecify.annotations.NullMarked;
 public final class BucketBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
-    public BucketBrush(GoPaintProvider provider) {
+    public BucketBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTAxOGI0NTc0OTM5Nzg4YTJhZDU1NTJiOTEyZDY3ODEwNjk4ODhjNTEyMzRhNGExM2VhZGI3ZDRjOTc5YzkzIn19fQ==",
                 Key.key("gopaint", "bucket_brush")
@@ -47,12 +47,12 @@ public final class BucketBrush extends PatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.bucket", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{
                 provider.bundle().component("brush.description.bucket.1", audience),
                 provider.bundle().component("brush.description.bucket.2", audience)
@@ -60,13 +60,13 @@ public final class BucketBrush extends PatternBrush {
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new ShufflePattern(session, position, player, settings);
     }
 
     @Override
-    public void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
-        var blocks = Sphere.getBlocksInRadius(position, size);
+    public void build(final EditSession session, final BlockVector3 position, final Pattern pattern, final double size) throws MaxChangedBlocksException {
+        final var blocks = Sphere.getBlocksInRadius(position, size);
         ConnectedBlocks.getConnectedBlocks(session.getWorld(), position, blocks)
                 .forEach(vector3 -> session.setBlock(vector3, pattern));
     }

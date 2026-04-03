@@ -35,7 +35,7 @@ import org.jspecify.annotations.NullMarked;
 public final class GradientBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
-    public GradientBrush(GoPaintProvider provider) {
+    public GradientBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA2MmRhM2QzYjhmMWZkMzUzNDNjYzI3OWZiMGZlNWNmNGE1N2I1YWJjNDMxZmJiNzhhNzNiZjJhZjY3NGYifX19",
                 Key.key("gopaint", "gradient_brush")
@@ -44,17 +44,17 @@ public final class GradientBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.gradient", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{provider.bundle().component("brush.description.gradient", audience)};
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new GradientPattern(session, position, player, settings);
     }
 }

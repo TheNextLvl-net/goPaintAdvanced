@@ -47,9 +47,9 @@ public final class CraftItemBrushSettings implements ItemBrushSettings {
 
     private static final Random random = new Random();
 
-    public CraftItemBrushSettings(PatternBrush brush, Material mask, List<Material> blocks, Axis axis, SurfaceMode surfaceMode,
-                           boolean maskEnabled, int brushSize, int chance, int thickness, int angleDistance,
-                           int fractureStrength, int falloffStrength, int mixingStrength, double angleHeightDifference) {
+    public CraftItemBrushSettings(final PatternBrush brush, final Material mask, final List<Material> blocks, final Axis axis, final SurfaceMode surfaceMode,
+                                  final boolean maskEnabled, final int brushSize, final int chance, final int thickness, final int angleDistance,
+                                  final int fractureStrength, final int falloffStrength, final int mixingStrength, final double angleHeightDifference) {
         this.brush = brush;
         this.mask = mask;
         this.blocks = blocks;

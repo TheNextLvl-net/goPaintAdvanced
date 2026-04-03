@@ -18,7 +18,7 @@ public record ShufflePattern(
 ) implements BuildPattern {
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
         return set.setBlock(extent, getRandomBlockState().withProperties(get.getBlock(extent)));
     }
 }

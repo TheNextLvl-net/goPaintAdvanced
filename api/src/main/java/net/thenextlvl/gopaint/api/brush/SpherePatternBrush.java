@@ -7,12 +7,12 @@ import com.sk89q.worldedit.math.BlockVector3;
 import net.kyori.adventure.key.Key;
 
 public abstract class SpherePatternBrush extends PatternBrush {
-    public SpherePatternBrush(String headValue, Key key) {
+    public SpherePatternBrush(final String headValue, final Key key) {
         super(headValue, key);
     }
 
     @Override
-    public final void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
+    public final void build(final EditSession session, final BlockVector3 position, final Pattern pattern, final double size) throws MaxChangedBlocksException {
         session.makeSphere(position, pattern, size, size, size, true);
     }
 }

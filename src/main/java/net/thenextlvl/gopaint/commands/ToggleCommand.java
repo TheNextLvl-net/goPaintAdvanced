@@ -10,23 +10,23 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class ToggleCommand extends SimpleCommand {
-    private ToggleCommand(GoPaintPlugin plugin) {
+    private ToggleCommand(final GoPaintPlugin plugin) {
         super(plugin, "toggle", null);
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        var command = new ToggleCommand(plugin);
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final GoPaintPlugin plugin) {
+        final var command = new ToggleCommand(plugin);
         return command.create()
                 .requires(stack -> stack.getSender() instanceof Player)
                 .executes(command);
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        var player = (Player) context.getSource().getSender();
-        var settings = plugin.brushController().getBrushSettings(player);
+    public int run(final CommandContext<CommandSourceStack> context) {
+        final var player = (Player) context.getSource().getSender();
+        final var settings = plugin.brushController().getBrushSettings(player);
         settings.setEnabled(!settings.isEnabled());
-        var message = settings.isEnabled() ? "command.gopaint.brush.enabled"
+        final var message = settings.isEnabled() ? "command.gopaint.brush.enabled"
                 : "command.gopaint.brush.disabled";
         plugin.bundle().sendMessage(player, message);
         return SINGLE_SUCCESS;

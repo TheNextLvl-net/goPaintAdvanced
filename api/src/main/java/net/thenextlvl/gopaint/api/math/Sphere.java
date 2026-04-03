@@ -25,15 +25,15 @@ import java.util.Set;
 
 public class Sphere {
 
-    public static Set<BlockVector3> getBlocksInRadius(BlockVector3 position, double radius) {
-        var vectors = new HashSet<BlockVector3>();
-        var loc1 = position.subtract((int) radius, (int) radius, (int) radius);
-        var loc2 = position.add((int) radius, (int) radius, (int) radius);
+    public static Set<BlockVector3> getBlocksInRadius(final BlockVector3 position, final double radius) {
+        final var vectors = new HashSet<BlockVector3>();
+        final var loc1 = position.subtract((int) radius, (int) radius, (int) radius);
+        final var loc2 = position.add((int) radius, (int) radius, (int) radius);
 
         for (var x = loc1.x(); x <= loc2.x(); x++) {
             for (var y = loc1.y(); y <= loc2.y(); y++) {
                 for (var z = loc1.z(); z <= loc2.z(); z++) {
-                    var vector3 = BlockVector3.at(x, y, z);
+                    final var vector3 = BlockVector3.at(x, y, z);
                     if (vector3.distance(position) >= radius) continue;
                     vectors.add(vector3);
                 }

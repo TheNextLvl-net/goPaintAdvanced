@@ -28,7 +28,7 @@ public class Height {
      * @param block the block to find the nearest non-empty block for
      * @return the y-coordinate of the nearest non-empty block
      */
-    public static int getNearestNonEmptyBlock(Block block) {
+    public static int getNearestNonEmptyBlock(final Block block) {
         if (block.material().isAir()) {
             for (var y = block.vector().y(); y >= block.world().getMinY(); y--) {
                 if (block.world().getBlock(block.vector().x(), y, block.vector().z()).isAir()) continue;
@@ -52,7 +52,7 @@ public class Height {
      * @param distance The distance to consider when calculating the average height difference fracture.
      * @return The average height difference fracture of the block within the given distance.
      */
-    public static double getAverageHeightDiffFracture(Block block, int height, int distance) {
+    public static double getAverageHeightDiffFracture(final Block block, final int height, final int distance) {
         double totalHeight = 0;
         totalHeight += Math.abs(getNearestNonEmptyBlock(relative(block, distance, -distance))) - height;
         totalHeight += Math.abs(getNearestNonEmptyBlock(relative(block, distance, distance))) - height;
@@ -65,8 +65,8 @@ public class Height {
         return (totalHeight / 8d) / distance;
     }
 
-    private static Block relative(Block block, int x, int z) {
-        var vector3 = block.vector().add(x, 0, z);
+    private static Block relative(final Block block, final int x, final int z) {
+        final var vector3 = block.vector().add(x, 0, z);
         return new Block(block.world().getFullBlock(vector3), vector3, block.world());
     }
 
@@ -77,7 +77,7 @@ public class Height {
      * @param distance The distance to consider when calculating the average height difference angle.
      * @return The average height difference angle of the block within the given distance.
      */
-    public static double getAverageHeightDiffAngle(Block block, int distance) {
+    public static double getAverageHeightDiffAngle(final Block block, final int distance) {
         var maxHeightDiff = 0;
         var maxHeightDiff2 = 0;
         var diff = Math.abs(getNearestNonEmptyBlock(relative(block, distance, -distance))

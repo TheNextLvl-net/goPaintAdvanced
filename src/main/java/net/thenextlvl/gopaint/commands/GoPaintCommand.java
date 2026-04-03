@@ -9,11 +9,11 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public final class GoPaintCommand extends BrigadierCommand {
-    private GoPaintCommand(GoPaintPlugin plugin) {
+    private GoPaintCommand(final GoPaintPlugin plugin) {
         super(plugin, "gopaint", GoPaintProvider.USE_PERMISSION);
     }
 
-    public static LiteralCommandNode<CommandSourceStack> create(GoPaintPlugin plugin) {
+    public static LiteralCommandNode<CommandSourceStack> create(final GoPaintPlugin plugin) {
         return new GoPaintCommand(plugin).create()
                 .then(BrushCommand.create(plugin))
                 .then(ExportCommand.create(plugin))

@@ -20,8 +20,8 @@ public record AnglePattern(
 ) implements BuildPattern {
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
-        var block = new Block(applyBlock(get), set, extent);
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
+        final var block = new Block(applyBlock(get), set, extent);
 
         if (Height.getAverageHeightDiffAngle(block, 1) < 0.1) return false;
         if (Height.getAverageHeightDiffAngle(block, settings().getAngleDistance())

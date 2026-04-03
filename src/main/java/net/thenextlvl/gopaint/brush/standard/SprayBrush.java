@@ -35,7 +35,7 @@ import org.jspecify.annotations.NullMarked;
 public final class SprayBrush extends SpherePatternBrush {
     private final GoPaintProvider provider;
 
-    public SprayBrush(GoPaintProvider provider) {
+    public SprayBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg4MGY3NjVlYTgwZGVlMzcwODJkY2RmZDk4MTJlZTM2ZmRhODg0ODY5MmE4NDFiZWMxYmJkOWVkNTFiYTIyIn19fQ==",
                 Key.key("gopaint", "spray_brush")
@@ -44,17 +44,17 @@ public final class SprayBrush extends SpherePatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.spray", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{provider.bundle().component("brush.description.spray", audience)};
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new SprayPattern(session, position, player, settings);
     }
 }

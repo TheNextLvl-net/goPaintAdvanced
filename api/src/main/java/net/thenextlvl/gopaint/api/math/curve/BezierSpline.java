@@ -32,7 +32,7 @@ public class BezierSpline {
     private final BezierSplineSegment[] segments;
     private final double curveLength;
 
-    public BezierSpline(List<MutableBlockVector3> curve) {
+    public BezierSpline(final List<MutableBlockVector3> curve) {
         this.knots = curve.toArray(new MutableBlockVector3[0]);
         this.segments = new BezierSplineSegment[knots.length - 1];
         for (var segment = 0; segment < knots.length - 1; segment++) {
@@ -45,14 +45,14 @@ public class BezierSpline {
     @Contract(pure = true)
     public double calculateLength() {
         var length = this.curveLength;
-        for (var segment : segments) {
+        for (final var segment : segments) {
             length += segment.getCurveLength();
         }
         return length;
     }
 
     @Contract(pure = true)
-    public BlockVector3 getPoint(double point) {
+    public BlockVector3 getPoint(final double point) {
         if (point >= segments.length) {
             return getPoint(segments.length - 1, 1);
         } else {
@@ -61,7 +61,7 @@ public class BezierSpline {
     }
 
     @Contract(pure = true)
-    public BlockVector3 getPoint(int segmentIndex, double factor) {
+    public BlockVector3 getPoint(final int segmentIndex, final double factor) {
         assert (segmentIndex < segments.length);
         assert (factor > 0 && factor <= 1);
         return segments[segmentIndex].getPoint(factor);
@@ -70,15 +70,15 @@ public class BezierSpline {
     public void calculateControlPoints() {
         if (segments.length == 0) return;
 
-        var xFlat = Arrays.stream(knots).allMatch(l -> l.x() == knots[0].x())
+        final var xFlat = Arrays.stream(knots).allMatch(l -> l.x() == knots[0].x())
                 ? OptionalDouble.of(knots[0].x()) : OptionalDouble.empty();
-        var yFlat = Arrays.stream(knots).allMatch(l -> l.y() == knots[0].y())
+        final var yFlat = Arrays.stream(knots).allMatch(l -> l.y() == knots[0].y())
                 ? OptionalDouble.of(knots[0].y()) : OptionalDouble.empty();
-        var zFlat = Arrays.stream(knots).allMatch(l -> l.z() == knots[0].z())
+        final var zFlat = Arrays.stream(knots).allMatch(l -> l.z() == knots[0].z())
                 ? OptionalDouble.of(knots[0].z()) : OptionalDouble.empty();
 
         if (segments.length == 1) {
-            var midpoint = new MutableBlockVector3(0, 0, 0);
+            final var midpoint = new MutableBlockVector3(0, 0, 0);
             midpoint.mutX((segments[0].getStartPoint().x() + segments[0].getEndPoint().x()) / 2);
             midpoint.mutY((segments[0].getStartPoint().y() + segments[0].getEndPoint().y()) / 2);
             midpoint.mutZ((segments[0].getStartPoint().z() + segments[0].getEndPoint().z()) / 2);
@@ -92,7 +92,7 @@ public class BezierSpline {
             segments[0].getResult().mutY(knots[0].y() + 2 * knots[1].y());
             segments[0].getResult().mutZ(knots[0].z() + 2 * knots[1].z());
 
-            int n = knots.length - 1;
+            final int n = knots.length - 1;
             float m;
 
             for (int i = 1; i < n - 1; i++) {

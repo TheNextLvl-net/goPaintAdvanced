@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public final class CraftBrushRegistry implements BrushRegistry {
     private final List<PatternBrush> brushes = new LinkedList<>();
 
-    public CraftBrushRegistry(GoPaintPlugin plugin) {
+    public CraftBrushRegistry(final GoPaintPlugin plugin) {
         registerBrush(new SphereBrush(plugin));
         registerBrush(new SprayBrush(plugin));
         registerBrush(new SplatterBrush(plugin));
@@ -37,23 +37,23 @@ public final class CraftBrushRegistry implements BrushRegistry {
     }
 
     @Override
-    public boolean isRegistered(PatternBrush brush) {
+    public boolean isRegistered(final PatternBrush brush) {
         return brushes.contains(brush);
     }
 
     @Override
-    public void registerBrush(PatternBrush brush) throws IllegalStateException {
+    public void registerBrush(final PatternBrush brush) throws IllegalStateException {
         Preconditions.checkState(!isRegistered(brush), "Brush already registered");
         brushes.add(brush);
     }
 
     @Override
-    public void unregisterBrush(PatternBrush brush) throws IllegalStateException {
+    public void unregisterBrush(final PatternBrush brush) throws IllegalStateException {
         if (!brushes.remove(brush)) throw new IllegalStateException("Brush not registered");
     }
 
     @Override
-    public Optional<PatternBrush> getBrush(Key key) {
+    public Optional<PatternBrush> getBrush(final Key key) {
         return brushes.stream()
                 .filter(brush -> brush.key().equals(key))
                 .findAny();

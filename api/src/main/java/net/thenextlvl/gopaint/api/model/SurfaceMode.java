@@ -24,7 +24,7 @@ public enum SurfaceMode implements Translatable {
 
     private final String translationKey;
 
-    SurfaceMode(String translationKey) {
+    SurfaceMode(final String translationKey) {
         this.translationKey = translationKey;
     }
 

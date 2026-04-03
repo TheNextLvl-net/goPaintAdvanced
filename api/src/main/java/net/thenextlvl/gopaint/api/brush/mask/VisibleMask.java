@@ -9,17 +9,17 @@ import com.sk89q.worldedit.math.Vector3;
 public record VisibleMask(Extent extent, Vector3 viewPoint) implements Mask {
 
     @Override
-    public boolean test(BlockVector3 vector) {
+    public boolean test(final BlockVector3 vector) {
 
-        var location = new MutableVector3(
+        final var location = new MutableVector3(
                 vector.x(),
                 vector.y(),
                 vector.z()
         );
 
-        var distanceX = viewPoint().x() - location.x();
-        var distanceY = viewPoint().y() - location.y();
-        var distanceZ = viewPoint().z() - location.z();
+        final var distanceX = viewPoint().x() - location.x();
+        final var distanceY = viewPoint().y() - location.y();
+        final var distanceZ = viewPoint().z() - location.z();
 
         location.setComponents(
                 location.x() + (distanceX > 1 ? 1 : distanceX > 0 ? 0.5 : 0),
@@ -27,14 +27,14 @@ public record VisibleMask(Extent extent, Vector3 viewPoint) implements Mask {
                 location.z() + (distanceZ > 1 ? 1 : distanceZ > 0 ? 0.5 : 0)
         );
 
-        var distance = location.distance(viewPoint());
+        final var distance = location.distance(viewPoint());
         for (var x = 1; x < distance; x++) {
 
-            var moveX = distanceX * (x / distance);
-            var moveY = distanceY * (x / distance);
-            var moveZ = distanceZ * (x / distance);
+            final var moveX = distanceX * (x / distance);
+            final var moveY = distanceY * (x / distance);
+            final var moveZ = distanceZ * (x / distance);
 
-            var point = location.add(moveX, moveY, moveZ).toBlockPoint();
+            final var point = location.add(moveX, moveY, moveZ).toBlockPoint();
 
             if (!extent().getBlock(point).getMaterial().isAir()) return false;
         }

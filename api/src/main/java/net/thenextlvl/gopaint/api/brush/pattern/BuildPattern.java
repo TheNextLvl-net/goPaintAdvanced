@@ -22,7 +22,7 @@ public interface BuildPattern extends Pattern {
     BrushSettings settings();
 
     @Override
-    default BaseBlock applyBlock(BlockVector3 position) {
+    default BaseBlock applyBlock(final BlockVector3 position) {
         return player().getWorld().getFullBlock(position);
     }
 
@@ -32,14 +32,14 @@ public interface BuildPattern extends Pattern {
      * @return The default state of the randomly picked block.
      */
     default BlockState getRandomBlockState() {
-        Material material;
+        final Material material;
         if (settings().getBlocks().size() == 1) {
             material = settings().getBlocks().getFirst();
         } else {
-            var index = settings().getRandom().nextInt(settings().getBlocks().size());
+            final var index = settings().getRandom().nextInt(settings().getBlocks().size());
             material = settings().getBlocks().get(index);
         }
-        var type = BukkitAdapter.asBlockType(material);
+        final var type = BukkitAdapter.asBlockType(material);
         return Objects.requireNonNull(type).getDefaultState();
     }
 }

@@ -29,12 +29,12 @@ import org.jspecify.annotations.NullMarked;
 public final class ConnectListener implements Listener {
     private final GoPaintPlugin plugin;
 
-    public ConnectListener(GoPaintPlugin plugin) {
+    public ConnectListener(final GoPaintPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(final PlayerQuitEvent event) {
         plugin.brushController().removeBrushSettings(event.getPlayer());
     }
 }

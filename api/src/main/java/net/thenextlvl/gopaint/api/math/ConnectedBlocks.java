@@ -48,17 +48,17 @@ public class ConnectedBlocks {
      * @param blocks  the list of blocks to check for connectivity
      * @return a stream of connected blocks
      */
-    public static Stream<BlockVector3> getConnectedBlocks(Extent world, BlockVector3 vector3, Set<BlockVector3> blocks) {
-        var startBlock = world.getFullBlock(vector3);
-        var connected = new HashSet<BlockVector3>();
-        var toCheck = new LinkedList<BlockVector3>();
+    public static Stream<BlockVector3> getConnectedBlocks(final Extent world, final BlockVector3 vector3, final Set<BlockVector3> blocks) {
+        final var startBlock = world.getFullBlock(vector3);
+        final var connected = new HashSet<BlockVector3>();
+        final var toCheck = new LinkedList<BlockVector3>();
 
         toCheck.add(vector3);
         connected.add(vector3);
 
         while (!toCheck.isEmpty() && connected.size() < blocks.size()) {
-            var current = toCheck.poll();
-            var neighbors = Arrays.stream(faces)
+            final var current = toCheck.poll();
+            final var neighbors = Arrays.stream(faces)
                     .map(face -> current.add(face.getModX(), face.getModY(), face.getModZ()))
                     .filter(relative -> !connected.contains(relative))
                     .filter(blocks::contains)

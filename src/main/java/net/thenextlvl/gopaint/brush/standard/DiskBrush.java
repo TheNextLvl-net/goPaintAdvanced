@@ -37,7 +37,7 @@ import org.jspecify.annotations.NullMarked;
 public final class DiskBrush extends PatternBrush {
     private final GoPaintProvider provider;
 
-    public DiskBrush(GoPaintProvider provider) {
+    public DiskBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjFmMjgyNTBkMWU0MjBhNjUxMWIwMzk2NDg2OGZjYTJmNTYzN2UzYWJhNzlmNGExNjNmNGE4ZDYxM2JlIn19fQ==",
                 Key.key("gopaint", "disk_brush")
@@ -46,12 +46,12 @@ public final class DiskBrush extends PatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.disk", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{
                 provider.bundle().component("brush.description.disk.1", audience),
                 provider.bundle().component("brush.description.disk.2", audience),
@@ -60,13 +60,13 @@ public final class DiskBrush extends PatternBrush {
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new ShufflePattern(session, position, player, settings);
     }
 
     @Override
-    public void build(EditSession session, BlockVector3 position, Pattern pattern, double size) throws MaxChangedBlocksException {
-        if (!(pattern instanceof BuildPattern buildPattern)) return;
+    public void build(final EditSession session, final BlockVector3 position, final Pattern pattern, final double size) throws MaxChangedBlocksException {
+        if (!(pattern instanceof final BuildPattern buildPattern)) return;
         switch (buildPattern.settings().getAxis()) {
             case X -> session.makeSphere(position, pattern, 0, size, size, true);
             case Y -> session.makeSphere(position, pattern, size, 0, size, true);

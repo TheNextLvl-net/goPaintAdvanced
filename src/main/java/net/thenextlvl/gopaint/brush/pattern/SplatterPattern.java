@@ -18,14 +18,14 @@ public record SplatterPattern(
 ) implements BuildPattern {
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
         if (settings().getRandom().nextDouble() <= getRate(set)) return false;
         return set.setBlock(extent, getRandomBlockState().withProperties(get.getBlock(extent)));
     }
 
-    private double getRate(BlockVector3 position) {
-        var size = settings().getBrushSize() / 2;
-        var falloff = (100 - settings().getFalloffStrength()) / 100d;
+    private double getRate(final BlockVector3 position) {
+        final var size = settings().getBrushSize() / 2;
+        final var falloff = (100 - settings().getFalloffStrength()) / 100d;
         return (position.distance(position()) - size * falloff) / (size - size * falloff);
     }
 }

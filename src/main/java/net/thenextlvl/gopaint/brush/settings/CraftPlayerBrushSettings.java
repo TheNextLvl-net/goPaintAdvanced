@@ -84,11 +84,11 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
 
     private final MainMenu mainMenu;
 
-    public CraftPlayerBrushSettings(GoPaintPlugin plugin, Player player) {
+    public CraftPlayerBrushSettings(final GoPaintPlugin plugin, final Player player) {
         this.plugin = plugin;
         this.player = player;
 
-        var defaultBrush = plugin.config().brushConfig().defaultBrush();
+        final var defaultBrush = plugin.config().brushConfig().defaultBrush();
         brush = plugin.brushRegistry().getBrush(defaultBrush)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown default brush: " + defaultBrush.asString()));
 
@@ -116,39 +116,39 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setMask(Material type) {
+    public void setMask(final Material type) {
         mask = type;
         mainMenu.updateMask();
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
         mainMenu.updateToggle();
     }
 
     @Override
-    public void addBlock(Material type, int slot) {
+    public void addBlock(final Material type, final int slot) {
         if (blocks.size() < slot) blocks.add(type);
         else blocks.set(slot - 1, type);
         mainMenu.updateBlockPalette();
     }
 
     @Override
-    public void removeBlock(int slot) {
+    public void removeBlock(final int slot) {
         if (blocks.size() < slot) return;
         blocks.remove(slot - 1);
         mainMenu.updateBlockPalette();
     }
 
     @Override
-    public void setBrush(PatternBrush brush) {
+    public void setBrush(final PatternBrush brush) {
         this.brush = brush;
         mainMenu.updateBrush();
     }
 
     @Override
-    public void setBrushSize(@Range(from = 1, to = Integer.MAX_VALUE) int size) {
+    public void setBrushSize(@Range(from = 1, to = Integer.MAX_VALUE) final int size) {
         this.brushSize = Math.clamp(size, 1, plugin.config().brushConfig().maxBrushSize());
         mainMenu.updateSize();
     }
@@ -159,37 +159,37 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setChance(@Range(from = 10, to = 90) int chance) {
+    public void setChance(@Range(from = 10, to = 90) final int chance) {
         this.chance = Math.clamp(chance, 10, 90);
         mainMenu.updateChance();
     }
 
     @Override
-    public void setThickness(@Range(from = 1, to = Integer.MAX_VALUE) int thickness) {
+    public void setThickness(@Range(from = 1, to = Integer.MAX_VALUE) final int thickness) {
         this.thickness = Math.clamp(thickness, 1, plugin.config().thicknessConfig().maxThickness());
         mainMenu.updateThickness();
     }
 
     @Override
-    public void setAngleDistance(@Range(from = 1, to = Integer.MAX_VALUE) int distance) {
+    public void setAngleDistance(@Range(from = 1, to = Integer.MAX_VALUE) final int distance) {
         this.angleDistance = Math.clamp(distance, 1, plugin.config().angleConfig().maxAngleDistance());
         mainMenu.updateAngleSettings();
     }
 
     @Override
-    public void setFalloffStrength(@Range(from = 0, to = 100) int strength) {
+    public void setFalloffStrength(@Range(from = 0, to = 100) final int strength) {
         this.falloffStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateFalloffStrength();
     }
 
     @Override
-    public void setMixingStrength(@Range(from = 0, to = 100) int strength) {
+    public void setMixingStrength(@Range(from = 0, to = 100) final int strength) {
         this.mixingStrength = Math.clamp(strength, 0, 100);
         mainMenu.updateMixingStrength();
     }
 
     @Override
-    public void setAngleHeightDifference(double difference) {
+    public void setAngleHeightDifference(final double difference) {
         this.angleHeightDifference = Math.clamp(difference,
                 plugin.config().angleConfig().minAngleHeightDifference(),
                 plugin.config().angleConfig().maxAngleHeightDifference());
@@ -197,60 +197,60 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void setMaskEnabled(boolean maskEnabled) {
+    public void setMaskEnabled(final boolean maskEnabled) {
         this.maskEnabled = maskEnabled;
         mainMenu.updateMaskToggle();
     }
 
     @Override
-    public void setSurfaceMode(SurfaceMode surfaceMode) {
+    public void setSurfaceMode(final SurfaceMode surfaceMode) {
         this.surfaceMode = surfaceMode;
         mainMenu.updateSurfaceMode();
     }
 
     @Override
-    public void setAxis(Axis axis) {
+    public void setAxis(final Axis axis) {
         this.axis = axis;
         mainMenu.updateAxis();
     }
 
     @Override
-    public void setBlocks(List<Material> blocks) {
+    public void setBlocks(final List<Material> blocks) {
         this.blocks.clear();
         this.blocks.addAll(blocks);
         mainMenu.updateBlockPalette();
     }
 
     @Override
-    public void setFractureStrength(@Range(from = 1, to = Integer.MAX_VALUE) int fractureStrength) {
+    public void setFractureStrength(@Range(from = 1, to = Integer.MAX_VALUE) final int fractureStrength) {
         this.fractureStrength = Math.clamp(fractureStrength, 1, plugin.config().fractureConfig().maxFractureStrength());
         mainMenu.updateFractureSettings();
     }
 
     @Override
-    public PatternBrush getNextBrush(@Nullable PatternBrush brush) {
-        var brushes = plugin.brushRegistry().getBrushes().toList();
+    public PatternBrush getNextBrush(@Nullable final PatternBrush brush) {
+        final var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
-        int next = brushes.indexOf(brush) + 1;
+        final int next = brushes.indexOf(brush) + 1;
         if (next < brushes.size()) return brushes.get(next);
         return brushes.getFirst();
     }
 
     @Override
-    public PatternBrush getPreviousBrush(@Nullable PatternBrush brush) {
-        var brushes = plugin.brushRegistry().getBrushes().toList();
+    public PatternBrush getPreviousBrush(@Nullable final PatternBrush brush) {
+        final var brushes = plugin.brushRegistry().getBrushes().toList();
         if (brush == null) return brushes.getFirst();
-        int back = brushes.indexOf(brush) - 1;
+        final int back = brushes.indexOf(brush) - 1;
         if (back >= 0) return brushes.get(back);
         return brushes.getLast();
     }
 
     @Override
-    public boolean exportSettings(ItemStack itemStack) {
+    public boolean exportSettings(final ItemStack itemStack) {
         if (itemStack.getType().equals(plugin.config().brushConfig().defaultBrushType())) return false;
         if (itemStack.getType().isBlock()) return false;
 
-        var lines = new ArrayList<Component>();
+        final var lines = new ArrayList<Component>();
         lines.add(Component.empty());
         lines.add(plugin.bundle().component("brush.exported.size", player,
                 Formatter.number("size", getBrushSize())));
@@ -281,7 +281,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
                     Formatter.number("fracture", getFractureStrength())));
         }
         if (!blocks.isEmpty()) {
-            var blocks = getBlocks().stream()
+            final var blocks = getBlocks().stream()
                     .map(Material::translationKey)
                     .map(Component::translatable)
                     .toList();
@@ -295,7 +295,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
         }
 
         if (!getSurfaceMode().equals(SurfaceMode.DISABLED)) {
-            var mode = plugin.bundle().component(getSurfaceMode().translationKey(), player);
+            final var mode = plugin.bundle().component(getSurfaceMode().translationKey(), player);
             lines.add(plugin.bundle().component("brush.exported.surface-mode", player,
                     Placeholder.component("mode", mode.style(Style.empty()))));
         }
@@ -327,7 +327,7 @@ public final class CraftPlayerBrushSettings implements PlayerBrushSettings {
     }
 
     @Override
-    public void importSettings(ItemBrushSettings settings) {
+    public void importSettings(final ItemBrushSettings settings) {
         setBrushSize(settings.getBrushSize());
         setChance(settings.getBrushSize());
         setThickness(settings.getThickness());

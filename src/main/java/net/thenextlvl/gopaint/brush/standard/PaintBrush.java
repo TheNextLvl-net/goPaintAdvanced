@@ -49,7 +49,7 @@ public final class PaintBrush extends PatternBrush {
     private final Map<UUID, List<BlockVector3>> selectedPoints = new HashMap<>();
     private final GoPaintProvider provider;
 
-    public PaintBrush(GoPaintProvider provider) {
+    public PaintBrush(final GoPaintProvider provider) {
         super(
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBiM2E5ZGZhYmVmYmRkOTQ5YjIxN2JiZDRmYTlhNDg2YmQwYzNmMGNhYjBkMGI5ZGZhMjRjMzMyZGQzZTM0MiJ9fX0=",
                 Key.key("gopaint", "paint_brush")
@@ -58,12 +58,12 @@ public final class PaintBrush extends PatternBrush {
     }
 
     @Override
-    public Component getName(Audience audience) {
+    public Component getName(final Audience audience) {
         return provider.bundle().component("brush.name.paint", audience);
     }
 
     @Override
-    public Component[] getDescription(Audience audience) {
+    public Component[] getDescription(final Audience audience) {
         return new Component[]{
                 provider.bundle().component("brush.description.paint.1", audience),
                 provider.bundle().component("brush.description.paint.2", audience)
@@ -71,16 +71,16 @@ public final class PaintBrush extends PatternBrush {
     }
 
     @Override
-    public Pattern buildPattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public Pattern buildPattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         return new SplinePattern(session, position, player, settings);
     }
 
     @Override
-    public void build(EditSession session, BlockVector3 position, Pattern original, double size) throws MaxChangedBlocksException {
-        if (!(original instanceof SplinePattern pattern)) return;
-        if (!(pattern.player() instanceof BukkitPlayer bukkit)) return;
+    public void build(final EditSession session, final BlockVector3 position, final Pattern original, final double size) throws MaxChangedBlocksException {
+        if (!(original instanceof final SplinePattern pattern)) return;
+        if (!(pattern.player() instanceof final BukkitPlayer bukkit)) return;
 
-        var id = pattern.player().getUniqueId();
+        final var id = pattern.player().getUniqueId();
         selectedPoints.computeIfAbsent(id, ignored -> new ArrayList<>()).add(position);
 
         if (!bukkit.getPlayer().isSneaking()) {
@@ -95,19 +95,19 @@ public final class PaintBrush extends PatternBrush {
 
         if (selectedPoints.get(id).size() <= 1) return;
 
-        var vectors = selectedPoints.remove(id);
+        final var vectors = selectedPoints.remove(id);
 
-        var first = vectors.getFirst();
-        var settings = pattern.settings();
+        final var first = vectors.getFirst();
+        final var settings = pattern.settings();
 
         Sphere.getBlocksInRadius(first, size).stream()
                 .filter(vector3 -> {
-                    var rate = getRate(settings.getFalloffStrength(), size, vector3, first);
+                    final var rate = getRate(settings.getFalloffStrength(), size, vector3, first);
                     return settings.getRandom().nextDouble() > rate;
                 }).forEach(vector3 -> {
                     pattern.random(settings.getRandom().nextInt(settings.getBlocks().size()));
 
-                    var curve = new LinkedList<MutableBlockVector3>();
+                    final var curve = new LinkedList<MutableBlockVector3>();
                     curve.add(MutableBlockVector3.at(vector3.x(), vector3.y(), vector3.z()));
                     vectors.stream().skip(1).map(location -> MutableBlockVector3.at(
                             vector3.x() + location.x() - first.x(),
@@ -115,8 +115,8 @@ public final class PaintBrush extends PatternBrush {
                             vector3.z() + location.z() - first.z()
                     )).forEach(curve::add);
 
-                    var spline = new BezierSpline(curve);
-                    var maxCount = (spline.getCurveLength() * 2.5) + 1;
+                    final var spline = new BezierSpline(curve);
+                    final var maxCount = (spline.getCurveLength() * 2.5) + 1;
 
                     for (var y = 0; y <= maxCount; y++) {
                         session.setBlock(spline.getPoint((y / maxCount) * (vectors.size() - 1)), pattern);
@@ -124,10 +124,10 @@ public final class PaintBrush extends PatternBrush {
                 });
     }
 
-    private double getRate(double falloffStrength, double size, BlockVector3 vector3, BlockVector3 first) {
-        var falloffFactor = (100.0 - falloffStrength) / 100.0;
-        var numerator = vector3.distance(first) - size * falloffFactor;
-        var denominator = size - size * falloffFactor;
+    private double getRate(final double falloffStrength, final double size, final BlockVector3 vector3, final BlockVector3 first) {
+        final var falloffFactor = (100.0 - falloffStrength) / 100.0;
+        final var numerator = vector3.distance(first) - size * falloffFactor;
+        final var denominator = size - size * falloffFactor;
         return numerator / denominator;
     }
 }

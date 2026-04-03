@@ -22,7 +22,7 @@ public final class SplinePattern implements BuildPattern {
 
     private int random;
 
-    public SplinePattern(EditSession session, BlockVector3 position, Player player, BrushSettings settings) {
+    public SplinePattern(final EditSession session, final BlockVector3 position, final Player player, final BrushSettings settings) {
         this.session = session;
         this.position = position;
         this.player = player;
@@ -30,14 +30,14 @@ public final class SplinePattern implements BuildPattern {
     }
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
         return set.setBlock(extent, getRandomBlockState().withProperties(get.getBlock(extent)));
     }
 
     @Override
     public BlockState getRandomBlockState() {
-        var index = Math.clamp(random(), 0, settings().getBlocks().size() - 1);
-        var block = BukkitAdapter.asBlockType(settings().getBlocks().get(index));
+        final var index = Math.clamp(random(), 0, settings().getBlocks().size() - 1);
+        final var block = BukkitAdapter.asBlockType(settings().getBlocks().get(index));
         return Objects.requireNonNull(block).getDefaultState();
     }
 
@@ -61,7 +61,7 @@ public final class SplinePattern implements BuildPattern {
         return this.random;
     }
 
-    public void random(int random) {
+    public void random(final int random) {
         this.random = random;
     }
 }

@@ -22,26 +22,26 @@ public record GradientPattern(
 ) implements BuildPattern {
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
         if (settings().getRandom().nextDouble() <= getRate(set)) return false;
         return set.setBlock(extent, getRandomBlockState(set.y()).withProperties(get.getBlock(extent)));
     }
 
-    public BlockState getRandomBlockState(int altitude) {
-        var index = Math.clamp(getRandom(altitude), 0, settings().getBlocks().size() - 1);
-        var block = BukkitAdapter.asBlockType(settings().getBlocks().get(index));
+    public BlockState getRandomBlockState(final int altitude) {
+        final var index = Math.clamp(getRandom(altitude), 0, settings().getBlocks().size() - 1);
+        final var block = BukkitAdapter.asBlockType(settings().getBlocks().get(index));
         return Objects.requireNonNull(block).getDefaultState();
     }
 
-    private int getRandom(int altitude) {
+    private int getRandom(final int altitude) {
         if (settings().getBlocks().size() == 1) return 1;
-        var y = position().y() - (settings().getBrushSize() / 2d);
-        var _y = (altitude - y) / settings().getBrushSize() * settings().getBlocks().size();
+        final var y = position().y() - (settings().getBrushSize() / 2d);
+        final var _y = (altitude - y) / settings().getBrushSize() * settings().getBlocks().size();
         return (int) (_y + (settings().getRandom().nextDouble() * 2 - 1) * (settings().getMixingStrength() / 100d));
     }
 
-    private double getRate(BlockVector3 position) {
-        var size = settings().getBrushSize() * ((100d - settings().getFalloffStrength()) / 100d);
+    private double getRate(final BlockVector3 position) {
+        final var size = settings().getBrushSize() * ((100d - settings().getFalloffStrength()) / 100d);
         return (position.distance(position()) - size) / (settings().getBrushSize() - size);
     }
 }

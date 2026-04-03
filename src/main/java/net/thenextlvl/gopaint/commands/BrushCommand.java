@@ -15,12 +15,12 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 final class BrushCommand extends SimpleCommand {
-    private BrushCommand(GoPaintPlugin plugin) {
+    private BrushCommand(final GoPaintPlugin plugin) {
         super(plugin, "brush", null);
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> create(GoPaintPlugin plugin) {
-        var command = new BrushCommand(plugin);
+    public static LiteralArgumentBuilder<CommandSourceStack> create(final GoPaintPlugin plugin) {
+        final var command = new BrushCommand(plugin);
         return command.create().then(Commands.argument("brush", ArgumentTypes.key())
                 .suggests(new BrushSuggestionProvider<>(plugin))
                 .requires(stack -> stack.getSender() instanceof Player)
@@ -28,10 +28,10 @@ final class BrushCommand extends SimpleCommand {
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        var player = (Player) context.getSource().getSender();
-        var settings = plugin.brushController().getBrushSettings(player);
-        var argument = context.getArgument("brush", Key.class);
+    public int run(final CommandContext<CommandSourceStack> context) {
+        final var player = (Player) context.getSource().getSender();
+        final var settings = plugin.brushController().getBrushSettings(player);
+        final var argument = context.getArgument("brush", Key.class);
         plugin.brushRegistry().getBrush(argument).ifPresentOrElse(brush -> {
             plugin.bundle().sendMessage(player, "brush.set",
                     Placeholder.component("brush", brush.getName(player)));

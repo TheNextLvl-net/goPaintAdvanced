@@ -44,13 +44,13 @@ import org.jspecify.annotations.NullMarked;
 public final class InventoryListener implements Listener {
     private final GoPaintPlugin plugin;
 
-    public InventoryListener(GoPaintPlugin plugin) {
+    public InventoryListener(final GoPaintPlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void menuClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) {
+    public void menuClick(final InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof final Player player)) {
             return;
         }
         if (!(event.getView().getTopInventory().getHolder(true) instanceof MainMenu)) {
@@ -66,8 +66,8 @@ public final class InventoryListener implements Listener {
 
         if (event.getAction().equals(InventoryAction.NOTHING)) return;
 
-        var settings = plugin.brushController().getBrushSettings(player);
-        var itemType = event.getCursor().getType();
+        final var settings = plugin.brushController().getBrushSettings(player);
+        final var itemType = event.getCursor().getType();
 
         if (event.getRawSlot() == 10 || event.getRawSlot() == 1 || event.getRawSlot() == 19) {
 
@@ -89,7 +89,7 @@ public final class InventoryListener implements Listener {
                 settings.getBrushesMenu().open();
             }
         } else if (event.getRawSlot() == 12 || event.getRawSlot() == 3 || event.getRawSlot() == 21) {
-            var brush = settings.getBrush();
+            final var brush = settings.getBrush();
             if (brush instanceof SprayBrush) {
                 if (event.getClick().isLeftClick()) {
                     settings.setChance(settings.getChance() + 10);
@@ -129,7 +129,7 @@ public final class InventoryListener implements Listener {
                 });
             }
         } else if (event.getRawSlot() == 13 || event.getRawSlot() == 4 || event.getRawSlot() == 22) {
-            var brush = settings.getBrush();
+            final var brush = settings.getBrush();
             if (brush instanceof AngleBrush) {
                 if (event.getClick().equals(ClickType.LEFT)) {
                     settings.setAngleHeightDifference(settings.getAngleHeightDifference() + 5);
@@ -167,7 +167,7 @@ public final class InventoryListener implements Listener {
             });
         } else if ((event.getRawSlot() >= 37 && event.getRawSlot() <= 41)
                    || (event.getRawSlot() >= 46 && event.getRawSlot() <= 50)) {
-            int slot = event.getRawSlot() - (event.getRawSlot() >= 37 && event.getRawSlot() <= 41 ? 36 : 45);
+            final int slot = event.getRawSlot() - (event.getRawSlot() >= 37 && event.getRawSlot() <= 41 ? 36 : 45);
             if (event.getClick().isLeftClick()) {
                 if (!itemType.isSolid()) return;
                 settings.addBlock(itemType, slot);

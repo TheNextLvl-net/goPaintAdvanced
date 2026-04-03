@@ -19,13 +19,13 @@ public record UnderlayPattern(
 ) implements BuildPattern {
 
     @Override
-    public boolean apply(Extent extent, BlockVector3 get, BlockVector3 set) throws WorldEditException {
-        var block = applyBlock(get);
+    public boolean apply(final Extent extent, final BlockVector3 get, final BlockVector3 set) throws WorldEditException {
+        final var block = applyBlock(get);
         if (!isUnderlay(get, block)) return false;
         return set.setBlock(extent, getRandomBlockState().withProperties(block.toBlockState()));
     }
 
-    private boolean isUnderlay(BlockVector3 position, BaseBlock block) {
+    private boolean isUnderlay(final BlockVector3 position, final BaseBlock block) {
         for (var i = 1; i <= settings().getThickness(); i++) {
             if (!block.getMaterial().isMovementBlocker()) return false;
             if (!position.getStateRelativeY(player().getWorld(), i).getMaterial().isMovementBlocker()) return false;
