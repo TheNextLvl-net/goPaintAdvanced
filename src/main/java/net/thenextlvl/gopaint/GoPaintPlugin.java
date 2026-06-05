@@ -3,8 +3,8 @@ package net.thenextlvl.gopaint;
 import com.google.gson.GsonBuilder;
 import core.file.FileIO;
 import core.file.formats.GsonFile;
-import dev.faststats.bukkit.BukkitMetrics;
-import dev.faststats.core.ErrorTracker;
+import dev.faststats.ErrorTracker;
+import dev.faststats.bukkit.BukkitContext;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.key.Key;
 import net.thenextlvl.gopaint.adapters.KeyAdapter;
@@ -66,10 +66,10 @@ public final class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     private final VersionChecker versionChecker = new VersionChecker(this);
     private final Metrics metrics = new Metrics(this, 22279);
-    private final dev.faststats.core.Metrics fastStats = BukkitMetrics.factory()
-            .errorTracker(ErrorTracker.contextAware())
-            .token("52cb9873b3b03df680419446780c101c")
-            .create(this);
+    private final BukkitContext context = new BukkitContext.Factory(this, "52cb9873b3b03df680419446780c101c")
+            .errorTrackerService(ErrorTracker.contextAware())
+            .metrics(dev.faststats.Metrics.Factory::create)
+            .create();
 
     public GoPaintPlugin() {
         registerServices();
@@ -92,13 +92,14 @@ public final class GoPaintPlugin extends JavaPlugin implements GoPaintProvider {
 
     @Override
     public void onEnable() {
+        context.ready();
         registerListeners();
         registerCommands();
     }
 
     @Override
     public void onDisable() {
-        fastStats.shutdown();
+        context.shutdown();
         metrics.shutdown();
     }
 
