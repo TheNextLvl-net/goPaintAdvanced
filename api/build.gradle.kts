@@ -5,13 +5,17 @@ plugins {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
     withSourcesJar()
     withJavadocJar()
 }
 
 tasks.compileJava {
     options.release.set(21)
+}
+
+configurations.compileClasspath {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
 }
 
 group = rootProject.group
@@ -26,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.+")
 
     compileOnlyApi(platform("com.intellectualsites.bom:bom-newest:1.57-SNAPSHOT"))
     compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core") { isTransitive = false }

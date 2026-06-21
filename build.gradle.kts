@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.2.+")
 
     implementation("net.thenextlvl.core:files:4.0.0-pre1")
     implementation("net.thenextlvl.version-checker:modrinth-paper:1.0.1")
@@ -67,7 +67,11 @@ java {
 }
 
 tasks.compileJava {
-    options.release.set(25)
+    options.release.set(21)
+}
+
+configurations.compileClasspath {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
 }
 
 tasks.shadowJar {

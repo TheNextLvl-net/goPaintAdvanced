@@ -13,7 +13,6 @@ module net.thenextlvl.gopaintadvanced {
     requires com.google.gson;
     requires core.paper;
     requires net.kyori.adventure.key;
-    requires net.kyori.adventure;
     requires net.thenextlvl.i18n;
     requires org.bukkit;
 
